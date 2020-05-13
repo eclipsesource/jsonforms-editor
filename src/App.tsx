@@ -1,27 +1,54 @@
-import './App.css';
+import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
+import { Editor } from './editor';
+import { Layout } from './core/components';
+import { Properties } from './properties';
 import React from 'react';
-import logo from './logo.svg';
+import { SchemaPanel } from './schema-panel';
+import { makeStyles } from '@material-ui/core';
 
-function App() {
+const useStyles = makeStyles((theme) => ({
+  paneContainer: {
+    height: '100%',
+  },
+  leftPane: {
+    minHeight: '200px',
+  },
+  centerPane: {
+    minHeight: '200px',
+  },
+  rightPane: {
+    minHeight: '200px',
+  },
+}));
+
+const App = () => {
+  const classes = useStyles();
   return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <div className={classes.paneContainer}>
+        <ReflexContainer orientation='vertical'>
+          <ReflexElement minSize={200}>
+            <div className={classes.leftPane}>
+              <SchemaPanel />
+            </div>
+          </ReflexElement>
+          <ReflexSplitter propagate />
+          <ReflexElement minSize={200}>
+            <div className={classes.centerPane}>
+              <Editor />
+            </div>
+          </ReflexElement>
+          <ReflexSplitter propagate />
+          <ReflexElement minSize={200}>
+            <div className={classes.rightPane}>
+              <Properties />
+            </div>
+          </ReflexElement>
+        </ReflexContainer>
+      </div>
+    </Layout>
   );
-}
+};
 
 export default App;

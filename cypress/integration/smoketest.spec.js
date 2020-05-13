@@ -3,7 +3,7 @@ describe('Smoketest', () => {
     cy.visit('/');
   });
 
-  it('Renders Learn React', () => {
-    cy.contains('Learn React');
+  it('Renders Title', () => {
+    cy.contains('JSON Forms Editor');
   });
 });
