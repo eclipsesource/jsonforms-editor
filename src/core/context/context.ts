@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
 
-import { GitLabService } from '../api/gitlab';
+import { EditorAction } from '../model/actions';
+import { LinkedUISchemaElement } from '../model/uischema';
+import { SchemaElement } from '../model';
+import { SchemaService } from '../api/schemaService';
 import { SelectedElement } from '../selection';
 
 export interface EditorContext {
-  gitLabService: GitLabService;
-  schema: any;
-  setSchema: (schema: any) => void;
-  uiSchema: any;
-  setUiSchema: (uiSchema: any) => void;
+  schemaService: SchemaService;
+  schema: SchemaElement | undefined;
+  uiSchema: LinkedUISchemaElement | undefined;
+  dispatch: (action: EditorAction) => void;
   selection: SelectedElement;
   setSelection: (selection: SelectedElement) => void;
 }
@@ -23,14 +25,19 @@ export const EditorContextInstance = React.createContext<EditorContext>(
 export const useEditorContext = (): EditorContext =>
   useContext(EditorContextInstance);
 
-export const useGitLabService = (): GitLabService => {
-  const { gitLabService } = useEditorContext();
-  return gitLabService;
+export const useGitLabService = (): SchemaService => {
+  const { schemaService } = useEditorContext();
+  return schemaService;
 };
 
-export const useSchema = (): any => {
+export const useSchema = (): SchemaElement | undefined => {
   const { schema } = useEditorContext();
   return schema;
+};
+
+export const useUiSchema = (): LinkedUISchemaElement | undefined => {
+  const { uiSchema } = useEditorContext();
+  return uiSchema;
 };
 
 export const useSelection = (): [

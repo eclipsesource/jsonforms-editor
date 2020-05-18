@@ -1,0 +1,8 @@
+/* customize problematic react-reflex rules:
+ * - set height back to auto
+ * - use align-self to grow the splitter vertically instead of relying on a pre-set height
+ */
+.reflex-container.vertical > .reflex-splitter {
+  height: auto;
+  align-self: stretch;
+}

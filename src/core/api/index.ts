@@ -1,1 +1,1 @@
-export * from './gitlab';
+export * from './schemaService';

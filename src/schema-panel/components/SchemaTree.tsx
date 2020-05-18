@@ -1,8 +1,4 @@
-import {
-  SchemaTreeItem,
-  SchemaTreeItemType,
-  buildSchemaTree,
-} from '../../core/schemaTree/schemaTree';
+import { SchemaElement, SchemaElementType } from '../../core/model/schema';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
 import {
@@ -22,14 +18,13 @@ import { SelectedElement } from '../../core/selection';
 import { TransitionProps } from '@material-ui/core/transitions';
 import TreeView from '@material-ui/lab/TreeView';
 import { useSelection } from '../../core/context';
-import { useTransform } from '../../core/util/hooks';
 
 const ObjectIcon = ListAltIcon;
 const ArrayIcon = QueueOutlinedIcon;
 const PrimitiveIcon = LabelOutlinedIcon;
 const OtherIcon = RadioButtonUncheckedIcon;
 
-const getIconForType = (type: SchemaTreeItemType) => {
+const getIconForType = (type: SchemaElementType) => {
   switch (type) {
     case 'Object':
       return ObjectIcon;
@@ -76,7 +71,7 @@ const StyledTreeItem = withStyles((theme) =>
 ));
 
 const toTreeViewItem = (
-  treeItem: SchemaTreeItem,
+  treeItem: SchemaElement,
   setSelection: (selection: SelectedElement) => void
 ) => (
   <StyledTreeItem
@@ -93,7 +88,6 @@ const toTreeViewItem = (
 const useStyles = makeStyles(
   createStyles({
     root: {
-      height: 264,
       flexGrow: 1,
       maxWidth: 400,
     },
@@ -102,23 +96,17 @@ const useStyles = makeStyles(
 
 export const SchemaTreeView: React.FC<{ schema: any }> = ({ schema }) => {
   const classes = useStyles();
-  const presentationModel = useTransform(schema, buildSchemaTree);
   const [, setSelection] = useSelection();
 
   if (!schema && schema !== false) {
     return <NoSchema />;
   }
 
-  if (!presentationModel) {
-    return <InvalidSchema />;
-  }
-
   return (
     <TreeView className={classes.root} defaultExpanded={['']}>
-      {toTreeViewItem(presentationModel, setSelection)}
+      {toTreeViewItem(schema, setSelection)}
     </TreeView>
   );
 };
 
 const NoSchema = () => <div>No schema available</div>;
-const InvalidSchema = () => <div>Error when transforming schema to tree</div>;
