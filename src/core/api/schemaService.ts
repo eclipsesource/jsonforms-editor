@@ -45,6 +45,7 @@ const exampleSchema = {
       },
     },
     nationality: {
+      type: 'string',
       enum: ['DE', 'IT', 'JP', 'US', 'RU', 'Other'],
     },
     occupation: {
@@ -105,12 +106,12 @@ const exampleUischema = {
   ],
 };
 
-export interface GitLabService {
+export interface SchemaService {
   getSchema(): Promise<any>;
-  getUiSchmema(): Promise<any>;
+  getUiSchema(): Promise<any>;
 }
 
-export class GitLabServiceMock implements GitLabService {
+export class ExampleSchemaService implements SchemaService {
   getSchema = async () => exampleSchema;
-  getUiSchmema = async () => exampleUischema;
+  getUiSchema = async () => exampleUischema;
 }

@@ -1,5 +1,6 @@
-import { GitLabService, GitLabServiceMock } from './core/api';
-import React, { useEffect, useState } from 'react';
+import { Actions, editorReducer } from './core/model';
+import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
+import React, { useEffect, useReducer, useState } from 'react';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import { Editor } from './editor';
@@ -11,9 +12,6 @@ import { SelectedElement } from './core/selection';
 import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  paneContainer: {
-    height: '100%',
-  },
   leftPane: {
     minHeight: '200px',
   },
@@ -23,26 +21,33 @@ const useStyles = makeStyles((theme) => ({
   rightPane: {
     minHeight: '200px',
   },
+  reflexContainer: {
+    flex: '1',
+  },
 }));
 
 const App = () => {
-  const [schema, setSchema] = useState<any>(undefined);
-  const [uiSchema, setUiSchema] = useState<any>(undefined);
+  const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
+
   const [selection, setSelection] = useState<SelectedElement>(undefined);
-  const [gitLabService] = useState<GitLabService>(new GitLabServiceMock());
+  const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
   useEffect(() => {
-    gitLabService.getSchema().then(setSchema);
-  }, [gitLabService]);
+    schemaService
+      .getSchema()
+      .then((schema) => dispatch(Actions.setSchema(schema)));
+    schemaService
+      .getUiSchema()
+      .then((uiSchema) => dispatch(Actions.setUiSchema(uiSchema)));
+  }, [schemaService]);
   return (
     <EditorContextInstance.Provider
       value={{
         schema,
-        setSchema,
         uiSchema,
-        setUiSchema,
+        dispatch,
         selection,
         setSelection,
-        gitLabService,
+        schemaService,
       }}
     >
       <AppUi />
@@ -54,27 +59,28 @@ const AppUi = () => {
   const classes = useStyles();
   return (
     <Layout>
-      <div className={classes.paneContainer}>
-        <ReflexContainer orientation='vertical'>
-          <ReflexElement minSize={200}>
-            <div className={classes.leftPane}>
-              <SchemaPanel />
-            </div>
-          </ReflexElement>
-          <ReflexSplitter propagate />
-          <ReflexElement minSize={200}>
-            <div className={classes.centerPane}>
-              <Editor />
-            </div>
-          </ReflexElement>
-          <ReflexSplitter propagate />
-          <ReflexElement minSize={200}>
-            <div className={classes.rightPane}>
-              <Properties />
-            </div>
-          </ReflexElement>
-        </ReflexContainer>
-      </div>
+      <ReflexContainer
+        orientation='vertical'
+        className={classes.reflexContainer}
+      >
+        <ReflexElement minSize={200}>
+          <div className={classes.leftPane}>
+            <SchemaPanel />
+          </div>
+        </ReflexElement>
+        <ReflexSplitter propagate />
+        <ReflexElement minSize={200}>
+          <div className={classes.centerPane}>
+            <Editor />
+          </div>
+        </ReflexElement>
+        <ReflexSplitter propagate />
+        <ReflexElement minSize={200}>
+          <div className={classes.rightPane}>
+            <Properties />
+          </div>
+        </ReflexElement>
+      </ReflexContainer>
     </Layout>
   );
 };

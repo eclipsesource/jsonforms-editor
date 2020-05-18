@@ -1,3 +1,3 @@
-import { SchemaTreeItem } from '../schemaTree';
+import { SchemaElement } from '../model';
 
-export type SelectedElement = SchemaTreeItem | undefined;
+export type SelectedElement = SchemaElement | undefined;
