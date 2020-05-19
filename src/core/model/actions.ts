@@ -1,6 +1,9 @@
+import { Layout } from '@jsonforms/core';
+import { SchemaElement } from './schema';
+
 export type SchemaAction = SetSchemaAction;
 export type UiSchemaAction = SetUiSchemaAction;
-export type CombinedAction = SetSchemasAction;
+export type CombinedAction = SetSchemasAction | AddSchemaElementToLayout;
 
 export type EditorAction = SchemaAction | UiSchemaAction | CombinedAction;
 
@@ -10,6 +13,8 @@ export const SET_UISCHEMA: 'jsonforms-editor/SET_UISCHEMA' =
   'jsonforms-editor/SET_UISCHEMA';
 export const SET_SCHEMAS: 'jsonforms-editor/SET_SCHEMAS' =
   'jsonforms-editor/SET_SCHEMAS';
+export const ADD_SCHEMA_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT' =
+  'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT';
 
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
@@ -27,21 +32,43 @@ export interface SetSchemasAction {
   uiSchema: any;
 }
 
+export interface AddSchemaElementToLayout {
+  type: 'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT';
+  schemaElement: SchemaElement;
+  layout: Layout;
+  index: number;
+}
+
 const setSchema = (schema: any) => ({
   type: SET_SCHEMA,
   schema,
 });
+
 const setUiSchema = (uiSchema: any) => ({
   type: SET_UISCHEMA,
   uiSchema,
 });
+
 const setSchemas = (schema: any, uiSchema: any) => ({
   type: SET_SCHEMAS,
   schema,
   uiSchema,
 });
+
+const addSchemaElementToLayout = (
+  schemaElement: SchemaElement,
+  layout: Layout,
+  index: number
+) => ({
+  type: ADD_SCHEMA_ELEMENT_TO_LAYOUT,
+  schemaElement,
+  layout,
+  index,
+});
+
 export const Actions = {
   setSchema,
   setUiSchema,
   setSchemas,
+  addSchemaElementToLayout,
 };

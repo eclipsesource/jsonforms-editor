@@ -1,6 +1,7 @@
 import { FormattedJson } from '../../core/components';
 import React from 'react';
 import { Typography } from '@material-ui/core';
+import { toPrintableObject } from '../../core/model';
 import { useSelection } from '../../core/context';
 
 export const Properties = () => {
@@ -10,7 +11,13 @@ export const Properties = () => {
       <Typography variant='h6' color='inherit' noWrap>
         Properties
       </Typography>
-      <FormattedJson object={selection?.toPrintableObject()} />
+      {selection ? (
+        <FormattedJson object={toPrintableObject(selection)} />
+      ) : (
+        <NoSelection />
+      )}
     </>
   );
 };
+
+const NoSelection = () => <div>No selection</div>;

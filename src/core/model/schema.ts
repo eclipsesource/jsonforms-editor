@@ -1,129 +1,123 @@
+import { LinkedUISchemaElement } from './uischema';
+import { Parentable } from '../util/tree';
 import traverse from 'json-schema-traverse';
 
-export type SchemaElementType = 'Object' | 'Array' | 'Primitive' | 'Other';
+export const OBJECT: 'object' = 'object';
+export const ARRAY: 'array' = 'array';
+export const PRIMITIVE: 'primitive' = 'primitive';
+export const OTHER: 'other' = 'other';
 
-export abstract class SchemaElement {
-  abstract readonly type: SchemaElementType;
-  parent?: SchemaElement;
-  abstract readonly children: ReadonlyArray<SchemaElement>;
-  readonly schema: any;
-  abstract readonly keywords: Map<SchemaElement, string>;
-  readonly other: Map<SchemaElement, string> = new Map();
+export type SchemaElementType = 'object' | 'array' | 'primitive' | 'other';
 
-  constructor(schema: any) {
-    this.schema = schema;
-  }
-  get label(): string {
-    return determineLabel(this);
-  }
-  get path(): string {
-    return this.parent
-      ? `${this.parent.path}/${this.parent.keywords.get(this)}`
-      : '';
-  }
-  toPrintableObject(): any {
-    return {
-      type: this.type,
-      path: this.path,
-      schema: this.schema,
-      children: Array.from(this.keywords.entries()).map(([el, key]) => [
-        key,
-        el.toPrintableObject(),
-      ]),
-    };
-  }
+interface SchemaElementBase extends Parentable<SchemaElement> {
+  type: SchemaElementType;
+  schema: any;
+  other?: Map<SchemaElement, string>;
+  linkedUiSchemaElements?: Array<LinkedUISchemaElement>;
 }
 
-export class ArrayElement extends SchemaElement {
-  type: SchemaElementType = 'Array';
-  items: Array<SchemaElement> | SchemaElement = [];
-  get children(): ReadonlyArray<SchemaElement> {
-    const items = Array.isArray(this.items) ? this.items : [this.items];
-    return [...items, ...Array.from(this.other.keys())];
-  }
-  get keywords(): Map<SchemaElement, string> {
-    const itemEntries: [SchemaElement, string][] = Array.isArray(this.items)
-      ? this.items.map((element, index) => [element, `items/${index}`])
-      : [[this.items, 'items']];
-    return new Map<SchemaElement, string>([
-      ...itemEntries,
-      ...Array.from(this.other.entries()),
-    ]);
-  }
-  set children(nn) {}
-  set keywords(nn) {}
+export type SchemaElement =
+  | ArrayElement
+  | ObjectElement
+  | PrimitiveElement
+  | OtherElement;
+
+interface ArrayElement extends SchemaElementBase {
+  type: 'array';
+  items: SchemaElement | Array<SchemaElement>;
 }
 
-export class ObjectElement extends SchemaElement {
-  type: SchemaElementType = 'Object';
-  readonly properties: Map<SchemaElement, string> = new Map();
-  get children(): ReadonlyArray<SchemaElement> {
-    return [
-      ...Array.from(this.properties.keys()),
-      ...Array.from(this.other.keys()),
-    ];
-  }
-  get keywords(): Map<SchemaElement, string> {
-    const propertyEntries: [SchemaElement, string][] = Array.from(
-      this.properties.entries()
-    ).map(([element, prop]) => [element, `properties/${prop}`]);
-    return new Map<SchemaElement, string>([
-      ...propertyEntries,
-      ...Array.from(this.other.entries()),
-    ]);
-  }
-  set children(nn) {}
-  set keywords(nn) {}
+interface ObjectElement extends SchemaElementBase {
+  type: 'object';
+  properties: Map<SchemaElement, string>;
 }
 
-export class PrimitiveElement extends SchemaElement {
-  type: SchemaElementType = 'Primitive';
-  get children(): ReadonlyArray<SchemaElement> {
-    return [...Array.from(this.other.keys())];
-  }
-  get primitiveType(): string {
-    return (
-      this.schema.type ||
-      (this.schema.enum && 'enum') ||
-      (this.schema.const && 'const') ||
-      '<unknown>'
-    );
-  }
-  get keywords(): Map<SchemaElement, string> {
-    return new Map<SchemaElement, string>(this.other.entries());
-  }
-  set children(nn) {}
-  set keywords(nn) {}
+interface PrimitiveElement extends SchemaElementBase {
+  type: 'primitive';
 }
 
-/**
- * Could be an object or an array but not both
- */
-export class OtherElement extends SchemaElement {
-  type: SchemaElementType = 'Other';
-  readonly items: Array<SchemaElement> = [];
-  get children(): ReadonlyArray<SchemaElement> {
-    return [...this.items, ...Array.from(this.other.keys())];
-  }
-  get keywords(): Map<SchemaElement, string> {
-    return new Map<SchemaElement, string>(this.other.entries());
-  }
-  set children(nn) {}
-  set keywords(nn) {}
+interface OtherElement extends SchemaElementBase {
+  type: 'other';
 }
 
-const isElementOfType = <T extends SchemaElement>(type: SchemaElementType) => (
+export const getChildren = (
+  schemaElement: SchemaElement
+): Array<SchemaElement> => {
+  const children: Array<SchemaElement> = [];
+  switch (schemaElement.type) {
+    case OBJECT:
+      children.push(...Array.from(schemaElement.properties.keys()));
+      break;
+    case ARRAY:
+      const items = Array.isArray(schemaElement.items)
+        ? schemaElement.items
+        : [schemaElement.items];
+      children.push(...items);
+      break;
+  }
+  if (schemaElement.other) {
+    children.push(...Array.from(schemaElement.other.keys()));
+  }
+  return children;
+};
+
+export const containsAs = (
+  schemaElement: SchemaElement
+): Map<SchemaElement, string> => {
+  const containments: [SchemaElement, string][] = [];
+  switch (schemaElement.type) {
+    case OBJECT:
+      const propertyEntries: [SchemaElement, string][] = Array.from(
+        schemaElement.properties.entries()
+      ).map(([element, prop]) => [element, `properties/${prop}`]);
+      containments.push(...propertyEntries);
+      break;
+    case ARRAY:
+      const itemEntries: [SchemaElement, string][] = Array.isArray(
+        schemaElement.items
+      )
+        ? schemaElement.items.map((element, index) => [
+            element,
+            `items/${index}`,
+          ])
+        : [[schemaElement.items, 'items']];
+      containments.push(...itemEntries);
+      break;
+  }
+  if (schemaElement.other) {
+    containments.push(...Array.from(schemaElement.other.entries()));
+  }
+  return new Map<SchemaElement, string>(containments);
+};
+
+export const getPath = (schemaElement: SchemaElement): string => {
+  if (!schemaElement.parent) {
+    return '';
+  }
+  return `${getPath(schemaElement.parent)}/${containsAs(
+    schemaElement.parent
+  ).get(schemaElement)}`;
+};
+
+export const toPrintableObject = (schemaElement: SchemaElement): any => ({
+  type: schemaElement.type,
+  path: getPath(schemaElement),
+  schema: schemaElement.schema,
+  children: Array.from(containsAs(schemaElement)).map(([el, key]) => [
+    key,
+    toPrintableObject(el),
+  ]),
+});
+
+const isElementOfType = <T extends SchemaElement>(type: string) => (
   schemaElement: SchemaElement | undefined
 ): schemaElement is T => schemaElement?.type === type;
+export const isObjectElement = isElementOfType<ObjectElement>(OBJECT);
+export const isArrayElement = isElementOfType<ArrayElement>(ARRAY);
+export const isPrimitiveElement = isElementOfType<PrimitiveElement>(PRIMITIVE);
+export const isOtherElement = isElementOfType<OtherElement>(OTHER);
 
-export const isObjectElement = isElementOfType<ObjectElement>('Object');
-export const isArrayElement = isElementOfType<ArrayElement>('Array');
-export const isPrimitiveElement = isElementOfType<PrimitiveElement>(
-  'Primitive'
-);
-export const isOtherElement = isElementOfType<OtherElement>('Other');
-
-const determineLabel = (schemaElement: SchemaElement) => {
+export const getLabel = (schemaElement: SchemaElement) => {
   if (schemaElement.schema.title) {
     return schemaElement.schema.title;
   }
@@ -146,24 +140,24 @@ const determineLabel = (schemaElement: SchemaElement) => {
   return '<No label>';
 };
 
-const createElementForType = (
+const createNewElementForType = (
   schema: any,
   type: SchemaElementType
 ): SchemaElement => {
   switch (type) {
-    case 'Object':
-      return new ObjectElement(schema);
-    case 'Array':
-      return new ArrayElement(schema);
-    case 'Primitive':
-      return new PrimitiveElement(schema);
+    case OBJECT:
+      return { type, schema, properties: new Map() };
+    case ARRAY:
+      return { type, schema, items: [] };
+    case PRIMITIVE:
+      return { type, schema };
     default:
-      return new OtherElement(schema);
+      return { type: OTHER, schema };
   }
 };
 
 const createSingleElement = (schema: any) =>
-  createElementForType(schema, determineType(schema));
+  createNewElementForType(schema, determineType(schema));
 
 const getUndefined = (): SchemaElement | undefined => undefined;
 
@@ -201,8 +195,11 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
           path[path.length - 1] === 'items'
         ) {
           currentElement.items = newElement;
-        } else {
-          currentElement?.other.set(newElement, `${indexOrProp}`);
+        } else if (currentElement) {
+          if (!currentElement.other) {
+            currentElement.other = new Map();
+          }
+          currentElement.other.set(newElement, `${indexOrProp}`);
         }
         currentElement = newElement;
       },
@@ -221,32 +218,32 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
 
 const determineType = (schema: any): SchemaElementType => {
   if (!schema) {
-    return 'Other';
+    return OTHER;
   }
   if (schema.type) {
     switch (schema.type) {
       case 'object':
-        return 'Object';
+        return OBJECT;
       case 'array':
-        return 'Array';
+        return ARRAY;
       case 'number':
       case 'integer':
       case 'string':
       case 'boolean':
       case 'const':
-        return 'Primitive';
+        return PRIMITIVE;
       default:
-        return 'Other';
+        return OTHER;
     }
   }
   if (schema.properties) {
-    return 'Object';
+    return OBJECT;
   }
   if (schema.items) {
-    return 'Array';
+    return ARRAY;
   }
   if (schema.enum) {
-    return 'Primitive';
+    return PRIMITIVE;
   }
-  return 'Other';
+  return OTHER;
 };

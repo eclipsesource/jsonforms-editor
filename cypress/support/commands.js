@@ -23,3 +23,18 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add(
+  'dragTo',
+  { prevSubject: 'element' },
+  (subject, targetEl) => {
+    cy.wrap(subject)
+      .trigger('mousedown', { which: 1 })
+      .trigger('dragstart')
+      .trigger('drag', {});
+    cy.get(targetEl)
+      .trigger('dragover')
+      .trigger('drop')
+      .trigger('dragend')
+      .trigger('mouseup', { which: 1 });
+  }
+);

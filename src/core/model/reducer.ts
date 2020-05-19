@@ -1,4 +1,5 @@
 import {
+  ADD_SCHEMA_ELEMENT_TO_LAYOUT,
   CombinedAction,
   EditorAction,
   SET_SCHEMA,
@@ -7,9 +8,10 @@ import {
   SchemaAction,
   UiSchemaAction,
 } from './actions';
-import { SchemaElement, buildSchemaTree } from './schema';
-
-import { LinkedUISchemaElement } from './uischema';
+import { ControlElement, Layout } from '@jsonforms/core';
+import { LinkedUISchemaElement, buildLinkedUiSchemaTree } from './uischema';
+import { SchemaElement, buildSchemaTree, getPath } from './schema';
+import { cloneTree, getRoot, isPathError } from '../util/clone';
 
 export interface EditorState {
   schema?: SchemaElement;
@@ -34,7 +36,7 @@ export const uiSchemaReducer = (
 ) => {
   switch (action.type) {
     case SET_UISCHEMA:
-      return action.uiSchema;
+      return buildLinkedUiSchemaTree(action.uiSchema);
   }
   // fallback - do nothing
   return uiSchema;
@@ -45,11 +47,50 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
     case SET_SCHEMAS:
       return {
         schema: buildSchemaTree(action.schema),
-        uiSchema: action.uiSchema,
+        uiSchema: buildLinkedUiSchemaTree(action.uiSchema),
+      };
+    case ADD_SCHEMA_ELEMENT_TO_LAYOUT:
+      const newUiSchema = cloneTree(action.layout as LinkedUISchemaElement);
+      const newSchema = cloneTree(action.schemaElement);
+      if (isPathError(newUiSchema)) {
+        console.error(
+          'An error occured when cloning the ui schema',
+          newUiSchema
+        );
+        // Do nothing
+        return state;
+      }
+      if (isPathError(newSchema)) {
+        console.error('An error occured when cloning the schema', newSchema);
+        // Do nothing
+        return state;
+      }
+      const newControl: LinkedUISchemaElement = createControl(
+        `#${getPath(action.schemaElement)}`
+      );
+      (newUiSchema as Layout).elements.splice(action.index, 0, newControl);
+      if (!newSchema.linkedUiSchemaElements) {
+        newSchema.linkedUiSchemaElements = [];
+      }
+      newSchema.linkedUiSchemaElements.push(newControl);
+      if (!newUiSchema.linkedSchemaElements) {
+        newUiSchema.linkedSchemaElements = [];
+      }
+      newUiSchema.linkedSchemaElements.push(newSchema);
+      return {
+        schema: getRoot(newSchema),
+        uiSchema: getRoot(newUiSchema),
       };
   }
   // fallback - do nothing
   return state;
+};
+
+const createControl = (scope: string): ControlElement => {
+  return {
+    type: 'Control',
+    scope: scope,
+  };
 };
 
 export const editorReducer = (
@@ -62,6 +103,7 @@ export const editorReducer = (
     case SET_UISCHEMA:
       return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
     case SET_SCHEMAS:
+    case ADD_SCHEMA_ELEMENT_TO_LAYOUT:
       return combinedReducer({ schema, uiSchema }, action);
   }
   // fallback - do nothing
