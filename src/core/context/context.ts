@@ -47,3 +47,8 @@ export const useSelection = (): [
   const { selection, setSelection } = useEditorContext();
   return [selection, setSelection];
 };
+
+export const useDispatch = (): ((action: EditorAction) => void) => {
+  const { dispatch } = useEditorContext();
+  return dispatch;
+};

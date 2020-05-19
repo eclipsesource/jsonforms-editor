@@ -3,6 +3,8 @@ import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
 import React, { useEffect, useReducer, useState } from 'react';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
+import Backend from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { Editor } from './editor';
 import { EditorContextInstance } from './core/context';
 import { Layout } from './core/components';
@@ -50,7 +52,9 @@ const App = () => {
         schemaService,
       }}
     >
-      <AppUi />
+      <DndProvider backend={Backend}>
+        <AppUi />
+      </DndProvider>
     </EditorContextInstance.Provider>
   );
 };

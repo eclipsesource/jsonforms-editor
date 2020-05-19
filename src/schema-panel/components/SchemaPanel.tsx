@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, Typography } from '@material-ui/core';
 
+import { SchemaElement } from '../../core/model';
 import { SchemaJson } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
 import { useSchema } from '../../core/context';
@@ -21,7 +22,7 @@ const TabContent: React.FC<TabContentProps> = (props: TabContentProps) => {
 };
 
 export const SchemaPanel = () => {
-  const schema = useSchema();
+  const schema: SchemaElement | undefined = useSchema();
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);

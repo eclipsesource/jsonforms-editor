@@ -1,4 +1,7 @@
 import { FormattedJson } from '../../core/components';
 import React from 'react';
+import { SchemaElement } from '../../core/model';
 
-export const SchemaJson = (schema: any) => <FormattedJson object={schema} />;
+export const SchemaJson: React.FC<{ schema: SchemaElement | undefined }> = (
+  schema
+) => <FormattedJson object={schema?.schema} />;

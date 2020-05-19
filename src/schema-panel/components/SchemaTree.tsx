@@ -1,4 +1,13 @@
-import { SchemaElement, SchemaElementType } from '../../core/model/schema';
+import {
+  ARRAY,
+  OBJECT,
+  PRIMITIVE,
+  SchemaElement,
+  SchemaElementType,
+  getChildren,
+  getLabel,
+  getPath,
+} from '../../core/model/schema';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
 import {
@@ -9,14 +18,15 @@ import {
 } from '@material-ui/core/styles';
 
 import Collapse from '@material-ui/core/Collapse';
+import { DndItems } from '../../core/dnd';
 import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React from 'react';
-import { SelectedElement } from '../../core/selection';
 import { TransitionProps } from '@material-ui/core/transitions';
 import TreeView from '@material-ui/lab/TreeView';
+import { useDrag } from 'react-dnd';
 import { useSelection } from '../../core/context';
 
 const ObjectIcon = ListAltIcon;
@@ -26,11 +36,11 @@ const OtherIcon = RadioButtonUncheckedIcon;
 
 const getIconForType = (type: SchemaElementType) => {
   switch (type) {
-    case 'Object':
+    case OBJECT:
       return ObjectIcon;
-    case 'Array':
+    case ARRAY:
       return ArrayIcon;
-    case 'Primitive':
+    case PRIMITIVE:
       return PrimitiveIcon;
     default:
       return OtherIcon;
@@ -70,20 +80,39 @@ const StyledTreeItem = withStyles((theme) =>
   <TreeItem {...props} TransitionComponent={TransitionComponent} />
 ));
 
-const toTreeViewItem = (
-  treeItem: SchemaElement,
-  setSelection: (selection: SelectedElement) => void
-) => (
-  <StyledTreeItem
-    key={treeItem.path}
-    nodeId={treeItem.path}
-    label={treeItem.label}
-    icon={React.createElement(getIconForType(treeItem.type), {})}
-    onLabelClick={() => setSelection(treeItem)}
-  >
-    {treeItem.children.map((child) => toTreeViewItem(child, setSelection))}
-  </StyledTreeItem>
-);
+interface SchemaTreeItemProps {
+  schemaElement: SchemaElement;
+}
+
+const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
+  children,
+  schemaElement,
+}) => {
+  const [{ isDragging }, drag] = useDrag({
+    item: DndItems.dragSchemaElement(schemaElement),
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+  const [, setSelection] = useSelection();
+  const schemaElementPath = getPath(schemaElement);
+  return (
+    <div ref={drag} data-cy={`${schemaElementPath}-source`}>
+      <StyledTreeItem
+        key={schemaElementPath}
+        nodeId={schemaElementPath}
+        label={getLabel(schemaElement)}
+        icon={React.createElement(getIconForType(schemaElement.type), {})}
+        onLabelClick={() => setSelection(schemaElement)}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      >
+        {getChildren(schemaElement).map((child) => (
+          <SchemaTreeItem schemaElement={child} key={getPath(child)} />
+        ))}
+      </StyledTreeItem>
+    </div>
+  );
+};
 
 const useStyles = makeStyles(
   createStyles({
@@ -94,17 +123,18 @@ const useStyles = makeStyles(
   })
 );
 
-export const SchemaTreeView: React.FC<{ schema: any }> = ({ schema }) => {
+export const SchemaTreeView: React.FC<{
+  schema: SchemaElement | undefined;
+}> = ({ schema }) => {
   const classes = useStyles();
-  const [, setSelection] = useSelection();
 
-  if (!schema && schema !== false) {
+  if (schema === undefined) {
     return <NoSchema />;
   }
 
   return (
     <TreeView className={classes.root} defaultExpanded={['']}>
-      {toTreeViewItem(schema, setSelection)}
+      <SchemaTreeItem schemaElement={schema} />
     </TreeView>
   );
 };

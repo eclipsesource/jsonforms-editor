@@ -1,4 +1,8 @@
 import {
+  DroppableHorizontalLayoutRegistration,
+  DroppableVerticalLayoutRegistration,
+} from '../../core/renderers/DroppableLayout';
+import {
   materialCells,
   materialRenderers,
 } from '@jsonforms/material-renderers';
@@ -20,7 +24,11 @@ export const Editor: React.FC = () => {
         data={{}}
         schema={schema?.schema}
         uischema={uiSchema}
-        renderers={materialRenderers}
+        renderers={[
+          ...materialRenderers,
+          DroppableHorizontalLayoutRegistration,
+          DroppableVerticalLayoutRegistration,
+        ]}
         cells={materialCells}
       />
     </>
