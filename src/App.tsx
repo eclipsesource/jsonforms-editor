@@ -9,7 +9,7 @@ import { Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
-import { Editor } from './editor';
+import { EditorPanel } from './editor';
 import { Properties } from './properties';
 import { SchemaPanel } from './schema-panel';
 
@@ -75,7 +75,7 @@ const AppUi = () => {
         <ReflexSplitter propagate />
         <ReflexElement minSize={200}>
           <div className={classes.centerPane}>
-            <Editor />
+            <EditorPanel />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
