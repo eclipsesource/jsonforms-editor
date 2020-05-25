@@ -1,33 +1,33 @@
-import {
-  ARRAY,
-  OBJECT,
-  PRIMITIVE,
-  SchemaElement,
-  SchemaElementType,
-  getChildren,
-  getLabel,
-  getPath,
-} from '../../core/model/schema';
-import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
-import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
+import Collapse from '@material-ui/core/Collapse';
 import {
   createStyles,
   fade,
   makeStyles,
   withStyles,
 } from '@material-ui/core/styles';
-
-import Collapse from '@material-ui/core/Collapse';
-import { DndItems } from '../../core/dnd';
+import { TransitionProps } from '@material-ui/core/transitions';
 import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import React from 'react';
-import { TransitionProps } from '@material-ui/core/transitions';
+import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
+import React from 'react';
 import { useDrag } from 'react-dnd';
+import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
+
 import { useSelection } from '../../core/context';
+import { DndItems } from '../../core/dnd';
+import {
+  ARRAY,
+  getChildren,
+  getLabel,
+  getPath,
+  OBJECT,
+  PRIMITIVE,
+  SchemaElement,
+  SchemaElementType,
+} from '../../core/model/schema';
 
 const ObjectIcon = ListAltIcon;
 const ArrayIcon = QueueOutlinedIcon;

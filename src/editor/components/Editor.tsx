@@ -1,16 +1,16 @@
 import {
-  DroppableHorizontalLayoutRegistration,
-  DroppableVerticalLayoutRegistration,
-} from '../../core/renderers/DroppableLayout';
-import {
   materialCells,
   materialRenderers,
 } from '@jsonforms/material-renderers';
-import { useSchema, useUiSchema } from '../../core/context';
-
 import { JsonForms } from '@jsonforms/react';
-import React from 'react';
 import { Typography } from '@material-ui/core';
+import React from 'react';
+
+import { useSchema, useUiSchema } from '../../core/context';
+import {
+  DroppableHorizontalLayoutRegistration,
+  DroppableVerticalLayoutRegistration,
+} from '../../core/renderers/DroppableLayout';
 
 export const Editor: React.FC = () => {
   const schema = useSchema();

@@ -1,4 +1,5 @@
 import { Layout } from '@jsonforms/core';
+
 import { SchemaElement } from './schema';
 
 export type SchemaAction = SetSchemaAction;

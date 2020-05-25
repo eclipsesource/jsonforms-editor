@@ -1,17 +1,17 @@
-import { Actions, editorReducer } from './core/model';
-import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
+import { makeStyles } from '@material-ui/core';
 import React, { useEffect, useReducer, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
-import Backend from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
-import { Editor } from './editor';
-import { EditorContextInstance } from './core/context';
+import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
 import { Layout } from './core/components';
+import { EditorContextInstance } from './core/context';
+import { Actions, editorReducer } from './core/model';
+import { SelectedElement } from './core/selection';
+import { Editor } from './editor';
 import { Properties } from './properties';
 import { SchemaPanel } from './schema-panel';
-import { SelectedElement } from './core/selection';
-import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   leftPane: {

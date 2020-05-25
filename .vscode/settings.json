@@ -8,6 +8,11 @@
     "typescriptreact"
   ],
 
+  // apply eslint fixes on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
   // prettier extension setting
   "editor.formatOnSave": true,
   "[javascript]": {
