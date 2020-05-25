@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
 import { Tab, Tabs, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
 
+import { useSchema } from '../../core/context';
 import { SchemaElement } from '../../core/model';
 import { SchemaJson } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
-import { useSchema } from '../../core/context';
 
 interface TabContentProps {
   children?: React.ReactNode;

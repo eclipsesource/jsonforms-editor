@@ -1,17 +1,18 @@
+import { ControlElement, Layout } from '@jsonforms/core';
+
+import { cloneTree, getRoot, isPathError } from '../util/clone';
 import {
   ADD_SCHEMA_ELEMENT_TO_LAYOUT,
   CombinedAction,
   EditorAction,
+  SchemaAction,
   SET_SCHEMA,
   SET_SCHEMAS,
   SET_UISCHEMA,
-  SchemaAction,
   UiSchemaAction,
 } from './actions';
-import { ControlElement, Layout } from '@jsonforms/core';
-import { LinkedUISchemaElement, buildLinkedUiSchemaTree } from './uischema';
-import { SchemaElement, buildSchemaTree, getPath } from './schema';
-import { cloneTree, getRoot, isPathError } from '../util/clone';
+import { buildSchemaTree, getPath, SchemaElement } from './schema';
+import { buildLinkedUiSchemaTree, LinkedUISchemaElement } from './uischema';
 
 export interface EditorState {
   schema?: SchemaElement;

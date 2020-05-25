@@ -7,8 +7,7 @@
     "msjsdiag.debugger-for-chrome",
     "dbaeumer.vscode-eslint",
     "davidanson.vscode-markdownlint",
-    "esbenp.prettier-vscode",
-    "amatiasq.sort-imports"
+    "esbenp.prettier-vscode"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

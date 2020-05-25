@@ -1,8 +1,8 @@
-import { PathError, calculatePath, getRoot, isPathError } from '../util/clone';
-import { UISchemaElement, isLayout } from '@jsonforms/core';
-
-import { SchemaElement } from './schema';
+import { isLayout, UISchemaElement } from '@jsonforms/core';
 import { cloneDeep } from 'lodash';
+
+import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
+import { SchemaElement } from './schema';
 
 export interface LinkedUISchemaElement extends UISchemaElement {
   linkedSchemaElements?: Array<SchemaElement>;

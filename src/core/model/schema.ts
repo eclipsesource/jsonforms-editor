@@ -1,6 +1,7 @@
-import { LinkedUISchemaElement } from './uischema';
-import { Parentable } from '../util/tree';
 import traverse from 'json-schema-traverse';
+
+import { Parentable } from '../util/tree';
+import { LinkedUISchemaElement } from './uischema';
 
 export const OBJECT: 'object' = 'object';
 export const ARRAY: 'array' = 'array';

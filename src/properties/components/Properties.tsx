@@ -1,8 +1,9 @@
-import { FormattedJson } from '../../core/components';
-import React from 'react';
 import { Typography } from '@material-ui/core';
-import { toPrintableObject } from '../../core/model';
+import React from 'react';
+
+import { FormattedJson } from '../../core/components';
 import { useSelection } from '../../core/context';
+import { toPrintableObject } from '../../core/model';
 
 export const Properties = () => {
   const [selection] = useSelection();

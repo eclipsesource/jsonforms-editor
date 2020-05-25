@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
+import { SchemaService } from '../api/schemaService';
+import { SchemaElement } from '../model';
 import { EditorAction } from '../model/actions';
 import { LinkedUISchemaElement } from '../model/uischema';
-import { SchemaElement } from '../model';
-import { SchemaService } from '../api/schemaService';
 import { SelectedElement } from '../selection';
 
 export interface EditorContext {

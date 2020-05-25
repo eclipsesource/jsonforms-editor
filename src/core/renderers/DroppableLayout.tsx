@@ -1,26 +1,26 @@
-import { Grid, makeStyles } from '@material-ui/core';
 import {
   JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
   JsonSchema,
   Layout,
   LayoutProps,
-  UISchemaElement,
   rankWith,
+  UISchemaElement,
   uiTypeIs,
 } from '@jsonforms/core';
 import {
   ResolvedJsonFormsDispatch,
   withJsonFormsLayoutProps,
 } from '@jsonforms/react';
-
-import { Actions } from '../model';
+import { Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { useDrop } from 'react-dnd';
+
+import { useDispatch } from '../context';
 import { SCHEMA_ELEMENT } from '../dnd';
+import { Actions } from '../model';
 import { getUISchemaPath } from '../model/uischema';
 import { isPathError } from '../util/clone';
-import { useDispatch } from '../context';
-import { useDrop } from 'react-dnd';
 
 interface DroppableLayoutProps {
   schema: JsonSchema;
