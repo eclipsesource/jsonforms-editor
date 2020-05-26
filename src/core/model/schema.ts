@@ -1,4 +1,5 @@
 import traverse from 'json-schema-traverse';
+import { cloneDeep, omit } from 'lodash';
 
 import { Parentable } from '../util/tree';
 import { LinkedUISchemaElement } from './uischema';
@@ -62,7 +63,7 @@ export const getChildren = (
   return children;
 };
 
-export const containsAs = (
+const containsAs = (
   schemaElement: SchemaElement
 ): Map<SchemaElement, string> => {
   const containments: [SchemaElement, string][] = [];
@@ -147,13 +148,15 @@ const createNewElementForType = (
 ): SchemaElement => {
   switch (type) {
     case OBJECT:
-      return { type, schema, properties: new Map() };
+      const objectCopy = cloneDeep(omit(schema, ['properties']));
+      return { type, schema: objectCopy, properties: new Map() };
     case ARRAY:
-      return { type, schema, items: [] };
+      const arrayCopy = cloneDeep(omit(schema, ['items']));
+      return { type, schema: arrayCopy, items: [] };
     case PRIMITIVE:
-      return { type, schema };
+      return { type, schema: cloneDeep(schema) };
     default:
-      return { type: OTHER, schema };
+      return { type: OTHER, schema: cloneDeep(schema) };
   }
 };
 
@@ -247,4 +250,26 @@ const determineType = (schema: any): SchemaElementType => {
     return PRIMITIVE;
   }
   return OTHER;
+};
+
+export const buildJsonSchema = (element: SchemaElement) => {
+  const result = cloneDeep(element.schema);
+  switch (element.type) {
+    case OBJECT:
+      if (element.properties.size > 0) {
+        result.properties = {};
+        element.properties.forEach((propName, propertyElement) => {
+          result.properties[propName] = buildJsonSchema(propertyElement);
+        });
+      }
+      break;
+    case ARRAY:
+      if (Array.isArray(element.items)) {
+        result.items = element.items.map(buildJsonSchema);
+      } else {
+        result.items = buildJsonSchema(element.items);
+      }
+      break;
+  }
+  return result;
 };

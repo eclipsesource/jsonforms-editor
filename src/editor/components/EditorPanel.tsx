@@ -1,4 +1,4 @@
-import { Tab, Tabs, Typography } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
 import { Editor } from './Editor';
@@ -27,9 +27,6 @@ export const EditorPanel = () => {
 
   return (
     <>
-      <Typography variant='h6' color='inherit' noWrap>
-        UI Schema Editor
-      </Typography>
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label='Editor' />
         <Tab label='Preview' />

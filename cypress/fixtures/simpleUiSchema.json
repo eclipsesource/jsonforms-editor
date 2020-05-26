@@ -1,0 +1,4 @@
+{
+  "type": "VerticalLayout",
+  "elements": [{ "type": "Control", "scope": "#/properties/name" }]
+}
