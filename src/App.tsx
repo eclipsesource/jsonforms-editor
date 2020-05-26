@@ -10,8 +10,8 @@ import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
 import { EditorPanel } from './editor';
+import { PalettePanel } from './palette-panel';
 import { Properties } from './properties';
-import { SchemaPanel } from './schema-panel';
 
 const useStyles = makeStyles((theme) => ({
   leftPane: {
@@ -69,7 +69,7 @@ const AppUi = () => {
       >
         <ReflexElement minSize={200}>
           <div className={classes.leftPane}>
-            <SchemaPanel />
+            <PalettePanel />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />

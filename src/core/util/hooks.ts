@@ -1,5 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { useSchema, useUiSchema } from '../context';
+import { buildJsonSchema, SchemaElement } from '../model';
+import { buildUiSchema, LinkedUISchemaElement } from '../model/uischema';
+
+const doBuildJsonSchema = (schema: SchemaElement | undefined) =>
+  schema ? buildJsonSchema(schema) : schema;
+
+const doBuildUiSchema = (uiSchema: LinkedUISchemaElement | undefined) =>
+  uiSchema ? buildUiSchema(uiSchema) : undefined;
+
+/**
+ * Json Schema for export
+ */
+export const useExportSchema = () => {
+  const schema = useSchema();
+  return useTransform(schema, doBuildJsonSchema);
+};
+
+/**
+ * Ui Schema for export
+ */
+export const useExportUiSchema = () => {
+  const uiSchema = useUiSchema();
+  return useTransform(uiSchema, doBuildUiSchema);
+};
+
 /**
  * Transforms the given element whenever it changes.
  */

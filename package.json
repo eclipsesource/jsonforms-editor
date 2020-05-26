@@ -9,7 +9,10 @@
     "@material-ui/core": "^4.9.14",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.53",
+    "@rescripts/cli": "0.0.14",
+    "@rescripts/utilities": "0.0.7",
     "@types/json-schema-traverse": "^0.4.0",
+    "@types/lodash": "^4.14.153",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "eslint-config-prettier": "^6.11.0",
@@ -17,11 +20,13 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "json-schema-traverse": "^0.4.1",
     "lodash": "^4.17.15",
+    "monaco-editor-webpack-plugin": "^1.9.0",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.13.1",
+    "react-monaco-editor": "^0.36.0",
     "react-redux": "^7.2.0",
     "react-reflex": "^3.0.22",
     "react-scripts": "3.4.1",
@@ -30,9 +35,9 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
@@ -60,5 +65,14 @@
     "cypress": "^4.5.0",
     "eslint-plugin-cypress": "^2.10.3",
     "start-server-and-test": "^1.11.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(monaco-editor)/)"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "identity-obj-proxy",
+      "monaco-editor": "<rootDir>/node_modules/react-monaco-editor"
+    }
   }
 }

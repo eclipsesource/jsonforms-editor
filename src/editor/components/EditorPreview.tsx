@@ -1,8 +1,9 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
 
-import { useSchema, useUiSchema } from '../../core/context';
+import { useUiSchema } from '../../core/context';
 import { buildUiSchema } from '../../core/model/uischema';
+import { useExportSchema } from '../../core/util/hooks';
 
 declare global {
   namespace JSX {
@@ -13,18 +14,18 @@ declare global {
 }
 
 export const EditorPreview: React.FC = () => {
-  const ngJsonForms = useRef(null);
-  const schema = useSchema();
+  const ngJsonForms = useRef<JSX.IntrinsicElements['ng-jsonforms']>(null);
+  const schema = useExportSchema();
   const editorUISchema = useUiSchema();
 
   useEffect(() => {
     const uiSchema = editorUISchema ? buildUiSchema(editorUISchema) : undefined;
-
-    // @ts-ignore: Object is possibly 'null'
-    ngJsonForms.current.ngElementStrategy.componentRef.instance.setJsonFormsInput(
-      schema?.schema,
-      uiSchema
-    );
+    if (ngJsonForms.current) {
+      ngJsonForms.current.ngElementStrategy.componentRef.instance.setJsonFormsInput(
+        schema,
+        uiSchema
+      );
+    }
   }, [schema, editorUISchema]);
   return (
     <div>
