@@ -1,3 +1,10 @@
+/**
+ * ---------------------------------------------------------------------
+ * Copyright (c) 2020 EclipseSource Munich
+ * Licensed under MIT
+ * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
+ * ---------------------------------------------------------------------
+ */
 export const copyToClipBoard = (text: string) => {
   const textArea = document.createElement('textarea');
   document.body.appendChild(textArea);

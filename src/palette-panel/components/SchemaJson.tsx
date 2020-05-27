@@ -1,3 +1,10 @@
+/**
+ * ---------------------------------------------------------------------
+ * Copyright (c) 2020 EclipseSource Munich
+ * Licensed under MIT
+ * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
+ * ---------------------------------------------------------------------
+ */
 import { IconButton, Toolbar } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import FileCopyIcon from '@material-ui/icons/FileCopy';

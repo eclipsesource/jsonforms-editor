@@ -1,3 +1,10 @@
+/**
+ * ---------------------------------------------------------------------
+ * Copyright (c) 2020 EclipseSource Munich
+ * Licensed under MIT
+ * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
+ * ---------------------------------------------------------------------
+ */
 import { ControlElement, Layout } from '@jsonforms/core';
 
 import { cloneTree, getRoot, isPathError } from '../util/clone';
