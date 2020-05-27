@@ -1,0 +1,13 @@
+language: node_js
+
+node_js:
+  - '12'
+
+install:
+  - npm ci
+
+script:
+  - npm run build
+  - npm test -- --watchAll=false
+  - npm run cypress:ci
+  - npm run lint
