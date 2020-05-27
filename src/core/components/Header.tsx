@@ -1,3 +1,10 @@
+/**
+ * ---------------------------------------------------------------------
+ * Copyright (c) 2020 EclipseSource Munich
+ * Licensed under MIT
+ * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
+ * ---------------------------------------------------------------------
+ */
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
