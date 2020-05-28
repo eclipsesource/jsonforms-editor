@@ -2,6 +2,8 @@
 
 Editor for JSON Schema and JSON Forms Ui Schema
 
+[![Build Status](https://travis-ci.com/eclipsesource/jsonforms-editor.svg?branch=master)](https://travis-ci.com/eclipsesource/jsonforms-editor) [![Netlify Status](https://api.netlify.com/api/v1/badges/2c2a42d3-77fb-4cd8-aca1-4cfa6c9a4a03/deploy-status)](https://app.netlify.com/sites/jsonforms-editor/deploys)
+
 ## Setup
 
 - `npm ci`
@@ -19,6 +21,7 @@ Editor for JSON Schema and JSON Forms Ui Schema
 
 ### Recommended setup
 
+- Node >= 12
 - Visual Studio Code
 - Install recommended extensions
 
