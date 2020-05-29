@@ -5,11 +5,14 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { UISchemaElement } from '@jsonforms/core';
+
 import { SchemaElement } from '../model';
 
 export const SCHEMA_ELEMENT: 'schemaElement' = 'schemaElement';
+export const UI_SCHEMA_ELEMENT: 'uiSchemaElement' = 'uiSchemaElement';
 
-export type DndType = DragSchemaElement;
+export type DndType = DragSchemaElement | DragUISchemaElement;
 
 export interface DragSchemaElement {
   type: 'schemaElement';
@@ -21,6 +24,17 @@ const dragSchemaElement = (schemaElement: SchemaElement) => ({
   schemaElement,
 });
 
+export interface DragUISchemaElement {
+  type: 'uiSchemaElement';
+  element: UISchemaElement;
+}
+
+const dragUISchemaElement = (uiSchemaElement: UISchemaElement) => ({
+  type: UI_SCHEMA_ELEMENT,
+  uiSchemaElement,
+});
+
 export const DndItems = {
   dragSchemaElement,
+  dragUISchemaElement,
 };

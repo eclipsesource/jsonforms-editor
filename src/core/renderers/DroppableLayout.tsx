@@ -20,14 +20,43 @@ import {
   withJsonFormsLayoutProps,
 } from '@jsonforms/react';
 import { Grid, makeStyles } from '@material-ui/core';
+import { ClassNameMap } from '@material-ui/core/styles/withStyles';
+import Height from '@material-ui/icons/Height';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDispatch } from '../context';
-import { SCHEMA_ELEMENT } from '../dnd';
+import { SCHEMA_ELEMENT, UI_SCHEMA_ELEMENT } from '../dnd';
 import { Actions } from '../model';
 import { getUISchemaPath } from '../model/uischema';
 import { isPathError } from '../util/clone';
+
+const useStyles = makeStyles((theme) => ({
+  dropPointContent: {
+    textAlign: 'center',
+  },
+  dropPoint: {
+    padding: '10',
+    width: '3em',
+    maxWidth: '3em',
+    minWidth: '3em',
+    margin: 'auto',
+  },
+  renderedContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  droppableLayout: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid #D3D3D3',
+    padding: '20',
+  },
+  uiElementIcon: {
+    alignSelf: 'flex-start',
+  },
+}));
 
 interface DroppableLayoutProps {
   schema: JsonSchema;
@@ -46,28 +75,59 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
   renderers,
   cells,
 }) => {
+  const classes = useStyles();
   return (
-    <Grid container direction={direction} spacing={direction === 'row' ? 2 : 0}>
-      {renderLayoutElementsWithDrops(layout, schema, path, renderers, cells)}
+    <Grid container wrap='nowrap' className={classes.droppableLayout} xs>
+      <Grid item key={`${path}-${0}-icon`} className={classes.uiElementIcon}>
+        {getLayoutIcon(layout)}
+      </Grid>
+      <Grid
+        container
+        item
+        direction={direction}
+        spacing={direction === 'row' ? 2 : 0}
+        xs
+      >
+        {renderLayoutElementsWithDrops(
+          layout,
+          schema,
+          path,
+          classes,
+          renderers,
+          cells
+        )}
+      </Grid>
     </Grid>
   );
 };
+const getLayoutIcon = (layout: Layout) =>
+  layout.type === 'HorizontalLayout' ? (
+    <Height style={{ transform: 'rotate(90deg)' }} />
+  ) : (
+    <Height />
+  );
 
 const renderLayoutElementsWithDrops = (
   layout: Layout,
   schema: JsonSchema,
   path: string,
+  classes: ClassNameMap<any>,
   renderers?: JsonFormsRendererRegistryEntry[],
   cells?: JsonFormsCellRendererRegistryEntry[]
 ) => {
   return (
     <>
-      <Grid item key={`${path}-${0}-drop`} xs>
+      <Grid item key={`${path}-${0}-drop`} className={classes.dropPoint} xs>
         <DropPoint index={0} layout={layout} />
       </Grid>
       {layout.elements.map((child, index) => (
         <React.Fragment key={`${path}-${index}-fragment`}>
-          <Grid item key={`${path}-${index}`} xs>
+          <Grid
+            item
+            key={`${path}-${index}`}
+            className={classes.renderedContent}
+            xs
+          >
             <ResolvedJsonFormsDispatch
               uischema={child}
               schema={schema}
@@ -76,7 +136,12 @@ const renderLayoutElementsWithDrops = (
               cells={cells}
             />
           </Grid>
-          <Grid item key={`${path}-${index + 1}-drop`} xs>
+          <Grid
+            item
+            className={classes.dropPoint}
+            key={`${path}-${index + 1}-drop`}
+            xs
+          >
             <DropPoint index={index + 1} layout={layout} />
           </Grid>
         </React.Fragment>
@@ -84,12 +149,6 @@ const renderLayoutElementsWithDrops = (
     </>
   );
 };
-
-const useStyles = makeStyles((theme) => ({
-  dropPoint: {
-    textAlign: 'center',
-  },
-}));
 
 interface DropPointProps {
   layout: Layout;
@@ -99,21 +158,30 @@ interface DropPointProps {
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [{ isOver, schemaElement }, drop] = useDrop({
-    accept: SCHEMA_ELEMENT,
+  const [{ isOver, schemaElement, uiSchemaElement }, drop] = useDrop({
+    accept: [SCHEMA_ELEMENT, UI_SCHEMA_ELEMENT],
     collect: (mon) => ({
       isOver: !!mon.isOver(),
       schemaElement: mon.getItem()?.schemaElement,
+      uiSchemaElement: mon.getItem()?.uiSchemaElement,
     }),
     drop: (): any => {
-      dispatch(Actions.addSchemaElementToLayout(schemaElement, layout, index));
+      if (schemaElement) {
+        dispatch(
+          Actions.addSchemaElementToLayout(schemaElement, layout, index)
+        );
+      } else if (uiSchemaElement) {
+        dispatch(
+          Actions.addUISchemaElementToLayout(uiSchemaElement, layout, index)
+        );
+      }
     },
   });
 
   return (
     <div
       ref={drop}
-      className={classes.dropPoint}
+      className={classes.dropPointContent}
       style={{ fontSize: isOver ? '2em' : '1em' }}
       data-cy={`${getDataPath(layout)}-drop-${index}`}
     >

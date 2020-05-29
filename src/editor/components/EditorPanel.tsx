@@ -39,7 +39,9 @@ export const EditorPanel = () => {
         <Tab label='Preview' />
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
-        <Editor />
+        <div style={{ padding: 10 }}>
+          <Editor />
+        </div>
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>
         <EditorPreview />

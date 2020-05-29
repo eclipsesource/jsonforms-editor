@@ -5,6 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { Layout, UISchemaElement } from '@jsonforms/core';
 import Collapse from '@material-ui/core/Collapse';
 import {
   createStyles,
@@ -14,46 +15,23 @@ import {
 } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
-import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import HeightIcon from '@material-ui/icons/Height';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
 
-import { useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
-import {
-  ARRAY,
-  getChildren,
-  getLabel,
-  getPath,
-  OBJECT,
-  PRIMITIVE,
-  SchemaElement,
-  SchemaElementType,
-} from '../../core/model/schema';
 
-const ObjectIcon = ListAltIcon;
-const ArrayIcon = QueueOutlinedIcon;
-const PrimitiveIcon = LabelOutlinedIcon;
-const OtherIcon = RadioButtonUncheckedIcon;
-
-const getIconForType = (type: SchemaElementType) => {
-  switch (type) {
-    case OBJECT:
-      return ObjectIcon;
-    case ARRAY:
-      return ArrayIcon;
-    case PRIMITIVE:
-      return PrimitiveIcon;
-    default:
-      return OtherIcon;
-  }
-};
+const useStyles = makeStyles(
+  createStyles({
+    root: {
+      flexGrow: 1,
+      maxWidth: 400,
+    },
+  })
+);
 
 const TransitionComponent = (props: TransitionProps) => {
   const style = useSpring({
@@ -70,7 +48,6 @@ const TransitionComponent = (props: TransitionProps) => {
     </animated.div>
   );
 };
-
 const StyledTreeItem = withStyles((theme) =>
   createStyles({
     iconContainer: {
@@ -89,67 +66,62 @@ const StyledTreeItem = withStyles((theme) =>
 ));
 
 interface SchemaTreeItemProps {
-  schemaElement: SchemaElement;
+  uiSchemaElement: UISchemaElement;
+  label: string;
+  icon?: React.ReactNode;
 }
 
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
-  children,
-  schemaElement,
+  uiSchemaElement,
+  label,
+  icon,
 }) => {
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.dragSchemaElement(schemaElement),
+    item: DndItems.dragUISchemaElement(uiSchemaElement),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const [, setSelection] = useSelection();
-  const schemaElementPath = getPath(schemaElement);
   return (
-    <div ref={drag} data-cy={`${schemaElementPath}-source`}>
+    <div ref={drag} data-cy={`${uiSchemaElement.type}-source`}>
       <StyledTreeItem
-        key={schemaElementPath}
-        nodeId={schemaElementPath}
-        label={getLabel(schemaElement)}
-        icon={React.createElement(getIconForType(schemaElement.type), {})}
-        onLabelClick={() => setSelection(schemaElement)}
+        key={uiSchemaElement.type}
+        nodeId={uiSchemaElement.type}
+        label={label}
+        icon={icon}
         style={{ opacity: isDragging ? 0.5 : 1 }}
-      >
-        {getChildren(schemaElement).map((child) => (
-          <SchemaTreeItem schemaElement={child} key={getPath(child)} />
-        ))}
-      </StyledTreeItem>
+      ></StyledTreeItem>
     </div>
   );
 };
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      flexGrow: 1,
-      maxWidth: 400,
-    },
-  })
-);
+const createLayout = (type: string): Layout => ({
+  type: type,
+  elements: [],
+});
 
-export const SchemaTreeView: React.FC<{
-  schema: SchemaElement | undefined;
-}> = ({ schema }) => {
+const HorizontalIcon = <HeightIcon style={{ transform: 'rotate(90deg)' }} />;
+const VerticalIcon = <HeightIcon />;
+
+export const UIElementsTree: React.FC = () => {
   const classes = useStyles();
-
-  if (schema === undefined) {
-    return <NoSchema />;
-  }
-
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>
-        Controls
+        Layouts
       </Typography>
       <TreeView className={classes.root} defaultExpanded={['']}>
-        <SchemaTreeItem schemaElement={schema} />
+        <SchemaTreeItem
+          label='Horizontal Layout'
+          icon={HorizontalIcon}
+          uiSchemaElement={createLayout('HorizontalLayout')}
+        />
+        <SchemaTreeItem
+          label='Vertical Layout'
+          icon={VerticalIcon}
+          uiSchemaElement={createLayout('VerticalLayout')}
+        />
       </TreeView>
     </>
   );
 };
-
-const NoSchema = () => <div>No schema available</div>;

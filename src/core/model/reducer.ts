@@ -10,6 +10,7 @@ import { ControlElement, Layout } from '@jsonforms/core';
 import { cloneTree, getRoot, isPathError } from '../util/clone';
 import {
   ADD_SCHEMA_ELEMENT_TO_LAYOUT,
+  ADD_UI_SCHEMA_ELEMENT_TO_LAYOUT,
   CombinedAction,
   EditorAction,
   SchemaAction,
@@ -45,6 +46,21 @@ export const uiSchemaReducer = (
   switch (action.type) {
     case SET_UISCHEMA:
       return buildLinkedUiSchemaTree(action.uiSchema);
+    case ADD_UI_SCHEMA_ELEMENT_TO_LAYOUT:
+      const newUiSchema = cloneTree(action.layout as LinkedUISchemaElement);
+      if (isPathError(newUiSchema)) {
+        console.error(
+          'An error occured when cloning the ui schema',
+          newUiSchema
+        );
+        // Do nothing
+        return action.layout;
+      }
+      const newUIElement = action.uiSchemaElement;
+      (newUIElement as LinkedUISchemaElement).parent = newUiSchema;
+      (newUiSchema as Layout).elements.splice(action.index, 0, newUIElement);
+
+      return getRoot(newUiSchema);
   }
   // fallback - do nothing
   return uiSchema;
@@ -108,6 +124,7 @@ export const editorReducer = (
   switch (action.type) {
     case SET_SCHEMA:
       return { schema: schemaReducer(schema, action), uiSchema };
+    case ADD_UI_SCHEMA_ELEMENT_TO_LAYOUT:
     case SET_UISCHEMA:
       return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
     case SET_SCHEMAS:

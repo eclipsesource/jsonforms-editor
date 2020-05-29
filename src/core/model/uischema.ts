@@ -35,7 +35,9 @@ export const buildLinkedUiSchemaTree = (
 ): LinkedUISchemaElement => {
   const linkedUiSchema: LinkedUISchemaElement = cloneDeep(uiSchema);
   traverse(linkedUiSchema, (current, parent) => {
-    current.parent = parent;
+    if (current) {
+      current.parent = parent;
+    }
   });
   return linkedUiSchema;
 };
@@ -64,7 +66,7 @@ const traverse = (
   parent?: LinkedUISchemaElement
 ): void => {
   pre(uiSchema, parent);
-  if (isLayout(uiSchema)) {
+  if (uiSchema && isLayout(uiSchema)) {
     uiSchema.elements.forEach((el) => traverse(el, pre, uiSchema));
   }
   // TODO other containments like categorization

@@ -13,6 +13,7 @@ import { Actions, SchemaElement } from '../../core/model';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
+import { UIElementsTree } from './UIElementsTree';
 
 interface TabContentProps {
   children?: React.ReactNode;
@@ -88,6 +89,9 @@ export const PalettePanel = () => {
         <Tab label='UI Schema' data-cy='uischema-tab' />
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
+        <div style={{ marginBottom: 10 }}>
+          <UIElementsTree />
+        </div>
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>
