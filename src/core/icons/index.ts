@@ -5,6 +5,4 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { Layout } from './Layout';
-export * from './Formatted';
-export * from './TabContent';
+export * from './icons';

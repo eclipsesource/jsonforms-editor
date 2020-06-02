@@ -20,13 +20,12 @@ import {
   withJsonFormsLayoutProps,
 } from '@jsonforms/react';
 import { Grid, makeStyles } from '@material-ui/core';
-import { ClassNameMap } from '@material-ui/core/styles/withStyles';
-import Height from '@material-ui/icons/Height';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDispatch } from '../context';
-import { SCHEMA_ELEMENT, UI_SCHEMA_ELEMENT } from '../dnd';
+import { UI_SCHEMA_ELEMENT } from '../dnd';
+import { HorizontalIcon, VerticalIcon } from '../icons';
 import { Actions } from '../model';
 import { getUISchemaPath } from '../model/uischema';
 import { isPathError } from '../util/clone';
@@ -101,17 +100,13 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
   );
 };
 const getLayoutIcon = (layout: Layout) =>
-  layout.type === 'HorizontalLayout' ? (
-    <Height style={{ transform: 'rotate(90deg)' }} />
-  ) : (
-    <Height />
-  );
+  layout.type === 'HorizontalLayout' ? HorizontalIcon : VerticalIcon;
 
 const renderLayoutElementsWithDrops = (
   layout: Layout,
   schema: JsonSchema,
   path: string,
-  classes: ClassNameMap<any>,
+  classes: Record<'dropPoint' | 'renderedContent', string>,
   renderers?: JsonFormsRendererRegistryEntry[],
   cells?: JsonFormsCellRendererRegistryEntry[]
 ) => {
@@ -158,24 +153,26 @@ interface DropPointProps {
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [{ isOver, schemaElement, uiSchemaElement }, drop] = useDrop({
-    accept: [SCHEMA_ELEMENT, UI_SCHEMA_ELEMENT],
+  const [{ isOver, uiSchemaElement, schema }, drop] = useDrop({
+    accept: [UI_SCHEMA_ELEMENT],
     collect: (mon) => ({
       isOver: !!mon.isOver(),
-      schemaElement: mon.getItem()?.schemaElement,
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
+      schema: mon.getItem()?.schema,
     }),
-    drop: (): any => {
-      if (schemaElement) {
-        dispatch(
-          Actions.addSchemaElementToLayout(schemaElement, layout, index)
-        );
-      } else if (uiSchemaElement) {
-        dispatch(
-          Actions.addUISchemaElementToLayout(uiSchemaElement, layout, index)
-        );
-      }
-    },
+    drop: (): any =>
+      schema
+        ? dispatch(
+            Actions.addScopedElementToLayout(
+              uiSchemaElement,
+              layout,
+              index,
+              schema
+            )
+          )
+        : dispatch(
+            Actions.addUnscopedElementToLayout(uiSchemaElement, layout, index)
+          ),
   });
 
   return (

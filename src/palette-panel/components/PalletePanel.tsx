@@ -5,30 +5,16 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Tab, Tabs } from '@material-ui/core';
+import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
+import { TabContent } from '../../core/components';
 import { useDispatch, useSchema } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
 import { UIElementsTree } from './UIElementsTree';
-
-interface TabContentProps {
-  children?: React.ReactNode;
-  index: number;
-  currentIndex: number;
-}
-
-const TabContent: React.FC<TabContentProps> = (props: TabContentProps) => {
-  const { children, index, currentIndex, ...other } = props;
-  return (
-    <div hidden={currentIndex !== index} {...other}>
-      {currentIndex === index && children}
-    </div>
-  );
-};
 
 const toText = (object: any) => JSON.stringify(object, null, 2);
 
@@ -62,6 +48,12 @@ export const PalettePanel = () => {
     }
   };
 
+  const useStyles = makeStyles({
+    tabContent: {
+      margin: '10px 0 0 10px',
+    },
+  });
+
   const handleUiSchemaUpdate = (newUiSchema: string): UpdateResult => {
     try {
       const newUiSchemaObject = JSON.parse(newUiSchema);
@@ -80,7 +72,7 @@ export const PalettePanel = () => {
       throw error;
     }
   };
-
+  const classes = useStyles();
   return (
     <>
       <Tabs value={selectedTab} onChange={handleTabChange}>
@@ -88,10 +80,8 @@ export const PalettePanel = () => {
         <Tab label='JSON Schema' data-cy='schema-tab' />
         <Tab label='UI Schema' data-cy='uischema-tab' />
       </Tabs>
-      <TabContent index={0} currentIndex={selectedTab}>
-        <div style={{ marginBottom: 10 }}>
-          <UIElementsTree />
-        </div>
+      <TabContent index={0} currentIndex={selectedTab} classes={classes}>
+        <UIElementsTree margin={'0 0 10px 0'} />
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>

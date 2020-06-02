@@ -5,14 +5,13 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import Collapse from '@material-ui/core/Collapse';
+import { ControlElement } from '@jsonforms/core';
 import {
   createStyles,
   fade,
   makeStyles,
   withStyles,
 } from '@material-ui/core/styles';
-import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
 import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
@@ -22,7 +21,6 @@ import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
 
 import { useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
@@ -36,6 +34,8 @@ import {
   SchemaElement,
   SchemaElementType,
 } from '../../core/model/schema';
+import { LinkedUISchemaElement } from '../../core/model/uischema';
+import { PaletteTransitionComponent } from './PaletteTransitionComponent';
 
 const ObjectIcon = ListAltIcon;
 const ArrayIcon = QueueOutlinedIcon;
@@ -55,22 +55,6 @@ const getIconForType = (type: SchemaElementType) => {
   }
 };
 
-const TransitionComponent = (props: TransitionProps) => {
-  const style = useSpring({
-    from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
-    to: {
-      opacity: props.in ? 1 : 0,
-      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
-    },
-  });
-
-  return (
-    <animated.div style={style}>
-      <Collapse {...props} />
-    </animated.div>
-  );
-};
-
 const StyledTreeItem = withStyles((theme) =>
   createStyles({
     iconContainer: {
@@ -85,19 +69,29 @@ const StyledTreeItem = withStyles((theme) =>
     },
   })
 )((props: TreeItemProps) => (
-  <TreeItem {...props} TransitionComponent={TransitionComponent} />
+  <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
 ));
 
 interface SchemaTreeItemProps {
   schemaElement: SchemaElement;
 }
 
+const createControl = (scope: string): ControlElement => {
+  return {
+    type: 'Control',
+    scope: scope,
+  };
+};
+
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
   children,
   schemaElement,
 }) => {
+  const uiSchemaElement: LinkedUISchemaElement = createControl(
+    `#${getPath(schemaElement)}`
+  );
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.dragSchemaElement(schemaElement),
+    item: DndItems.dragUISchemaElement(uiSchemaElement),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

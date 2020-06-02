@@ -5,6 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { Layout } from './Layout';
-export * from './Formatted';
-export * from './TabContent';
+import Height from '@material-ui/icons/Height';
+import React from 'react';
+
+export const VerticalIcon = <Height />;
+export const HorizontalIcon = <Height style={{ transform: 'rotate(90deg)' }} />;

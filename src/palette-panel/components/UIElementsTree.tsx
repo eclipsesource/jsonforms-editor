@@ -6,48 +6,23 @@
  * ---------------------------------------------------------------------
  */
 import { Layout, UISchemaElement } from '@jsonforms/core';
-import Collapse from '@material-ui/core/Collapse';
 import {
   createStyles,
   fade,
   makeStyles,
+  Theme,
   withStyles,
 } from '@material-ui/core/styles';
-import { TransitionProps } from '@material-ui/core/transitions';
 import Typography from '@material-ui/core/Typography';
-import HeightIcon from '@material-ui/icons/Height';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { animated, useSpring } from 'react-spring/web.cjs'; // web.cjs is required for IE 11 support
 
 import { DndItems } from '../../core/dnd';
+import { HorizontalIcon, VerticalIcon } from '../../core/icons';
+import { PaletteTransitionComponent } from './PaletteTransitionComponent';
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      flexGrow: 1,
-      maxWidth: 400,
-    },
-  })
-);
-
-const TransitionComponent = (props: TransitionProps) => {
-  const style = useSpring({
-    from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
-    to: {
-      opacity: props.in ? 1 : 0,
-      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
-    },
-  });
-
-  return (
-    <animated.div style={style}>
-      <Collapse {...props} />
-    </animated.div>
-  );
-};
 const StyledTreeItem = withStyles((theme) =>
   createStyles({
     iconContainer: {
@@ -62,7 +37,7 @@ const StyledTreeItem = withStyles((theme) =>
     },
   })
 )((props: TreeItemProps) => (
-  <TreeItem {...props} TransitionComponent={TransitionComponent} />
+  <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
 ));
 
 interface SchemaTreeItemProps {
@@ -99,12 +74,20 @@ const createLayout = (type: string): Layout => ({
   type: type,
   elements: [],
 });
+export interface UIElementsTreeProps {
+  margin?: string;
+}
 
-const HorizontalIcon = <HeightIcon style={{ transform: 'rotate(90deg)' }} />;
-const VerticalIcon = <HeightIcon />;
+const useStyles = makeStyles<Theme, UIElementsTreeProps>((theme: Theme) => ({
+  root: (props) => ({
+    flexGrow: 1,
+    maxWidth: 400,
+    margin: props.margin,
+  }),
+}));
 
-export const UIElementsTree: React.FC = () => {
-  const classes = useStyles();
+export const UIElementsTree: React.FC<UIElementsTreeProps> = (props) => {
+  const classes = useStyles(props);
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>

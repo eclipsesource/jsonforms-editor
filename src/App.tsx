@@ -19,6 +19,7 @@ import { SelectedElement } from './core/selection';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { Properties } from './properties';
+
 const useStyles = makeStyles((theme) => ({
   leftPane: {
     minHeight: '200px',

@@ -44,7 +44,7 @@ const NoUISchemaComponent: React.FC = () => {
       }}
       data-cy={`nolayout-drop`}
     >
-      Drag and drop a layout element to begin.
+      Drag and drop an element from the Palette to begin.
     </Typography>
   );
 };
