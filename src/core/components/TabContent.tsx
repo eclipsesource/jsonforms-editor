@@ -5,24 +5,27 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
 export interface TabContentProps {
   children?: React.ReactNode;
   index: number;
   currentIndex: number;
-  classes: Record<'tabContent', string>;
 }
 
-const styles = {
+const useStyles = makeStyles({
   tabContent: {
-    border: 0,
+    border: 20,
     padding: 0,
+    margin: '10px 0 0 10px',
   },
-};
+});
 
-export const TabContent = withStyles(styles)((props: TabContentProps) => {
-  const { children, index, currentIndex, classes, ...other } = props;
+export const TabContent: React.FC<TabContentProps> = (
+  props: TabContentProps
+) => {
+  const { children, index, currentIndex, ...other } = props;
+  const classes = useStyles();
   return (
     <div
       hidden={currentIndex !== index}
@@ -32,4 +35,4 @@ export const TabContent = withStyles(styles)((props: TabContentProps) => {
       {currentIndex === index && children}
     </div>
   );
-});
+};

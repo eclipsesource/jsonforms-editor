@@ -13,8 +13,8 @@ export const PaletteTransitionComponent = (props: TransitionProps) => {
   const style = useSpring({
     from: { opacity: 0, transform: 'translate3d(20px,0,0)' },
     to: {
-      opacity: 1,
-      transform: `translate3d(${props.in ? 0 : 50}px,0,0)`,
+      opacity: props.in ? 1 : 0,
+      transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
     },
   });
   return (

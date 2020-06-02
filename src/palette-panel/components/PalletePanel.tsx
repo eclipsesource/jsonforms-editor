@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
@@ -48,12 +48,6 @@ export const PalettePanel = () => {
     }
   };
 
-  const useStyles = makeStyles({
-    tabContent: {
-      margin: '10px 0 0 10px',
-    },
-  });
-
   const handleUiSchemaUpdate = (newUiSchema: string): UpdateResult => {
     try {
       const newUiSchemaObject = JSON.parse(newUiSchema);
@@ -72,7 +66,6 @@ export const PalettePanel = () => {
       throw error;
     }
   };
-  const classes = useStyles();
   return (
     <>
       <Tabs value={selectedTab} onChange={handleTabChange}>
@@ -80,8 +73,8 @@ export const PalettePanel = () => {
         <Tab label='JSON Schema' data-cy='schema-tab' />
         <Tab label='UI Schema' data-cy='uischema-tab' />
       </Tabs>
-      <TabContent index={0} currentIndex={selectedTab} classes={classes}>
-        <UIElementsTree margin={'0 0 10px 0'} />
+      <TabContent index={0} currentIndex={selectedTab}>
+        <UIElementsTree />
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>

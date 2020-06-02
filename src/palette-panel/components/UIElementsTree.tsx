@@ -10,7 +10,6 @@ import {
   createStyles,
   fade,
   makeStyles,
-  Theme,
   withStyles,
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -74,20 +73,17 @@ const createLayout = (type: string): Layout => ({
   type: type,
   elements: [],
 });
-export interface UIElementsTreeProps {
-  margin?: string;
-}
 
-const useStyles = makeStyles<Theme, UIElementsTreeProps>((theme: Theme) => ({
-  root: (props) => ({
+const useStyles = makeStyles({
+  root: {
     flexGrow: 1,
     maxWidth: 400,
-    margin: props.margin,
-  }),
-}));
+    margin: '0 0 10px 0',
+  },
+});
 
-export const UIElementsTree: React.FC<UIElementsTreeProps> = (props) => {
-  const classes = useStyles(props);
+export const UIElementsTree: React.FC = () => {
+  const classes = useStyles();
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>
