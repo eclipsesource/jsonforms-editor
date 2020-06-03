@@ -6,27 +6,42 @@
  * ---------------------------------------------------------------------
  */
 
+import { SchemaElement } from '../model';
 import { LinkedUISchemaElement } from '../model/uischema';
 
-export const UI_SCHEMA_ELEMENT: 'uiSchemaElement' = 'uiSchemaElement';
+export const NEW_UI_SCHEMA_ELEMENT: 'newUiSchemaElement' = 'newUiSchemaElement';
+export const MOVE_UI_SCHEMA_ELEMENT: 'moveUiSchemaElement' =
+  'moveUiSchemaElement';
 
-export type DndType = DragUISchemaElement;
+export type DndType = NewUISchemaElement | MoveUISchemaElement;
 
-export interface DragUISchemaElement {
-  type: 'uiSchemaElement';
+export interface NewUISchemaElement {
+  type: 'newUiSchemaElement';
   element: LinkedUISchemaElement;
   schema?: any;
 }
 
-const dragUISchemaElement = (
+const newUISchemaElement = (
   uiSchemaElement: LinkedUISchemaElement,
   schema?: any
 ) => ({
-  type: UI_SCHEMA_ELEMENT,
+  type: NEW_UI_SCHEMA_ELEMENT,
   uiSchemaElement,
   schema,
 });
 
-export const DndItems = {
-  dragUISchemaElement,
-};
+export interface MoveUISchemaElement {
+  type: 'moveUiSchemaElement';
+  element: LinkedUISchemaElement;
+}
+
+const moveUISchemaElement = (
+  uiSchemaElement: LinkedUISchemaElement,
+  schema?: SchemaElement
+) => ({
+  type: MOVE_UI_SCHEMA_ELEMENT,
+  uiSchemaElement,
+  schema,
+});
+
+export const DndItems = { newUISchemaElement, moveUISchemaElement };

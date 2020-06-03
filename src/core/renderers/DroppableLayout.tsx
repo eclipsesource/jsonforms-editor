@@ -23,11 +23,11 @@ import { Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
+import { EditorElement } from '../../editor/components/EditorElement';
 import { useDispatch } from '../context';
-import { UI_SCHEMA_ELEMENT } from '../dnd';
-import { HorizontalIcon, VerticalIcon } from '../icons';
+import { MOVE_UI_SCHEMA_ELEMENT, NEW_UI_SCHEMA_ELEMENT } from '../dnd';
 import { Actions } from '../model';
-import { getUISchemaPath } from '../model/uischema';
+import { getUISchemaPath, LinkedUISchemaElement } from '../model/uischema';
 import { isPathError } from '../util/clone';
 
 const useLayoutStyles = makeStyles((theme) => ({
@@ -42,15 +42,7 @@ const useLayoutStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  droppableLayout: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '1px solid #D3D3D3',
-    padding: theme.spacing(1),
-  },
-  iconGridItem: {
-    alignSelf: 'flex-start',
+    margin: 0,
   },
 }));
 
@@ -73,16 +65,12 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
 }) => {
   const classes = useLayoutStyles();
   return (
-    <Grid container wrap='nowrap' className={classes.droppableLayout} xs>
-      <Grid item key={`${path}-${0}-icon`} className={classes.iconGridItem}>
-        {getLayoutIcon(layout)}
-      </Grid>
+    <EditorElement wrappedElement={layout}>
       <Grid
         container
-        item
         direction={direction}
         spacing={direction === 'row' ? 2 : 0}
-        xs
+        wrap='nowrap'
       >
         {renderLayoutElementsWithDrops(
           layout,
@@ -93,11 +81,9 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
           cells
         )}
       </Grid>
-    </Grid>
+    </EditorElement>
   );
 };
-const getLayoutIcon = (layout: Layout) =>
-  layout.type === 'HorizontalLayout' ? <HorizontalIcon /> : <VerticalIcon />;
 
 const renderLayoutElementsWithDrops = (
   layout: Layout,
@@ -162,25 +148,56 @@ const useDropPointStyles = makeStyles({
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
   const [{ isOver, uiSchemaElement, schema }, drop] = useDrop({
-    accept: [UI_SCHEMA_ELEMENT],
+    accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT],
+    canDrop: (item, monitor) => {
+      if (item.type !== MOVE_UI_SCHEMA_ELEMENT) {
+        return true;
+      }
+      const uiSchemaElement = monitor.getItem()
+        .uiSchemaElement as LinkedUISchemaElement;
+      if (uiSchemaElement === layout || !uiSchemaElement.parent) {
+        return false;
+      }
+      if (layout !== uiSchemaElement.parent) {
+        return true;
+      }
+      const indexInParent = (uiSchemaElement.parent as Layout).elements.indexOf(
+        uiSchemaElement
+      );
+      return indexInParent !== index && indexInParent !== index - 1;
+    },
     collect: (mon) => ({
-      isOver: !!mon.isOver(),
+      isOver: !!mon.isOver() && mon.canDrop(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
       schema: mon.getItem()?.schema,
     }),
-    drop: (): any =>
-      schema
-        ? dispatch(
-            Actions.addScopedElementToLayout(
-              uiSchemaElement,
-              layout,
-              index,
-              schema
-            )
-          )
-        : dispatch(
-            Actions.addUnscopedElementToLayout(uiSchemaElement, layout, index)
-          ),
+    drop: (item): any => {
+      switch (item.type) {
+        case NEW_UI_SCHEMA_ELEMENT:
+          schema
+            ? dispatch(
+                Actions.addScopedElementToLayout(
+                  uiSchemaElement,
+                  layout,
+                  index,
+                  schema
+                )
+              )
+            : dispatch(
+                Actions.addUnscopedElementToLayout(
+                  uiSchemaElement,
+                  layout,
+                  index
+                )
+              );
+          break;
+        case MOVE_UI_SCHEMA_ELEMENT:
+          dispatch(
+            Actions.moveUiSchemaElement(uiSchemaElement, layout, index, schema)
+          );
+          break;
+      }
+    },
   });
 
   const classes = useDropPointStyles({ isOver });

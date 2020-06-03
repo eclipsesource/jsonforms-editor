@@ -22,20 +22,41 @@ interface GetPathError {
 export const isCalculatePathError = <T>(
   result: T | CalculatePathError
 ): result is CalculatePathError =>
-  (result as CalculatePathError).id === 'calulatePathError';
+  (result as CalculatePathError)?.id === 'calulatePathError';
 export const isGetPathError = <T>(
   result: T | GetPathError
-): result is GetPathError => (result as GetPathError).id === 'getPathError';
+): result is GetPathError => (result as GetPathError)?.id === 'getPathError';
 
 export type PathError = CalculatePathError | GetPathError;
 export const isPathError = <T>(result: T | PathError): result is PathError =>
   isCalculatePathError(result) || isGetPathError(result);
 
-export const getRoot = <T extends Parentable<T>>(element: T): T => {
-  if (element.parent) {
+export const getRoot = <T extends Parentable<T>>(
+  element: T | undefined
+): T | undefined => {
+  if (element?.parent) {
     return getRoot(element.parent);
   }
   return element;
+};
+
+/**
+ * Determines the corresponding element within the cloned tree.
+ * Works as long as the tree was not structurally modified.
+ */
+export const getCorrespondingElement = <
+  T1 extends Parentable<T1>,
+  T2 extends Parentable<T2>
+>(
+  element: T1,
+  clonedTree: T2
+): T1 | PathError => {
+  const elementPath = calculatePath(getRoot(element), element);
+  if (isPathError(elementPath)) {
+    return elementPath;
+  }
+  const clonedRoot = getRoot(clonedTree);
+  return getFromPath(clonedRoot, elementPath);
 };
 
 /**
@@ -59,6 +80,9 @@ export const withCloneTree = <R, T>(
   fallback: R,
   process: (clonedElement: T) => R
 ) => {
+  if (element === undefined) {
+    return process(element);
+  }
   const clonedElement = cloneTree(element);
   if (isPathError(clonedElement)) {
     console.error('An error occured when cloning', element);
@@ -98,6 +122,15 @@ export const calculatePath = (
   return path;
 };
 
+export const getPathString = (object: any): string | PathError => {
+  const root = getRoot(object);
+  const path = calculatePath(root, object);
+  if (isPathError(path)) {
+    return path;
+  }
+  return `${path.join('/')}`;
+};
+
 const doCalculatePath = (root: any, object: any): Array<string> | undefined => {
   if (root === object) {
     return [];
@@ -128,7 +161,10 @@ const doCalculatePath = (root: any, object: any): Array<string> | undefined => {
   return undefined;
 };
 
-const getFromPath = (root: any, path: Array<string>): any | GetPathError => {
+export const getFromPath = (
+  root: any,
+  path: Array<string>
+): any | GetPathError => {
   const element = doGetFromPath(root, path);
   if (!element) {
     return {

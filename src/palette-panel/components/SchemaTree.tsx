@@ -6,46 +6,21 @@
  * ---------------------------------------------------------------------
  */
 import Typography from '@material-ui/core/Typography';
-import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
+import { getIconForSchemaType } from '../../core/icons';
 import {
-  ARRAY,
   getChildren,
   getLabel,
   getPath,
-  OBJECT,
-  PRIMITIVE,
   SchemaElement,
-  SchemaElementType,
 } from '../../core/model/schema';
 import { LinkedUISchemaElement } from '../../core/model/uischema';
 import { createControl } from '../../core/util/generators/uiSchema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
-
-const ObjectIcon = ListAltIcon;
-const ArrayIcon = QueueOutlinedIcon;
-const PrimitiveIcon = LabelOutlinedIcon;
-const OtherIcon = RadioButtonUncheckedIcon;
-
-const getIconForType = (type: SchemaElementType) => {
-  switch (type) {
-    case OBJECT:
-      return ObjectIcon;
-    case ARRAY:
-      return ArrayIcon;
-    case PRIMITIVE:
-      return PrimitiveIcon;
-    default:
-      return OtherIcon;
-  }
-};
 
 interface SchemaTreeItemProps {
   schemaElement: SchemaElement;
@@ -56,7 +31,7 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
     `#${getPath(schemaElement)}`
   );
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.dragUISchemaElement(uiSchemaElement),
+    item: DndItems.newUISchemaElement(uiSchemaElement, schemaElement),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -69,7 +44,7 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
         key={schemaElementPath}
         nodeId={schemaElementPath}
         label={getLabel(schemaElement)}
-        icon={React.createElement(getIconForType(schemaElement.type), {})}
+        icon={React.createElement(getIconForSchemaType(schemaElement.type), {})}
         onLabelClick={() => setSelection(schemaElement)}
         isDragging={isDragging}
       >

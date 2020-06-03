@@ -11,7 +11,7 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDispatch } from '../../core/context';
-import { UI_SCHEMA_ELEMENT } from '../../core/dnd';
+import { NEW_UI_SCHEMA_ELEMENT } from '../../core/dnd';
 import { Actions } from '../../core/model';
 
 const useStyles = makeStyles({
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 export const EmptyEditor: React.FC = () => {
   const dispatch = useDispatch();
   const [{ isOver, uiSchemaElement }, drop] = useDrop({
-    accept: UI_SCHEMA_ELEMENT,
+    accept: NEW_UI_SCHEMA_ELEMENT,
     collect: (mon) => ({
       isOver: !!mon.isOver(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,

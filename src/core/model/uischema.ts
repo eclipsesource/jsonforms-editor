@@ -9,10 +9,9 @@ import { isLayout, UISchemaElement } from '@jsonforms/core';
 import { cloneDeep } from 'lodash';
 
 import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
-import { SchemaElement } from './schema';
 
 export interface LinkedUISchemaElement extends UISchemaElement {
-  linkedSchemaElements?: Array<SchemaElement>;
+  linkedSchemaElements?: Array<string>;
   parent?: LinkedUISchemaElement;
 }
 

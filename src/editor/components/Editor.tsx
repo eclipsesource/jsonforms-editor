@@ -13,6 +13,7 @@ import { JsonForms } from '@jsonforms/react';
 import React from 'react';
 
 import { useUiSchema } from '../../core/context';
+import { DroppableControlRegistration } from '../../core/renderers/DroppableControl';
 import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
@@ -33,6 +34,7 @@ export const Editor: React.FC = () => {
         ...materialRenderers,
         DroppableHorizontalLayoutRegistration,
         DroppableVerticalLayoutRegistration,
+        DroppableControlRegistration,
       ]}
       cells={materialCells}
     />
