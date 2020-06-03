@@ -54,26 +54,18 @@ export const cloneTree = <T extends Parentable<P>, P extends T>(
   return getFromPath(clonedRoot, pathToOldElement);
 };
 
-export const withCloneTree = <R, T1, T2>(
-  process: (clonedElement1: T1, clonedElement2: T2) => R,
-  [element1, element2, fallback]: [T1, T2, R]
+export const withCloneTree = <R, T>(
+  element: T,
+  fallback: R,
+  process: (clonedElement: T) => R
 ) => {
-  const clonedElement1 = cloneTree(element1);
-  if (isPathError(clonedElement1)) {
-    console.error('An error occured when cloning', element1);
+  const clonedElement = cloneTree(element);
+  if (isPathError(clonedElement)) {
+    console.error('An error occured when cloning', element);
     // Do nothing
     return fallback;
   }
-  let clonedElement2: T2 | PathError = element2;
-  if (element2) {
-    clonedElement2 = cloneTree(element2);
-    if (isPathError(clonedElement2)) {
-      console.error('An error occured when cloning', element2);
-      // Do nothing
-      return fallback;
-    }
-  }
-  return process(clonedElement1, clonedElement2);
+  return process(clonedElement);
 };
 
 export const calculatePath = (

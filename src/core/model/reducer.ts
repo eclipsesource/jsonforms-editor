@@ -47,15 +47,12 @@ export const uiSchemaReducer = (
     case SET_UISCHEMA:
       return buildLinkedUiSchemaTree(action.uiSchema);
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
-      return withCloneTree(
-        (newUiSchema) => {
-          const newUIElement = action.uiSchemaElement;
-          (newUIElement as LinkedUISchemaElement).parent = newUiSchema;
-          newUiSchema.elements.splice(action.index, 0, newUIElement);
-          return getRoot(newUiSchema as LinkedUISchemaElement);
-        },
-        [action.layout, undefined, uiSchema]
-      );
+      return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
+        const newUIElement = action.uiSchemaElement;
+        (newUIElement as LinkedUISchemaElement).parent = newUiSchema;
+        newUiSchema.elements.splice(action.index, 0, newUIElement);
+        return getRoot(newUiSchema as LinkedUISchemaElement);
+      });
   }
   // fallback - do nothing
   return uiSchema;
@@ -70,27 +67,30 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       };
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTree(
-        (newSchema, newUiSchema) => {
+        action.layout as LinkedUISchemaElement,
+        state,
+        (newUiSchema) => {
           const newUIElement = action.uiSchemaElement;
           (newUiSchema as Layout).elements.splice(
             action.index,
             0,
             newUIElement
           );
-          if (!newSchema.linkedUiSchemaElements) {
-            newSchema.linkedUiSchemaElements = [];
-          }
-          newSchema.linkedUiSchemaElements.push(newUIElement);
-          if (!newUiSchema.linkedSchemaElements) {
-            newUiSchema.linkedSchemaElements = [];
-          }
-          newUiSchema.linkedSchemaElements.push(newSchema);
-          return {
-            schema: getRoot(newSchema),
-            uiSchema: getRoot(newUiSchema),
-          };
-        },
-        [action.schema, action.layout as LinkedUISchemaElement, state]
+          return withCloneTree(action.schema, state, (newSchema) => {
+            if (!newSchema.linkedUiSchemaElements) {
+              newSchema.linkedUiSchemaElements = [];
+            }
+            newSchema.linkedUiSchemaElements.push(newUIElement);
+            if (!newUiSchema.linkedSchemaElements) {
+              newUiSchema.linkedSchemaElements = [];
+            }
+            newUiSchema.linkedSchemaElements.push(newSchema);
+            return {
+              schema: getRoot(newSchema),
+              uiSchema: getRoot(newUiSchema),
+            };
+          });
+        }
       );
   }
   // fallback - do nothing

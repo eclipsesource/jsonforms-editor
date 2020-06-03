@@ -5,10 +5,16 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { styled } from '@material-ui/core';
-import Height from '@material-ui/icons/Height';
+import { ControlElement, Layout } from '@jsonforms/core';
 
-export const VerticalIcon = Height;
-export const HorizontalIcon = styled(Height)({
-  transform: 'rotate(90deg)',
+export const createControl = (scope: string): ControlElement => {
+  return {
+    type: 'Control',
+    scope: scope,
+  };
+};
+
+export const createLayout = (type: string): Layout => ({
+  type: type,
+  elements: [],
 });

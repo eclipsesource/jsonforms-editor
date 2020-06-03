@@ -13,13 +13,11 @@ export interface TabContentProps {
   currentIndex: number;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   tabContent: {
-    border: 20,
-    padding: 0,
-    margin: '10px 0 0 10px',
+    margin: theme.spacing(1, 0, 0, 1),
   },
-});
+}));
 
 export const TabContent: React.FC<TabContentProps> = (
   props: TabContentProps

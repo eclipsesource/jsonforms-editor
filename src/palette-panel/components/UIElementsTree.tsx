@@ -5,13 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Layout, UISchemaElement } from '@jsonforms/core';
-import {
-  createStyles,
-  fade,
-  makeStyles,
-  withStyles,
-} from '@material-ui/core/styles';
+import { UISchemaElement } from '@jsonforms/core';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TreeItem, { TreeItemProps } from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
@@ -20,24 +15,33 @@ import { useDrag } from 'react-dnd';
 
 import { DndItems } from '../../core/dnd';
 import { HorizontalIcon, VerticalIcon } from '../../core/icons';
+import { createLayout } from '../../core/util/generators/uiSchema';
 import { PaletteTransitionComponent } from './PaletteTransitionComponent';
 
-const StyledTreeItem = withStyles((theme) =>
-  createStyles({
-    iconContainer: {
-      '& .close': {
-        opacity: 0.3,
-      },
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+    maxWidth: 400,
+    margin: '0 0 10px 0',
+  },
+  schemaTreeItem: (props: any) => ({
+    opacity: props.isDragging ? 0.5 : 1,
+  }),
+  iconContainer: {
+    '& .close': {
+      opacity: 0.3,
     },
-    group: {
-      marginLeft: 7,
-      paddingLeft: 18,
-      borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
-    },
-  })
-)((props: TreeItemProps) => (
+  },
+  group: {
+    marginLeft: 7,
+    paddingLeft: 18,
+    borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
+  },
+}));
+
+const StyledTreeItem: React.FC<TreeItemProps> = (props) => (
   <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
-));
+);
 
 interface SchemaTreeItemProps {
   uiSchemaElement: UISchemaElement;
@@ -56,6 +60,7 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
       isDragging: !!monitor.isDragging(),
     }),
   });
+  const classes = useStyles({ isDragging });
   return (
     <div ref={drag} data-cy={`${uiSchemaElement.type}-source`}>
       <StyledTreeItem
@@ -63,24 +68,11 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
         nodeId={uiSchemaElement.type}
         label={label}
         icon={icon}
-        style={{ opacity: isDragging ? 0.5 : 1 }}
+        className={classes.schemaTreeItem}
       ></StyledTreeItem>
     </div>
   );
 };
-
-const createLayout = (type: string): Layout => ({
-  type: type,
-  elements: [],
-});
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-    maxWidth: 400,
-    margin: '0 0 10px 0',
-  },
-});
 
 export const UIElementsTree: React.FC = () => {
   const classes = useStyles();
@@ -92,12 +84,12 @@ export const UIElementsTree: React.FC = () => {
       <TreeView className={classes.root} defaultExpanded={['']}>
         <SchemaTreeItem
           label='Horizontal Layout'
-          icon={HorizontalIcon}
+          icon={<HorizontalIcon />}
           uiSchemaElement={createLayout('HorizontalLayout')}
         />
         <SchemaTreeItem
           label='Vertical Layout'
-          icon={VerticalIcon}
+          icon={<VerticalIcon />}
           uiSchemaElement={createLayout('VerticalLayout')}
         />
       </TreeView>

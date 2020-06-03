@@ -5,7 +5,6 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { ControlElement } from '@jsonforms/core';
 import {
   createStyles,
   fade,
@@ -35,6 +34,7 @@ import {
   SchemaElementType,
 } from '../../core/model/schema';
 import { LinkedUISchemaElement } from '../../core/model/uischema';
+import { createControl } from '../../core/util/generators/uiSchema';
 import { PaletteTransitionComponent } from './PaletteTransitionComponent';
 
 const ObjectIcon = ListAltIcon;
@@ -75,13 +75,6 @@ const StyledTreeItem = withStyles((theme) =>
 interface SchemaTreeItemProps {
   schemaElement: SchemaElement;
 }
-
-const createControl = (scope: string): ControlElement => {
-  return {
-    type: 'Control',
-    scope: scope,
-  };
-};
 
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({
   children,

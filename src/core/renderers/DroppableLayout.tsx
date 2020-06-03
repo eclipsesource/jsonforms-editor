@@ -31,11 +31,12 @@ import { getUISchemaPath } from '../model/uischema';
 import { isPathError } from '../util/clone';
 
 const useStyles = makeStyles((theme) => ({
-  dropPointContent: {
+  dropPointContent: (props: any) => ({
     textAlign: 'center',
-  },
+    fontSize: props.isOver ? '2em' : '1em',
+  }),
   dropPoint: {
-    padding: '10',
+    padding: theme.spacing(1),
     width: '3em',
     maxWidth: '3em',
     minWidth: '3em',
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     border: '1px solid #D3D3D3',
-    padding: '20',
+    padding: theme.spacing(1),
   },
   uiElementIcon: {
     alignSelf: 'flex-start',
@@ -100,7 +101,7 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
   );
 };
 const getLayoutIcon = (layout: Layout) =>
-  layout.type === 'HorizontalLayout' ? HorizontalIcon : VerticalIcon;
+  layout.type === 'HorizontalLayout' ? <HorizontalIcon /> : <VerticalIcon />;
 
 const renderLayoutElementsWithDrops = (
   layout: Layout,
@@ -151,7 +152,6 @@ interface DropPointProps {
 }
 
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [{ isOver, uiSchemaElement, schema }, drop] = useDrop({
     accept: [UI_SCHEMA_ELEMENT],
@@ -175,11 +175,11 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
           ),
   });
 
+  const classes = useStyles({ isOver });
   return (
     <div
       ref={drop}
       className={classes.dropPointContent}
-      style={{ fontSize: isOver ? '2em' : '1em' }}
       data-cy={`${getDataPath(layout)}-drop-${index}`}
     >
       [ ]
