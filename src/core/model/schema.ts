@@ -9,7 +9,6 @@ import traverse from 'json-schema-traverse';
 import { cloneDeep, omit } from 'lodash';
 
 import { Parentable } from '../util/tree';
-import { LinkedUISchemaElement } from './uischema';
 
 export const OBJECT: 'object' = 'object';
 export const ARRAY: 'array' = 'array';
@@ -22,7 +21,7 @@ interface SchemaElementBase extends Parentable<SchemaElement> {
   type: SchemaElementType;
   schema: any;
   other?: Map<SchemaElement, string>;
-  linkedUiSchemaElements?: Array<LinkedUISchemaElement>;
+  linkedUiSchemaElements?: Array<string>;
 }
 
 export type SchemaElement =

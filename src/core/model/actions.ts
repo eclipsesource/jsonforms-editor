@@ -12,7 +12,10 @@ import { LinkedUISchemaElement } from './uischema';
 
 export type SchemaAction = SetSchemaAction;
 export type UiSchemaAction = SetUiSchemaAction | AddUnscopedElementToLayout;
-export type CombinedAction = SetSchemasAction | AddScopedElementToLayout;
+export type CombinedAction =
+  | SetSchemasAction
+  | AddScopedElementToLayout
+  | MoveUiSchemaElement;
 
 export type EditorAction = SchemaAction | UiSchemaAction | CombinedAction;
 
@@ -26,6 +29,9 @@ export const ADD_SCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCOPED_ELEMENT_
   'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
 export const ADD_UNSCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT' =
   'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT';
+export const MOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT' =
+  'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
+
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
   schema: any;
@@ -54,6 +60,13 @@ export interface AddUnscopedElementToLayout {
   uiSchemaElement: LinkedUISchemaElement;
   layout: Layout;
   index: number;
+}
+export interface MoveUiSchemaElement {
+  type: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
+  uiSchemaElement: LinkedUISchemaElement;
+  layout: Layout;
+  index: number;
+  schema?: SchemaElement;
 }
 
 const setSchema = (schema: any) => ({
@@ -96,10 +109,24 @@ const addUnscopedElementToLayout = (
   index,
 });
 
+const moveUiSchemaElement = (
+  uiSchemaElement: LinkedUISchemaElement,
+  layout: Layout,
+  index: number,
+  schema?: SchemaElement
+) => ({
+  type: MOVE_UISCHEMA_ELEMENT,
+  uiSchemaElement,
+  layout,
+  index,
+  schema,
+});
+
 export const Actions = {
   setSchema,
   setUiSchema,
   setSchemas,
   addScopedElementToLayout,
   addUnscopedElementToLayout,
+  moveUiSchemaElement,
 };

@@ -60,6 +60,6 @@ interface StyledTreeItemProps extends WithStyles<typeof treeItemStyles> {
 
 export const StyledTreeItem = withStyles(
   treeItemStyles
-)((props: StyledTreeItemProps & TreeItemProps) => (
+)(({ isDragging, ...props }: StyledTreeItemProps & TreeItemProps) => (
   <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
 ));

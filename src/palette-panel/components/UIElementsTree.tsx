@@ -27,7 +27,7 @@ const UiSchemaTreeItem: React.FC<UiSchemaTreeItemProps> = ({
   icon,
 }) => {
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.dragUISchemaElement(uiSchemaElement),
+    item: DndItems.newUISchemaElement(uiSchemaElement),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
