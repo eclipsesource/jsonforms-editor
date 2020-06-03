@@ -7,7 +7,7 @@
  */
 import { Layout } from '@jsonforms/core';
 
-import { getRoot, withCloneTree } from '../util/clone';
+import { getRoot, withCloneTree, withCloneTrees } from '../util/clone';
 import {
   ADD_SCOPED_ELEMENT_TO_LAYOUT,
   ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
@@ -66,30 +66,25 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
         uiSchema: buildLinkedUiSchemaTree(action.uiSchema),
       };
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
-      return withCloneTree(
+      return withCloneTrees(
         action.layout as LinkedUISchemaElement,
+        action.schema,
         state,
-        (newUiSchema) => {
+        (newUiSchema, newSchema) => {
           const newUIElement = action.uiSchemaElement;
           (newUiSchema as Layout).elements.splice(
             action.index,
             0,
             newUIElement
           );
-          return withCloneTree(action.schema, state, (newSchema) => {
-            if (!newSchema.linkedUiSchemaElements) {
-              newSchema.linkedUiSchemaElements = [];
-            }
-            newSchema.linkedUiSchemaElements.push(newUIElement);
-            if (!newUiSchema.linkedSchemaElements) {
-              newUiSchema.linkedSchemaElements = [];
-            }
-            newUiSchema.linkedSchemaElements.push(newSchema);
-            return {
-              schema: getRoot(newSchema),
-              uiSchema: getRoot(newUiSchema),
-            };
-          });
+          (newSchema.linkedUiSchemaElements =
+            newSchema.linkedUiSchemaElements || []).push(newUIElement);
+          (newUiSchema.linkedSchemaElements =
+            newUiSchema.linkedSchemaElements || []).push(newSchema);
+          return {
+            schema: getRoot(newSchema),
+            uiSchema: getRoot(newUiSchema),
+          };
         }
       );
   }

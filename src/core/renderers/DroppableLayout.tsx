@@ -30,19 +30,15 @@ import { Actions } from '../model';
 import { getUISchemaPath } from '../model/uischema';
 import { isPathError } from '../util/clone';
 
-const useStyles = makeStyles((theme) => ({
-  dropPointContent: (props: any) => ({
-    textAlign: 'center',
-    fontSize: props.isOver ? '2em' : '1em',
-  }),
-  dropPoint: {
+const useLayoutStyles = makeStyles((theme) => ({
+  dropPointGridItem: {
     padding: theme.spacing(1),
     width: '3em',
     maxWidth: '3em',
     minWidth: '3em',
     margin: 'auto',
   },
-  renderedContent: {
+  jsonformsGridItem: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -53,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #D3D3D3',
     padding: theme.spacing(1),
   },
-  uiElementIcon: {
+  iconGridItem: {
     alignSelf: 'flex-start',
   },
 }));
@@ -75,10 +71,10 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
   renderers,
   cells,
 }) => {
-  const classes = useStyles();
+  const classes = useLayoutStyles();
   return (
     <Grid container wrap='nowrap' className={classes.droppableLayout} xs>
-      <Grid item key={`${path}-${0}-icon`} className={classes.uiElementIcon}>
+      <Grid item key={`${path}-${0}-icon`} className={classes.iconGridItem}>
         {getLayoutIcon(layout)}
       </Grid>
       <Grid
@@ -107,13 +103,18 @@ const renderLayoutElementsWithDrops = (
   layout: Layout,
   schema: JsonSchema,
   path: string,
-  classes: Record<'dropPoint' | 'renderedContent', string>,
+  classes: Record<'dropPointGridItem' | 'jsonformsGridItem', string>,
   renderers?: JsonFormsRendererRegistryEntry[],
   cells?: JsonFormsCellRendererRegistryEntry[]
 ) => {
   return (
     <>
-      <Grid item key={`${path}-${0}-drop`} className={classes.dropPoint} xs>
+      <Grid
+        item
+        key={`${path}-${0}-drop`}
+        className={classes.dropPointGridItem}
+        xs
+      >
         <DropPoint index={0} layout={layout} />
       </Grid>
       {layout.elements.map((child, index) => (
@@ -121,7 +122,7 @@ const renderLayoutElementsWithDrops = (
           <Grid
             item
             key={`${path}-${index}`}
-            className={classes.renderedContent}
+            className={classes.jsonformsGridItem}
             xs
           >
             <ResolvedJsonFormsDispatch
@@ -134,7 +135,7 @@ const renderLayoutElementsWithDrops = (
           </Grid>
           <Grid
             item
-            className={classes.dropPoint}
+            className={classes.dropPointGridItem}
             key={`${path}-${index + 1}-drop`}
             xs
           >
@@ -150,6 +151,13 @@ interface DropPointProps {
   layout: Layout;
   index: number;
 }
+
+const useDropPointStyles = makeStyles({
+  dropPoint: (props: { isOver: boolean }) => ({
+    textAlign: 'center',
+    fontSize: props.isOver ? '2em' : '1em',
+  }),
+});
 
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
@@ -175,11 +183,11 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
           ),
   });
 
-  const classes = useStyles({ isOver });
+  const classes = useDropPointStyles({ isOver });
   return (
     <div
       ref={drop}
-      className={classes.dropPointContent}
+      className={classes.dropPoint}
       data-cy={`${getDataPath(layout)}-drop-${index}`}
     >
       [ ]
