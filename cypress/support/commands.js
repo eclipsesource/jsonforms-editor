@@ -16,7 +16,9 @@ Cypress.Commands.add(
     cy.get(targetEl)
       .trigger('dragover')
       .trigger('drop')
-      .trigger('dragend')
-      .trigger('mouseup', { which: 1 });
+      .then(($targetEl) => {
+        $targetEl.trigger('dragend');
+        $targetEl.trigger('mouseup', { which: 1 });
+      });
   }
 );

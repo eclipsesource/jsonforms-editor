@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '100vh',
   },
   main: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
     flex: '1',
     height: '100%',
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   footer: {
-    padding: theme.spacing(3, 2),
+    padding: theme.spacing(2, 2),
     backgroundColor:
       theme.palette.type === 'light'
         ? theme.palette.grey[200]

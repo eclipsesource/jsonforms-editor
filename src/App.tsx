@@ -23,12 +23,15 @@ import { Properties } from './properties';
 const useStyles = makeStyles((theme) => ({
   leftPane: {
     minHeight: '200px',
+    margin: theme.spacing(0, 1, 0, 1),
   },
   centerPane: {
     minHeight: '200px',
+    margin: theme.spacing(0, 1, 0, 1),
   },
   rightPane: {
     minHeight: '200px',
+    margin: theme.spacing(0, 1, 0, 1),
   },
   reflexContainer: {
     flex: '1',

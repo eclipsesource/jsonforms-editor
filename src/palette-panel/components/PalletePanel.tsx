@@ -5,31 +5,24 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Tab, Tabs } from '@material-ui/core';
+import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
+import { TabContent } from '../../core/components';
 import { useDispatch, useSchema } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
-
-interface TabContentProps {
-  children?: React.ReactNode;
-  index: number;
-  currentIndex: number;
-}
-
-const TabContent: React.FC<TabContentProps> = (props: TabContentProps) => {
-  const { children, index, currentIndex, ...other } = props;
-  return (
-    <div hidden={currentIndex !== index} {...other}>
-      {currentIndex === index && children}
-    </div>
-  );
-};
+import { UIElementsTree } from './UIElementsTree';
 
 const toText = (object: any) => JSON.stringify(object, null, 2);
+
+const useStyles = makeStyles((theme) => ({
+  uiElementsTree: {
+    marginBottom: theme.spacing(1),
+  },
+}));
 
 export const PalettePanel = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -80,6 +73,8 @@ export const PalettePanel = () => {
     }
   };
 
+  const classes = useStyles();
+
   return (
     <>
       <Tabs value={selectedTab} onChange={handleTabChange}>
@@ -88,6 +83,7 @@ export const PalettePanel = () => {
         <Tab label='UI Schema' data-cy='uischema-tab' />
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
+        <UIElementsTree className={classes.uiElementsTree} />
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>

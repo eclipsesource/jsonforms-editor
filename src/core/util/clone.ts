@@ -54,6 +54,35 @@ export const cloneTree = <T extends Parentable<P>, P extends T>(
   return getFromPath(clonedRoot, pathToOldElement);
 };
 
+export const withCloneTree = <R, T>(
+  element: T,
+  fallback: R,
+  process: (clonedElement: T) => R
+) => {
+  const clonedElement = cloneTree(element);
+  if (isPathError(clonedElement)) {
+    console.error('An error occured when cloning', element);
+    // Do nothing
+    return fallback;
+  }
+  return process(clonedElement);
+};
+
+/**
+ * Convenience wrapper to clone two trees at the same time.
+ */
+export const withCloneTrees = <R, T1, T2>(
+  element1: T1,
+  element2: T2,
+  fallback: R,
+  process: (clonedElement1: T1, clonedElement2: T2) => R
+) =>
+  withCloneTree(element1, fallback, (clonedElement1) =>
+    withCloneTree(element2, fallback, (clonedElement2) =>
+      process(clonedElement1, clonedElement2)
+    )
+  );
+
 export const calculatePath = (
   root: any,
   object: any

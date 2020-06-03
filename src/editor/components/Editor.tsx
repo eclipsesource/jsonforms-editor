@@ -18,12 +18,13 @@ import {
   DroppableVerticalLayoutRegistration,
 } from '../../core/renderers/DroppableLayout';
 import { useExportSchema } from '../../core/util/hooks';
+import { EmptyEditor } from './EmptyEditor';
 
 export const Editor: React.FC = () => {
   const schema = useExportSchema();
   const uiSchema = useUiSchema();
 
-  return (
+  return uiSchema ? (
     <JsonForms
       data={{}}
       schema={schema}
@@ -35,5 +36,7 @@ export const Editor: React.FC = () => {
       ]}
       cells={materialCells}
     />
+  ) : (
+    <EmptyEditor />
   );
 };

@@ -61,15 +61,7 @@ const exampleSchema = {
   },
 };
 
-const exampleUischema = {
-  type: 'VerticalLayout',
-  elements: [
-    {
-      type: 'HorizontalLayout',
-      elements: [],
-    },
-  ],
-};
+const exampleUischema = undefined;
 
 export interface SchemaService {
   getSchema(): Promise<any>;

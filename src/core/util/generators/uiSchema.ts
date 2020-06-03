@@ -5,6 +5,16 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { Layout } from './Layout';
-export * from './Formatted';
-export * from './TabContent';
+import { ControlElement, Layout } from '@jsonforms/core';
+
+export const createControl = (scope: string): ControlElement => {
+  return {
+    type: 'Control',
+    scope: scope,
+  };
+};
+
+export const createLayout = (type: string): Layout => ({
+  type: type,
+  elements: [],
+});

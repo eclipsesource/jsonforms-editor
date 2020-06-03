@@ -5,6 +5,10 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { Layout } from './Layout';
-export * from './Formatted';
-export * from './TabContent';
+import { styled } from '@material-ui/core';
+import Height from '@material-ui/icons/Height';
+
+export const VerticalIcon = Height;
+export const HorizontalIcon = styled(Height)({
+  transform: 'rotate(90deg)',
+});
