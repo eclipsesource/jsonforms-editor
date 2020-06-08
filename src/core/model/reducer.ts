@@ -23,6 +23,7 @@ import {
   CombinedAction,
   EditorAction,
   MOVE_UISCHEMA_ELEMENT,
+  REMOVE_UISCHEMA_ELEMENT,
   SchemaAction,
   SET_SCHEMA,
   SET_SCHEMAS,
@@ -137,7 +138,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             return state;
           }
 
-          const removeResult = removeUiElement(elementToMove, newSchema);
+          const removeResult = removeLeafUiElement(elementToMove, newSchema);
           if (isPathError(removeResult)) {
             console.error('Could not remove ui element ', removeResult);
             return state;
@@ -145,8 +146,11 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 
           // add element to new parent
           elementToMove.parent = newUiSchema;
-          const index = action.index;
-          (newUiSchema as Layout).elements.splice(index, 0, elementToMove);
+          (newUiSchema as Layout).elements.splice(
+            action.index,
+            0,
+            elementToMove
+          );
 
           // add linkedUiSchemaElements in the schema (for scoped ui elements) if such links existed before
           if (
@@ -173,17 +177,59 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
           };
         }
       );
+    case REMOVE_UISCHEMA_ELEMENT:
+      return withCloneTrees(
+        action.uiSchemaElement as LinkedUISchemaElement,
+        state.schema,
+        state,
+        (elementToRemove, newSchema) => {
+          if (elementToRemove.parent) {
+            const removeResult = removeLeafUiElement(
+              elementToRemove,
+              newSchema
+            );
+            if (isPathError(removeResult)) {
+              console.error('Could not remove ui element ', removeResult);
+              return state;
+            }
+          } else {
+            //we are removing the root ui element
+            // remove links in the schema
+            if (newSchema) {
+              const removeLinksResult = removeLinkedUIElementsFromSchema(
+                elementToRemove,
+                newSchema
+              );
+              if (isPathError(removeLinksResult)) {
+                console.error(
+                  'Could not remove linked ui elements',
+                  removeLinksResult
+                );
+                return state;
+              }
+            }
+            return {
+              schema: newSchema,
+              uiSchema: undefined,
+            };
+          }
+
+          return {
+            schema: newSchema,
+            uiSchema: elementToRemove ? getRoot(elementToRemove) : undefined,
+          };
+        }
+      );
   }
   // fallback - do nothing
   return state;
 };
 
-const removeUiElement = (
+const removeLinkedUIElementsFromSchema = (
   elementToRemove: LinkedUISchemaElement,
-  schema?: SchemaElement
+  schema: SchemaElement
 ): true | PathError => {
-  // remove links to UI element in the schema
-  if (schema && elementToRemove.linkedSchemaElements) {
+  if (elementToRemove.linkedSchemaElements) {
     const pathToRemove = getPathString(elementToRemove);
     if (isPathError(pathToRemove)) {
       return pathToRemove;
@@ -203,10 +249,30 @@ const removeUiElement = (
       );
     }
   }
+  return true;
+};
 
-  // remove element from parent in the UI schema
-  // TODO only works for layouts
+/** Removes the given UI element from its tree.
+ *  If a SchemaElement is provided, the element to remove will be cleaned up from all linkedUiSchemaElements fields in the schema.
+ *  ***Does not support the removal of the root UI schema element.***    */
+const removeLeafUiElement = (
+  elementToRemove: LinkedUISchemaElement,
+  schema?: SchemaElement
+): true | PathError => {
+  // remove links to UI element in the schema
+  if (schema) {
+    const removeLinksResult = removeLinkedUIElementsFromSchema(
+      elementToRemove,
+      schema
+    );
+    if (isPathError(removeLinksResult)) {
+      return removeLinksResult;
+    }
+  }
+
   if (elementToRemove.parent && (elementToRemove.parent as Layout).elements) {
+    // remove element from parent in the UI schema
+    // TODO only works for layouts
     const index = (elementToRemove.parent as Layout).elements.indexOf(
       elementToRemove
     );
@@ -228,6 +294,7 @@ export const editorReducer = (
     case SET_SCHEMAS:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
     case MOVE_UISCHEMA_ELEMENT:
+    case REMOVE_UISCHEMA_ELEMENT:
       return combinedReducer({ schema, uiSchema }, action);
   }
   // fallback - do nothing

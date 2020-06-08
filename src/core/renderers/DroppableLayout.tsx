@@ -192,8 +192,17 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
               );
           break;
         case MOVE_UI_SCHEMA_ELEMENT:
+          const indexInParent = (uiSchemaElement.parent as Layout).elements.indexOf(
+            uiSchemaElement
+          );
+          const moveToIndex = index < indexInParent ? index : index - 1;
           dispatch(
-            Actions.moveUiSchemaElement(uiSchemaElement, layout, index, schema)
+            Actions.moveUiSchemaElement(
+              uiSchemaElement,
+              layout,
+              moveToIndex,
+              schema
+            )
           );
           break;
       }
