@@ -12,7 +12,7 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { OkCancelDialog } from '../../core/components/OkCancelDialog';
-import { useDispatch, useSchema } from '../../core/context';
+import { useDispatch, useSchema, useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
 import { UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
@@ -29,10 +29,11 @@ export interface EditorElementProps {
 }
 
 const useEditorElementStyles = makeStyles((theme) => ({
-  editorElement: (props: { isDragging: boolean }) => ({
-    border: '1px solid #D3D3D3',
+  editorElement: (props: { isDragging: boolean; isSelected: boolean }) => ({
+    border: props.isSelected ? '1px solid #1976d2' : '1px solid #D3D3D3',
     padding: theme.spacing(1),
     opacity: props.isDragging ? 0.5 : 1,
+    width: '100%',
   }),
   elementHeader: {
     '&:hover $elementControls': {
@@ -66,19 +67,23 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const classes = useEditorElementStyles({ isDragging });
+  const [selection, setSelection] = useSelection();
+  const classes = useEditorElementStyles({
+    isDragging,
+    isSelected: selection === wrappedElement,
+  });
   const uiPath = getUISchemaPath(wrappedElement);
   const dispatch = useDispatch();
 
   return (
-    <Grid
-      item
-      container
-      wrap='nowrap'
-      direction='column'
+    <div
       data-cy={`editorElement-${uiPath}`}
       className={classes.editorElement}
       ref={drag}
+      onClick={(event) => {
+        event.stopPropagation();
+        setSelection(wrappedElement);
+      }}
     >
       <Grid
         item
@@ -123,6 +128,6 @@ export const EditorElement: React.FC<EditorElementProps> = ({
         </Grid>
       </Grid>
       {children}
-    </Grid>
+    </div>
   );
 };

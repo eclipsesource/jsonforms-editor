@@ -5,22 +5,40 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import {
+  materialCells,
+  materialRenderers,
+} from '@jsonforms/material-renderers';
+import { JsonForms } from '@jsonforms/react';
 import { Typography } from '@material-ui/core';
 import React from 'react';
 
-import { FormattedJson } from '../../core/components';
 import { useSelection } from '../../core/context';
-import { toPrintableObject } from '../../core/model';
 
 export const Properties = () => {
   const [selection] = useSelection();
+  const onPropertiesChanged = (newProperties: any) => {
+    if (selection) {
+      selection.options = newProperties;
+    }
+  };
+
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>
         Properties
       </Typography>
       {selection ? (
-        <FormattedJson object={toPrintableObject(selection)} />
+        selection.options ? (
+          <JsonForms
+            data={selection.options}
+            onChange={({ data }) => onPropertiesChanged(data)}
+            renderers={materialRenderers}
+            cells={materialCells}
+          />
+        ) : (
+          <NoProperties />
+        )
       ) : (
         <NoSelection />
       )}
@@ -28,3 +46,6 @@ export const Properties = () => {
   );
 };
 const NoSelection = () => <div>No selection</div>;
+const NoProperties = () => (
+  <div>Selected element does not have any configurable properties.</div>
+);

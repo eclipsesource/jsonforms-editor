@@ -5,6 +5,6 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { SchemaElement } from '../model';
+import { LinkedUISchemaElement } from '../model/uischema';
 
-export type SelectedElement = SchemaElement | undefined;
+export type SelectedElement = LinkedUISchemaElement | undefined;

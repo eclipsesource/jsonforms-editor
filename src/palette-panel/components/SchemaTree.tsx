@@ -9,7 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
-import { useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
 import { getIconForSchemaType } from '../../core/icons';
 import {
@@ -28,7 +27,8 @@ interface SchemaTreeItemProps {
 
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
   const uiSchemaElement: LinkedUISchemaElement = createControl(
-    `#${getPath(schemaElement)}`
+    `#${getPath(schemaElement)}`,
+    schemaElement
   );
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.newUISchemaElement(uiSchemaElement, schemaElement),
@@ -36,7 +36,6 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const [, setSelection] = useSelection();
   const schemaElementPath = getPath(schemaElement);
   return (
     <div ref={drag} data-cy={`${schemaElementPath}-source`}>
@@ -45,7 +44,6 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
         nodeId={schemaElementPath}
         label={getLabel(schemaElement)}
         icon={React.createElement(getIconForSchemaType(schemaElement.type), {})}
-        onLabelClick={() => setSelection(schemaElement)}
         isDragging={isDragging}
       >
         {getChildren(schemaElement).map((child) => (

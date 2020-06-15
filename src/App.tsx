@@ -51,6 +51,10 @@ const App = () => {
       .getUiSchema()
       .then((uiSchema) => dispatch(Actions.setUiSchema(uiSchema)));
   }, [schemaService]);
+  useEffect(() => {
+    //reset selection when ui schema changes
+    setSelection(undefined);
+  }, [uiSchema]);
   return (
     <EditorContextInstance.Provider
       value={{
