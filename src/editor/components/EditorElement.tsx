@@ -6,7 +6,6 @@
  * ---------------------------------------------------------------------
  */
 
-import { Layout } from '@jsonforms/core';
 import { Grid, IconButton, makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import React from 'react';
@@ -19,6 +18,7 @@ import { UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
 import {
   getUISchemaPath,
+  hasChildren,
   LinkedUISchemaElement,
 } from '../../core/model/uischema';
 import { getFromPath } from '../../core/util/clone';
@@ -103,14 +103,9 @@ export const EditorElement: React.FC<EditorElementProps> = ({
             data-cy={`editorElement-${uiPath}-removeButton`}
             size='small'
             onClick={() => {
-              if (
-                !Array.isArray((wrappedElement as Layout).elements) ||
-                !(wrappedElement as Layout).elements.length
-              ) {
-                dispatch(Actions.removeUiSchemaElement(wrappedElement));
-              } else {
-                setOpenConfirmRemoveDialog(true);
-              }
+              hasChildren(wrappedElement)
+                ? setOpenConfirmRemoveDialog(true)
+                : dispatch(Actions.removeUiSchemaElement(wrappedElement));
             }}
           >
             <DeleteIcon />
