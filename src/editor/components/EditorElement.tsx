@@ -6,6 +6,7 @@
  * ---------------------------------------------------------------------
  */
 
+import { Layout } from '@jsonforms/core';
 import { Grid, IconButton, makeStyles } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import React from 'react';
@@ -14,7 +15,7 @@ import { useDrag } from 'react-dnd';
 import { OkCancelDialog } from '../../core/components/OkCancelDialog';
 import { useDispatch, useSchema } from '../../core/context';
 import { DndItems } from '../../core/dnd';
-import { getIconForUISchemaType } from '../../core/icons';
+import { UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
 import {
   getUISchemaPath,
@@ -75,54 +76,57 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       container
       wrap='nowrap'
       direction='column'
-      key={`editorElement-${uiPath}`}
       data-cy={`editorElement-${uiPath}`}
       className={classes.editorElement}
       ref={drag}
     >
       <Grid
-        container
         item
+        container
         direction='row'
+        wrap='nowrap'
         className={classes.elementHeader}
-        key={`editorElement-${uiPath}-header`}
         data-cy={`editorElement-${uiPath}-header`}
-        xs={12}
       >
-        <Grid item key={`editorElement-${uiPath}-icon`} xs={6}>
-          {React.createElement(getIconForUISchemaType(wrappedElement.type), {})}
+        <Grid item container alignItems='center' xs>
+          <UISchemaIcon type={wrappedElement.type} />
         </Grid>
         <Grid
           item
           container
-          key={`editorElement-${uiPath}-elementControls`}
           className={classes.elementControls}
           justify='flex-end'
           alignItems='center'
-          xs={6}
+          xs
         >
           <IconButton
-            key={`editorElement-${uiPath}-removeIcon`}
-            data-cy={`editorElement-${uiPath}-removeIcon`}
+            data-cy={`editorElement-${uiPath}-removeButton`}
             size='small'
-            onClick={() => setOpenConfirmRemoveDialog(true)}
+            onClick={() => {
+              if (
+                !Array.isArray((wrappedElement as Layout).elements) ||
+                !(wrappedElement as Layout).elements.length
+              ) {
+                dispatch(Actions.removeUiSchemaElement(wrappedElement));
+              } else {
+                setOpenConfirmRemoveDialog(true);
+              }
+            }}
           >
             <DeleteIcon />
           </IconButton>
-          {openConfirmRemoveDialog && (
-            <OkCancelDialog
-              open
-              text={'Remove element and all its contents from the UI Schema?'}
-              onOk={() => {
-                dispatch(Actions.removeUiSchemaElement(wrappedElement));
-                setOpenConfirmRemoveDialog(false);
-              }}
-              onCancel={() => setOpenConfirmRemoveDialog(false)}
-            />
-          )}
+
+          <OkCancelDialog
+            open={openConfirmRemoveDialog}
+            text={'Remove element and all its contents from the UI Schema?'}
+            onOk={() => {
+              dispatch(Actions.removeUiSchemaElement(wrappedElement));
+              setOpenConfirmRemoveDialog(false);
+            }}
+            onCancel={() => setOpenConfirmRemoveDialog(false)}
+          />
         </Grid>
       </Grid>
-
       {children}
     </Grid>
   );

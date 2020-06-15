@@ -17,8 +17,7 @@ describe('Remove controls', () => {
     );
 
     // remove control
-    cy.get('[data-cy="editorElement-/-removeIcon"]').click();
-    cy.get('[data-cy="ok-button"]').click();
+    cy.get('[data-cy="editorElement-/-removeButton"]').click();
 
     // check that layout is empty
     cy.get('[data-cy="nolayout-drop"]');
@@ -33,8 +32,8 @@ describe('Remove controls', () => {
       '[data-cy="/-drop-0"]'
     );
 
-    // remove control
-    cy.get('[data-cy="editorElement-/-removeIcon"]').click();
+    // remove layuot with control
+    cy.get('[data-cy="editorElement-/-removeButton"]').click();
     cy.get('[data-cy="ok-button"]').click();
 
     // check that layout is empty
@@ -57,11 +56,9 @@ describe('Remove controls', () => {
     );
 
     // remove middle control
-    cy.get('[data-cy="editorElement-/elements/1-removeIcon"]').click();
-    cy.get('[data-cy="ok-button"]').click();
+    cy.get('[data-cy="editorElement-/elements/1-removeButton"]').click();
 
     // check that height and occupation controls remain
-
     cy.get('[data-cy="editorElement-/elements/0"]').should(
       'contain.text',
       'Birth Date'
@@ -88,11 +85,9 @@ describe('Remove controls', () => {
     );
 
     // remove middle control
-    cy.get('[data-cy="editorElement-/elements/0-removeIcon"]').click();
-    cy.get('[data-cy="ok-button"]').click();
+    cy.get('[data-cy="editorElement-/elements/0-removeButton"]').click();
 
     // check that height and occupation controls remain
-
     cy.get('[data-cy="editorElement-/elements/0"]').should(
       'contain.text',
       'Name'
