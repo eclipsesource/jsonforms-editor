@@ -15,7 +15,8 @@ export type UiSchemaAction = SetUiSchemaAction | AddUnscopedElementToLayout;
 export type CombinedAction =
   | SetSchemasAction
   | AddScopedElementToLayout
-  | MoveUiSchemaElement;
+  | MoveUiSchemaElement
+  | RemoveUiSchemaElement;
 
 export type EditorAction = SchemaAction | UiSchemaAction | CombinedAction;
 
@@ -31,6 +32,8 @@ export const ADD_UNSCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_UNSCOPED_ELEM
   'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT';
 export const MOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT' =
   'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
+export const REMOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT' =
+  'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
 
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
@@ -67,6 +70,11 @@ export interface MoveUiSchemaElement {
   layout: Layout;
   index: number;
   schema?: SchemaElement;
+}
+
+export interface RemoveUiSchemaElement {
+  type: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
+  uiSchemaElement: LinkedUISchemaElement;
 }
 
 const setSchema = (schema: any) => ({
@@ -122,6 +130,11 @@ const moveUiSchemaElement = (
   schema,
 });
 
+const removeUiSchemaElement = (uiSchemaElement: LinkedUISchemaElement) => ({
+  type: REMOVE_UISCHEMA_ELEMENT,
+  uiSchemaElement,
+});
+
 export const Actions = {
   setSchema,
   setUiSchema,
@@ -129,4 +142,5 @@ export const Actions = {
   addScopedElementToLayout,
   addUnscopedElementToLayout,
   moveUiSchemaElement,
+  removeUiSchemaElement,
 };

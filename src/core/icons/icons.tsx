@@ -12,6 +12,7 @@ import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import React from 'react';
 
 import { ARRAY, OBJECT, PRIMITIVE, SchemaElementType } from '../model';
 
@@ -50,4 +51,11 @@ export const getIconForUISchemaType = (type: string) => {
     default:
       return OtherIcon;
   }
+};
+
+interface UISchemaIconProps {
+  type: string;
+}
+export const UISchemaIcon: React.FC<UISchemaIconProps> = ({ type }) => {
+  return React.createElement(getIconForUISchemaType(type), {});
 };

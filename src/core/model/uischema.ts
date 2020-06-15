@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { isLayout, UISchemaElement } from '@jsonforms/core';
+import { isLayout, Layout, UISchemaElement } from '@jsonforms/core';
 import { cloneDeep } from 'lodash';
 
 import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
@@ -23,6 +23,10 @@ export const getChildren = (
     children.push(...schemaElement.elements);
   }
   return children;
+};
+
+export const hasChildren = (schemaElement: LinkedUISchemaElement): boolean => {
+  return isLayout(schemaElement) && !!(schemaElement as Layout).elements.length;
 };
 
 /**
