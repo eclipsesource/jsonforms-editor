@@ -29,12 +29,19 @@ export interface EditorElementProps {
 }
 
 const useEditorElementStyles = makeStyles((theme) => ({
-  editorElement: (props: { isDragging: boolean; isSelected: boolean }) => ({
-    border: props.isSelected ? '1px solid #1976d2' : '1px solid #D3D3D3',
+  editorElement: {
+    border: '1px solid #d3d3d3',
     padding: theme.spacing(1),
-    opacity: props.isDragging ? 0.5 : 1,
-    width: '100%',
-  }),
+    opacity: 1,
+    backgroundColor: '#fafafa',
+  },
+  elementDragging: {
+    opacity: 0.5,
+  },
+  elementSelected: {
+    border: '1px solid #a9a9a9',
+    backgroundColor: 'rgba(63, 81, 181, 0.08)',
+  },
   elementHeader: {
     '&:hover $elementControls': {
       opacity: 1,
@@ -68,21 +75,24 @@ export const EditorElement: React.FC<EditorElementProps> = ({
     }),
   });
   const [selection, setSelection] = useSelection();
-  const classes = useEditorElementStyles({
-    isDragging,
-    isSelected: selection === wrappedElement,
-  });
+  const classes = useEditorElementStyles();
   const uiPath = getUISchemaPath(wrappedElement);
   const dispatch = useDispatch();
-
+  const isSelected = selection?.uiSchema === wrappedElement;
   return (
-    <div
+    <Grid
+      item
+      container
+      wrap='nowrap'
+      direction='column'
       data-cy={`editorElement-${uiPath}`}
-      className={classes.editorElement}
+      className={`${classes.editorElement} ${
+        isDragging ? classes.elementDragging : ''
+      } ${isSelected ? classes.elementSelected : ''}`}
       ref={drag}
       onClick={(event) => {
         event.stopPropagation();
-        setSelection(wrappedElement);
+        setSelection({ schema: elementSchema, uiSchema: wrappedElement });
       }}
     >
       <Grid
@@ -128,6 +138,6 @@ export const EditorElement: React.FC<EditorElementProps> = ({
         </Grid>
       </Grid>
       {children}
-    </div>
+    </Grid>
   );
 };

@@ -11,27 +11,45 @@ import {
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { Typography } from '@material-ui/core';
+import { isEmpty, isEqual } from 'lodash';
 import React from 'react';
 
-import { useSelection } from '../../core/context';
+import { useDispatch, useSelection } from '../../core/context';
+import { Actions } from '../../core/model';
+import { getRoot } from '../../core/util/clone';
+import { ExamplePropertiesService } from '../propertiesService';
 
+const propertiesService = new ExamplePropertiesService();
 export const Properties = () => {
   const [selection] = useSelection();
+  const dispatch = useDispatch();
+
   const onPropertiesChanged = (newProperties: any) => {
     if (selection) {
-      selection.options = newProperties;
+      if (
+        !isEqual(newProperties, selection.uiSchema.options) &&
+        !(selection.uiSchema.options === undefined && isEmpty(newProperties))
+      ) {
+        selection.uiSchema.options = newProperties;
+        dispatch(Actions.setUiSchema(getRoot(selection.uiSchema)));
+      }
     }
   };
 
+  const properties = selection
+    ? propertiesService.getProperties(selection.uiSchema, selection.schema)
+    : undefined;
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>
         Properties
       </Typography>
       {selection ? (
-        selection.options ? (
+        properties ? (
           <JsonForms
-            data={selection.options}
+            data={selection.uiSchema.options}
+            schema={properties.schema}
+            uischema={properties.uiSchema}
             onChange={({ data }) => onPropertiesChanged(data)}
             renderers={materialRenderers}
             cells={materialCells}
