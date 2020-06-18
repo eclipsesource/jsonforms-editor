@@ -21,7 +21,7 @@ import {
   hasChildren,
   LinkedUISchemaElement,
 } from '../../core/model/uischema';
-import { getFromPath } from '../../core/util/clone';
+import { findByUUID, isUUIDError } from '../../core/util/clone';
 
 export interface EditorElementProps {
   wrappedElement: LinkedUISchemaElement;
@@ -57,13 +57,13 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   children,
 }) => {
   const schema = useSchema();
-  const elementSchemaPathString = wrappedElement.linkedSchemaElements?.find(
-    (schemaElement) => schemaElement !== undefined
-  );
-  const elementSchemaPath = elementSchemaPathString?.split('/');
-  const elementSchema = elementSchemaPath
-    ? getFromPath(schema, elementSchemaPath)
+  const schemaElementUUID = wrappedElement.linkedSchemaElements?.values().next()
+    .value;
+  const searchResult = schemaElementUUID
+    ? findByUUID(schema, schemaElementUUID)
     : undefined;
+
+  const elementSchema = isUUIDError(searchResult) ? undefined : searchResult;
 
   const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
     false

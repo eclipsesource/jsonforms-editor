@@ -26,10 +26,8 @@ interface SchemaTreeItemProps {
 }
 
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
-  const uiSchemaElement: LinkedUISchemaElement = createControl(
-    `#${getPath(schemaElement)}`,
-    schemaElement
-  );
+  const uiSchemaElement: LinkedUISchemaElement = createControl(schemaElement);
+
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.newUISchemaElement(uiSchemaElement, schemaElement),
     collect: (monitor) => ({

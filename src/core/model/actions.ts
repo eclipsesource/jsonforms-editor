@@ -11,7 +11,10 @@ import { SchemaElement } from './schema';
 import { LinkedUISchemaElement } from './uischema';
 
 export type SchemaAction = SetSchemaAction;
-export type UiSchemaAction = SetUiSchemaAction | AddUnscopedElementToLayout;
+export type UiSchemaAction =
+  | SetUiSchemaAction
+  | AddUnscopedElementToLayout
+  | SetUISchemaOptions;
 export type CombinedAction =
   | SetSchemasAction
   | AddScopedElementToLayout
@@ -26,6 +29,7 @@ export const SET_UISCHEMA: 'jsonforms-editor/SET_UISCHEMA' =
   'jsonforms-editor/SET_UISCHEMA';
 export const SET_SCHEMAS: 'jsonforms-editor/SET_SCHEMAS' =
   'jsonforms-editor/SET_SCHEMAS';
+/** UI schema actions */
 export const ADD_SCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT' =
   'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
 export const ADD_UNSCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT' =
@@ -34,6 +38,8 @@ export const MOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT' =
   'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
 export const REMOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT' =
   'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
+export const SET_UISCHEMA_OPTIONS: 'jsonforms-editor/SET_UISCHEMA_OPTIONS' =
+  'jsonforms-editor/SET_UISCHEMA_OPTIONS';
 
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
@@ -75,6 +81,12 @@ export interface MoveUiSchemaElement {
 export interface RemoveUiSchemaElement {
   type: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
   uiSchemaElement: LinkedUISchemaElement;
+}
+
+export interface SetUISchemaOptions {
+  type: 'jsonforms-editor/SET_UISCHEMA_OPTIONS';
+  uiSchema: LinkedUISchemaElement;
+  options: { [key: string]: any };
 }
 
 const setSchema = (schema: any) => ({
@@ -135,6 +147,11 @@ const removeUiSchemaElement = (uiSchemaElement: LinkedUISchemaElement) => ({
   uiSchemaElement,
 });
 
+const setUiSchemaOptions = (
+  uiSchema: LinkedUISchemaElement,
+  options: { [key: string]: any }
+) => ({ type: SET_UISCHEMA_OPTIONS, uiSchema, options });
+
 export const Actions = {
   setSchema,
   setUiSchema,
@@ -143,4 +160,5 @@ export const Actions = {
   addUnscopedElementToLayout,
   moveUiSchemaElement,
   removeUiSchemaElement,
+  setUiSchemaOptions,
 };

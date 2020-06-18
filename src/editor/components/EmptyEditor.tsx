@@ -13,6 +13,7 @@ import { useDrop } from 'react-dnd';
 import { useDispatch } from '../../core/context';
 import { NEW_UI_SCHEMA_ELEMENT } from '../../core/dnd';
 import { Actions } from '../../core/model';
+import { linkElements } from '../../core/util/clone';
 
 const useStyles = makeStyles({
   root: (props: any) => ({
@@ -24,13 +25,17 @@ const useStyles = makeStyles({
 
 export const EmptyEditor: React.FC = () => {
   const dispatch = useDispatch();
-  const [{ isOver, uiSchemaElement }, drop] = useDrop({
+  const [{ isOver, uiSchemaElement, schemaElement }, drop] = useDrop({
     accept: NEW_UI_SCHEMA_ELEMENT,
     collect: (mon) => ({
       isOver: !!mon.isOver(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
+      schemaElement: mon.getItem()?.schema,
     }),
     drop: (): any => {
+      if (schemaElement) {
+        linkElements(uiSchemaElement, schemaElement);
+      }
       dispatch(Actions.setUiSchema(uiSchemaElement));
     },
   });

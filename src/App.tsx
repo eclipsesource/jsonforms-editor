@@ -16,7 +16,7 @@ import { Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
-import { getCorrespondingElement, isPathError } from './core/util/clone';
+import { findByUUID, isUUIDError } from './core/util/clone';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { Properties } from './properties';
@@ -54,33 +54,33 @@ const App = () => {
   }, [schemaService]);
   useEffect(() => {
     //try to preserve selection when schemas change
-    const oldSelection = selection;
-    if (!oldSelection) {
-      return;
-    }
-    const newSelectedUISchemaElement =
-      oldSelection && uiSchema
-        ? getCorrespondingElement(oldSelection?.uiSchema, uiSchema)
-        : undefined;
-    const newSelectedSchemaElement =
-      oldSelection && oldSelection.schema && schema
-        ? getCorrespondingElement(oldSelection.schema, schema)
-        : undefined;
+    setSelection((oldSelection) => {
+      if (!oldSelection) {
+        return undefined;
+      }
+      const newSelectedUISchemaElement =
+        uiSchema && oldSelection.uiSchema.uuid
+          ? findByUUID(uiSchema, oldSelection.uiSchema.uuid)
+          : undefined;
+      const newSelectedSchemaElement =
+        schema && oldSelection.schema
+          ? findByUUID(schema, oldSelection.schema.uuid)
+          : undefined;
 
-    if (
-      !isPathError(newSelectedSchemaElement) &&
-      !isPathError(newSelectedUISchemaElement) &&
-      newSelectedUISchemaElement
-    ) {
-      setSelection({
-        schema: newSelectedSchemaElement,
-        uiSchema: newSelectedUISchemaElement,
-      });
-    } else {
-      //clear old selection
-      setSelection(undefined);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (
+        !isUUIDError(newSelectedSchemaElement) &&
+        !isUUIDError(newSelectedUISchemaElement) &&
+        newSelectedUISchemaElement
+      ) {
+        return {
+          schema: newSelectedSchemaElement,
+          uiSchema: newSelectedUISchemaElement,
+        };
+      } else {
+        //clear old selection
+        return undefined;
+      }
+    });
   }, [uiSchema, schema]);
   return (
     <EditorContextInstance.Provider

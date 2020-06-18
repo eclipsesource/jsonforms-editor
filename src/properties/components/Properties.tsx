@@ -16,7 +16,6 @@ import React from 'react';
 
 import { useDispatch, useSelection } from '../../core/context';
 import { Actions } from '../../core/model';
-import { getRoot } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
@@ -24,41 +23,37 @@ export const Properties = () => {
   const [selection] = useSelection();
   const dispatch = useDispatch();
 
+  if (!selection) return <NoSelection />;
+
   const onPropertiesChanged = (newProperties: any) => {
-    if (selection) {
-      if (
-        !isEqual(newProperties, selection.uiSchema.options) &&
-        !(selection.uiSchema.options === undefined && isEmpty(newProperties))
-      ) {
-        selection.uiSchema.options = newProperties;
-        dispatch(Actions.setUiSchema(getRoot(selection.uiSchema)));
-      }
+    if (
+      !isEqual(newProperties, selection.uiSchema.options) &&
+      !(selection.uiSchema.options === undefined && isEmpty(newProperties))
+    ) {
+      dispatch(Actions.setUiSchemaOptions(selection.uiSchema, newProperties));
     }
   };
 
-  const properties = selection
-    ? propertiesService.getProperties(selection.uiSchema, selection.schema)
-    : undefined;
+  const properties = propertiesService.getProperties(
+    selection.uiSchema,
+    selection.schema
+  );
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>
         Properties
       </Typography>
-      {selection ? (
-        properties ? (
-          <JsonForms
-            data={selection.uiSchema.options}
-            schema={properties.schema}
-            uischema={properties.uiSchema}
-            onChange={({ data }) => onPropertiesChanged(data)}
-            renderers={materialRenderers}
-            cells={materialCells}
-          />
-        ) : (
-          <NoProperties />
-        )
+      {properties ? (
+        <JsonForms
+          data={selection.uiSchema.options}
+          schema={properties.schema}
+          uischema={properties.uiSchema}
+          onChange={({ data }) => onPropertiesChanged(data)}
+          renderers={materialRenderers}
+          cells={materialCells}
+        />
       ) : (
-        <NoSelection />
+        <NoProperties />
       )}
     </>
   );

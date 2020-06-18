@@ -7,12 +7,14 @@
  */
 import { isLayout, Layout, UISchemaElement } from '@jsonforms/core';
 import { cloneDeep } from 'lodash';
+import { v4 as uuid } from 'uuid';
 
 import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
 
 export interface LinkedUISchemaElement extends UISchemaElement {
-  linkedSchemaElements?: Array<string>;
+  linkedSchemaElements?: Set<string>;
   parent?: LinkedUISchemaElement;
+  uuid?: string;
 }
 
 export const getChildren = (
@@ -40,6 +42,7 @@ export const buildLinkedUiSchemaTree = (
   traverse(linkedUiSchema, (current, parent) => {
     if (current) {
       current.parent = parent;
+      current.uuid = uuid();
     }
   });
   return linkedUiSchema;
@@ -56,6 +59,7 @@ export const buildUiSchema = (
   traverse(clone, (current, parent) => {
     delete current.parent;
     delete current.linkedSchemaElements;
+    delete current.uuid;
   });
   return clone;
 };

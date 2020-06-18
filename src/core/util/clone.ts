@@ -7,6 +7,8 @@
  */
 import { cloneDeep, get } from 'lodash';
 
+import { SchemaElement } from '../model';
+import { LinkedUISchemaElement } from '../model/uischema';
 import { Parentable } from './tree';
 
 interface CalculatePathError {
@@ -31,6 +33,27 @@ export type PathError = CalculatePathError | GetPathError;
 export const isPathError = <T>(result: T | PathError): result is PathError =>
   isCalculatePathError(result) || isGetPathError(result);
 
+interface NoUUIDError {
+  id: 'noUUIDError';
+  element: any;
+}
+interface GetByUUIDError {
+  id: 'getByUUIDError';
+  root: any;
+  uuid: string;
+}
+export type UUIDError = GetByUUIDError | NoUUIDError;
+
+export const isNoUUIDError = <T>(
+  result: T | NoUUIDError
+): result is NoUUIDError => (result as NoUUIDError)?.id === 'noUUIDError';
+export const isGetByUUIDError = <T>(
+  result: T | GetByUUIDError
+): result is GetByUUIDError =>
+  (result as GetByUUIDError)?.id === 'getByUUIDError';
+export const isUUIDError = <T>(result: T | UUIDError): result is UUIDError =>
+  isNoUUIDError(result) || isGetByUUIDError(result);
+
 export const getRoot = <T extends Parentable<T>>(
   element: T | undefined
 ): T | undefined => {
@@ -40,23 +63,47 @@ export const getRoot = <T extends Parentable<T>>(
   return element;
 };
 
-/**
- * Determines the corresponding element within the cloned tree.
- * Works as long as the tree was not structurally modified.
- */
-export const getCorrespondingElement = <
-  T1 extends Parentable<T1>,
-  T2 extends Parentable<T2>
->(
-  element: T1,
-  clonedTree: T2
-): T1 | PathError => {
-  const elementPath = calculatePath(getRoot(element), element);
-  if (isPathError(elementPath)) {
-    return elementPath;
+export const findByUUID = (uiSchema: any, uuid: string): any | UUIDError => {
+  const root = getRoot(uiSchema);
+  const element = doFindByUUID(root, uuid);
+  if (!element) {
+    return {
+      id: 'getByUUIDError',
+      root: root,
+      uuid: uuid,
+    };
   }
-  const clonedRoot = getRoot(clonedTree);
-  return getFromPath(clonedRoot, elementPath);
+  return element;
+};
+
+const doFindByUUID = (root: any, uuid: string): any | UUIDError => {
+  if (root && root.uuid === uuid) {
+    return root;
+  }
+  const entries = root instanceof Map ? root.entries() : Object.entries(root);
+  for (const [key, value] of Array.from(entries)) {
+    if (value && value.uuid === uuid) {
+      return value;
+    }
+    // some mappings are 'reversed'
+    if (key && key.uuid === uuid) {
+      return key;
+    }
+    if (typeof value === 'object' && key !== 'parent') {
+      const result = doFindByUUID(value, uuid);
+      if (result) {
+        return result;
+      }
+    }
+    // some mappings are 'reversed'
+    if (typeof key === 'object') {
+      const result = doFindByUUID(key, uuid);
+      if (result) {
+        return result;
+      }
+    }
+  }
+  return undefined;
 };
 
 /**
@@ -195,4 +242,23 @@ const doGetFromPath = (root: any, path: Array<string>): any => {
     return getFromPath(element, rest);
   }
   return getFromPath(get(root, [pathElement]), rest);
+};
+
+export const linkElements = (
+  uiSchemaElement: LinkedUISchemaElement,
+  schemaElement: SchemaElement
+): boolean => {
+  if (!uiSchemaElement.uuid) {
+    console.error('Found element without UUID', uiSchemaElement);
+    return false;
+  }
+
+  (schemaElement.linkedUiSchemaElements =
+    schemaElement.linkedUiSchemaElements || new Set()).add(
+    uiSchemaElement.uuid
+  );
+
+  (uiSchemaElement.linkedSchemaElements =
+    uiSchemaElement.linkedSchemaElements || new Set()).add(schemaElement.uuid);
+  return true;
 };
