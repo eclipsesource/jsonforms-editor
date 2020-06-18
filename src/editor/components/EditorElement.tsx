@@ -57,28 +57,27 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   children,
 }) => {
   const schema = useSchema();
+  const [selection, setSelection] = useSelection();
+  const dispatch = useDispatch();
+  const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
+    false
+  );
   const schemaElementUUID = wrappedElement.linkedSchemaElements?.values().next()
     .value;
   const searchResult = schemaElementUUID
     ? findByUUID(schema, schemaElementUUID)
     : undefined;
-
   const elementSchema = isUUIDError(searchResult) ? undefined : searchResult;
-
-  const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
-    false
-  );
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.moveUISchemaElement(wrappedElement, elementSchema),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const [selection, setSelection] = useSelection();
   const classes = useEditorElementStyles();
+
   const uiPath = getUISchemaPath(wrappedElement);
-  const dispatch = useDispatch();
-  const isSelected = selection?.uiSchema === wrappedElement;
+  const isSelected = selection && selection.uuid === wrappedElement.uuid;
   return (
     <Grid
       item
@@ -91,8 +90,13 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       } ${isSelected ? classes.elementSelected : ''}`}
       ref={drag}
       onClick={(event) => {
-        event.stopPropagation();
-        setSelection({ schema: elementSchema, uiSchema: wrappedElement });
+        if (wrappedElement.uuid) {
+          event.stopPropagation();
+          const newSelection = { uuid: wrappedElement.uuid };
+          setSelection(newSelection);
+        } else {
+          console.error('Found element without UUID', wrappedElement);
+        }
       }}
     >
       <Grid

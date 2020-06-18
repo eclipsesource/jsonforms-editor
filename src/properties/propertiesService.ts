@@ -27,7 +27,11 @@ export class ExamplePropertiesService implements PropertiesService {
     uiElement: LinkedUISchemaElement,
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
-    if (schemaElement && schemaElement.schema.type === 'string') {
+    if (
+      schemaElement &&
+      schemaElement.schema.type === 'string' &&
+      !schemaElement.schema.format
+    ) {
       return {
         schema: {
           type: 'object',

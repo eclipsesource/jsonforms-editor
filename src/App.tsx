@@ -53,33 +53,22 @@ const App = () => {
       .then((uiSchema) => dispatch(Actions.setUiSchema(uiSchema)));
   }, [schemaService]);
   useEffect(() => {
-    //try to preserve selection when schemas change
     setSelection((oldSelection) => {
       if (!oldSelection) {
         return undefined;
       }
-      const newSelectedUISchemaElement =
-        uiSchema && oldSelection.uiSchema.uuid
-          ? findByUUID(uiSchema, oldSelection.uiSchema.uuid)
-          : undefined;
-      const newSelectedSchemaElement =
-        schema && oldSelection.schema
-          ? findByUUID(schema, oldSelection.schema.uuid)
-          : undefined;
+      const newSelectedUISchemaElement = uiSchema
+        ? findByUUID(uiSchema, oldSelection.uuid)
+        : undefined;
 
       if (
-        !isUUIDError(newSelectedSchemaElement) &&
-        !isUUIDError(newSelectedUISchemaElement) &&
-        newSelectedUISchemaElement
+        isUUIDError(newSelectedUISchemaElement) ||
+        !newSelectedUISchemaElement
       ) {
-        return {
-          schema: newSelectedSchemaElement,
-          uiSchema: newSelectedUISchemaElement,
-        };
-      } else {
-        //clear old selection
+        //element does not exist anymore - clear old selection
         return undefined;
       }
+      return oldSelection;
     });
   }, [uiSchema, schema]);
   return (
