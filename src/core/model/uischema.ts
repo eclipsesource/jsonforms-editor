@@ -12,7 +12,7 @@ import { v4 as uuid } from 'uuid';
 import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
 
 export interface LinkedUISchemaElement extends UISchemaElement {
-  linkedSchemaElements?: Set<string>;
+  linkedSchemaElement?: string;
   parent?: LinkedUISchemaElement;
   uuid?: string;
 }
@@ -58,7 +58,7 @@ export const buildUiSchema = (
   const clone: LinkedUISchemaElement = cloneDeep(uiSchema);
   traverse(clone, (current, parent) => {
     delete current.parent;
-    delete current.linkedSchemaElements;
+    delete current.linkedSchemaElement;
     delete current.uuid;
   });
   return clone;

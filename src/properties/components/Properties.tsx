@@ -20,33 +20,48 @@ import {
   useSelection,
   useUiSchema,
 } from '../../core/context';
-import { Actions } from '../../core/model';
+import { Actions, SchemaElement } from '../../core/model';
 import { LinkedUISchemaElement } from '../../core/model/uischema';
-import { findByUUID, isUUIDError } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
+const getProperties = (
+  uiElement: LinkedUISchemaElement | undefined,
+  schema: SchemaElement | undefined
+) => {
+  if (!uiElement || !schema) {
+    return undefined;
+  }
+  const linkedSchemaUUID = uiElement.linkedSchemaElement;
+  if (!linkedSchemaUUID) {
+    return undefined;
+  }
+  const elementSchema = tryFindByUUID(schema, linkedSchemaUUID);
+  return propertiesService.getProperties(uiElement, elementSchema);
+};
+
 export const Properties = () => {
   const [selection] = useSelection();
   const uiSchema = useUiSchema();
   const schema = useSchema();
   const dispatch = useDispatch();
 
-  const uiElement: LinkedUISchemaElement = useMemo(() => {
-    if (!selection || !uiSchema) return undefined;
-    const findResult = findByUUID(uiSchema, selection.uuid);
-    return isUUIDError(findResult) ? undefined : findResult;
-  }, [selection, uiSchema]);
+  const uiElement: LinkedUISchemaElement = useMemo(
+    () => tryFindByUUID(uiSchema, selection?.uuid),
+    [selection, uiSchema]
+  );
+  const canSetUISchemaOptions = (
+    uiElement: LinkedUISchemaElement | undefined,
+    updatedProperties: any
+  ): boolean =>
+    !!uiElement &&
+    !isEqual(updatedProperties, uiElement.options) &&
+    !(uiElement.options === undefined && isEmpty(updatedProperties));
 
   const updateProperties = useCallback(
     ({ data: updatedProperties }) => {
-      if (!uiElement) {
-        return;
-      }
-      if (
-        !isEqual(updatedProperties, uiElement.options) &&
-        !(uiElement.options === undefined && isEmpty(updatedProperties))
-      ) {
+      if (canSetUISchemaOptions(uiElement, updatedProperties)) {
         dispatch(Actions.setUiSchemaOptions(uiElement, updatedProperties));
       }
     },
@@ -54,15 +69,7 @@ export const Properties = () => {
   );
   if (!selection) return <NoSelection />;
 
-  const linkedSchemaUUID = uiElement
-    ? uiElement.linkedSchemaElements?.values().next().value
-    : undefined;
-  const searchResult = linkedSchemaUUID
-    ? findByUUID(schema, linkedSchemaUUID)
-    : undefined;
-  const elementSchema = isUUIDError(searchResult) ? undefined : searchResult;
-  const properties = propertiesService.getProperties(uiElement, elementSchema);
-
+  const properties = getProperties(uiElement, schema);
   return (
     <>
       <Typography variant='h6' color='inherit' noWrap>

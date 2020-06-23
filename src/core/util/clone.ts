@@ -76,6 +76,15 @@ export const findByUUID = (uiSchema: any, uuid: string): any | UUIDError => {
   return element;
 };
 
+export const tryFindByUUID = (
+  uiSchema: any,
+  uuid: string | undefined
+): any | undefined => {
+  if (!uuid || !uiSchema) return undefined;
+  const findResult = findByUUID(uiSchema, uuid);
+  return isUUIDError(findResult) ? undefined : findResult;
+};
+
 const doFindByUUID = (root: any, uuid: string): any | UUIDError => {
   if (root && root.uuid === uuid) {
     return root;
@@ -84,10 +93,6 @@ const doFindByUUID = (root: any, uuid: string): any | UUIDError => {
   for (const [key, value] of Array.from(entries)) {
     if (value && value.uuid === uuid) {
       return value;
-    }
-    // some mappings are 'reversed'
-    if (key && key.uuid === uuid) {
-      return key;
     }
     if (typeof value === 'object' && key !== 'parent') {
       const result = doFindByUUID(value, uuid);
@@ -258,7 +263,6 @@ export const linkElements = (
     uiSchemaElement.uuid
   );
 
-  (uiSchemaElement.linkedSchemaElements =
-    uiSchemaElement.linkedSchemaElements || new Set()).add(schemaElement.uuid);
+  uiSchemaElement.linkedSchemaElement = schemaElement.uuid;
   return true;
 };

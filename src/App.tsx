@@ -16,7 +16,7 @@ import { Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
-import { findByUUID, isUUIDError } from './core/util/clone';
+import { tryFindByUUID } from './core/util/clone';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { Properties } from './properties';
@@ -55,22 +55,16 @@ const App = () => {
   useEffect(() => {
     setSelection((oldSelection) => {
       if (!oldSelection) {
-        return undefined;
+        return oldSelection;
       }
-      const newSelectedUISchemaElement = uiSchema
-        ? findByUUID(uiSchema, oldSelection.uuid)
-        : undefined;
-
-      if (
-        isUUIDError(newSelectedUISchemaElement) ||
-        !newSelectedUISchemaElement
-      ) {
-        //element does not exist anymore - clear old selection
+      const idInNewSchema = tryFindByUUID(uiSchema, oldSelection.uuid);
+      if (!idInNewSchema) {
+        // element does not exist anymore - clear old selection
         return undefined;
       }
       return oldSelection;
     });
-  }, [uiSchema, schema]);
+  }, [uiSchema]);
   return (
     <EditorContextInstance.Provider
       value={{

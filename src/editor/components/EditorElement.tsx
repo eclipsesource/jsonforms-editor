@@ -21,7 +21,7 @@ import {
   hasChildren,
   LinkedUISchemaElement,
 } from '../../core/model/uischema';
-import { findByUUID, isUUIDError } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/clone';
 
 export interface EditorElementProps {
   wrappedElement: LinkedUISchemaElement;
@@ -62,12 +62,10 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
     false
   );
-  const schemaElementUUID = wrappedElement.linkedSchemaElements?.values().next()
-    .value;
-  const searchResult = schemaElementUUID
-    ? findByUUID(schema, schemaElementUUID)
-    : undefined;
-  const elementSchema = isUUIDError(searchResult) ? undefined : searchResult;
+  const elementSchema = tryFindByUUID(
+    schema,
+    wrappedElement.linkedSchemaElement
+  );
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.moveUISchemaElement(wrappedElement, elementSchema),
     collect: (monitor) => ({
@@ -77,7 +75,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const classes = useEditorElementStyles();
 
   const uiPath = getUISchemaPath(wrappedElement);
-  const isSelected = selection && selection.uuid === wrappedElement.uuid;
+  const isSelected = selection?.uuid === wrappedElement.uuid;
   return (
     <Grid
       item

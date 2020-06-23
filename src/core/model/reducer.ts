@@ -57,7 +57,7 @@ export const uiSchemaReducer = (
 ) => {
   switch (action.type) {
     case SET_UISCHEMA:
-      //FIXME we need to link the uischema to the schema
+      // FIXME we need to link the uischema to the schema
       return buildLinkedUiSchemaTree(action.uiSchema);
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
@@ -145,10 +145,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
           );
 
           // add linkedUiSchemaElements in the schema (for scoped ui elements) if such links existed before
-          if (
-            action.uiSchemaElement.linkedSchemaElements &&
-            action.uiSchemaElement.linkedSchemaElements.size > 0
-          ) {
+          if (action.uiSchemaElement.linkedSchemaElement) {
             // newSchema can't be undefined when the old ui element had links to it
             (newSchema!.linkedUiSchemaElements =
               newSchema!.linkedUiSchemaElements || new Set()).add(
@@ -200,19 +197,20 @@ const removeUiElement = (
   schema?: SchemaElement
 ): true | UUIDError => {
   // remove links to UI element in the schema (if any)
-  if (schema && elementToRemove.linkedSchemaElements) {
+  if (schema && elementToRemove.linkedSchemaElement) {
     const uuidToRemove = elementToRemove.uuid;
     if (!uuidToRemove) {
       return { id: 'noUUIDError', element: elementToRemove };
     }
     const schemaRoot = getRoot(schema);
-    for (const uuid of elementToRemove.linkedSchemaElements) {
-      const linkedSchemaElement: SchemaElement = findByUUID(schemaRoot, uuid);
-      if (isUUIDError(linkedSchemaElement)) {
-        return linkedSchemaElement;
-      }
-      linkedSchemaElement.linkedUiSchemaElements?.delete(uuidToRemove);
+    const linkedSchemaElement: SchemaElement = findByUUID(
+      schemaRoot,
+      elementToRemove.linkedSchemaElement
+    );
+    if (isUUIDError(linkedSchemaElement)) {
+      return linkedSchemaElement;
     }
+    linkedSchemaElement.linkedUiSchemaElements?.delete(uuidToRemove);
   }
 
   // remove from parent (if it exists)
