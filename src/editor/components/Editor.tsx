@@ -10,6 +10,7 @@ import {
   materialRenderers,
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
+import { Grid } from '@material-ui/core';
 import React from 'react';
 
 import { useUiSchema } from '../../core/context';
@@ -26,18 +27,20 @@ export const Editor: React.FC = () => {
   const uiSchema = useUiSchema();
 
   return uiSchema ? (
-    <JsonForms
-      data={{}}
-      schema={schema}
-      uischema={uiSchema}
-      renderers={[
-        ...materialRenderers,
-        DroppableHorizontalLayoutRegistration,
-        DroppableVerticalLayoutRegistration,
-        DroppableControlRegistration,
-      ]}
-      cells={materialCells}
-    />
+    <Grid container style={{ height: '100%', overflow: 'auto' }}>
+      <JsonForms
+        data={{}}
+        schema={schema}
+        uischema={uiSchema}
+        renderers={[
+          ...materialRenderers,
+          DroppableHorizontalLayoutRegistration,
+          DroppableVerticalLayoutRegistration,
+          DroppableControlRegistration,
+        ]}
+        cells={materialCells}
+      />
+    </Grid>
   ) : (
     <EmptyEditor />
   );

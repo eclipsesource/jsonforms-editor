@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
   centerPane: {
     minHeight: '200px',
     margin: theme.spacing(0, 1, 0, 1),
+    height: '100%',
+    alignItems: 'stretch',
   },
   rightPane: {
     minHeight: '200px',
@@ -36,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   reflexContainer: {
     flex: '1',
+    alignItems: 'stretch',
   },
 }));
 
