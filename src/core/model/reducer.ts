@@ -5,8 +5,6 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Layout } from '@jsonforms/core';
-
 import {
   findByUUID,
   getRoot,
@@ -18,6 +16,7 @@ import {
   withCloneTrees,
 } from '../util/clone';
 import {
+  ADD_DETAIL,
   ADD_SCOPED_ELEMENT_TO_LAYOUT,
   ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
   CombinedAction,
@@ -32,7 +31,14 @@ import {
   UiSchemaAction,
 } from './actions';
 import { buildSchemaTree, SchemaElement } from './schema';
-import { buildLinkedUiSchemaTree, LinkedUISchemaElement } from './uischema';
+import {
+  buildLinkedUiSchemaTree,
+  isLinkedControl,
+  isLinkedLayout,
+  LinkedLayout,
+  LinkedUISchemaElement,
+  traverse,
+} from './uischema';
 
 export interface EditorState {
   schema?: SchemaElement;
@@ -91,7 +97,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
         (newUiSchema, newSchema) => {
           const newUIElement = action.uiSchemaElement;
           newUIElement.parent = newUiSchema;
-          (newUiSchema as Layout).elements.splice(
+          (newUiSchema as LinkedLayout).elements.splice(
             action.index,
             0,
             newUIElement
@@ -110,19 +116,15 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case MOVE_UISCHEMA_ELEMENT:
       return withCloneTrees(
-        action.layout as LinkedUISchemaElement,
+        action.newContainer,
         action.schema,
         state,
-        (newUiSchema, newSchema) => {
-          if (!action.uiSchemaElement.uuid) {
-            console.error('Found element without UUID', action.uiSchemaElement);
-            return state;
-          }
+        (newContainer, newSchema) => {
           const elementToMove = findByUUID(
-            newUiSchema,
+            newContainer,
             action.uiSchemaElement.uuid
           );
-          if (isUUIDError(elementToMove) || !elementToMove.uuid) {
+          if (isUUIDError(elementToMove)) {
             console.error(
               'Could not find corresponding element ',
               elementToMove
@@ -136,13 +138,33 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             return state;
           }
 
-          // add element to new parent
-          elementToMove.parent = newUiSchema;
-          (newUiSchema as Layout).elements.splice(
-            action.index,
-            0,
-            elementToMove
-          );
+          // link child and new parent
+          elementToMove.parent = newContainer;
+          if (isLinkedLayout(newContainer)) {
+            const moveRightInSameParent =
+              action.newContainer === action.uiSchemaElement.parent &&
+              (action.newContainer as LinkedLayout).elements.indexOf(
+                action.uiSchemaElement
+              ) < action.index;
+            // we need to adapt the index as we removed the element previously
+            const indexToUse = moveRightInSameParent
+              ? action.index - 1
+              : action.index;
+            (newContainer as LinkedLayout).elements.splice(
+              indexToUse,
+              0,
+              elementToMove
+            );
+          } else if (isLinkedControl(newContainer)) {
+            newContainer.options = {
+              ...newContainer.options,
+              detail: elementToMove,
+            };
+          } else {
+            // TODO other cases
+            console.error('Move encountered an invalid case');
+            return state;
+          }
 
           // add linkedUiSchemaElements in the schema (for scoped ui elements) if such links existed before
           if (action.uiSchemaElement.linkedSchemaElement) {
@@ -159,7 +181,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 
           return {
             schema: schemaToReturn,
-            uiSchema: getRoot(newUiSchema),
+            uiSchema: getRoot(newContainer as LinkedUISchemaElement),
           };
         }
       );
@@ -182,6 +204,57 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             schema: newSchema,
             uiSchema: uiSchemaToReturn,
           };
+        }
+      );
+    case ADD_DETAIL:
+      return withCloneTrees(
+        state.schema,
+        state.uiSchema,
+        state,
+        (schema, uiSchema) => {
+          const elementForDetail = findByUUID(
+            uiSchema,
+            action.uiSchemaElementId
+          );
+          if (isUUIDError(elementForDetail)) {
+            console.error(
+              'Could not find ui schema element with id',
+              elementForDetail
+            );
+            return state;
+          }
+          // link all new ui schema elements
+          const linkResult = traverse(
+            action.detail,
+            (uiSchemaElement, _parent, acc) => {
+              if (uiSchemaElement.linkedSchemaElement) {
+                const schemaElementToLink = findByUUID(
+                  schema,
+                  uiSchemaElement.linkedSchemaElement
+                );
+                if (isUUIDError(schemaElementToLink)) {
+                  console.error(
+                    'Could not find schema element with id',
+                    schemaElementToLink
+                  );
+                  acc.error = true;
+                }
+                (schemaElementToLink.linkedUiSchemaElements =
+                  schemaElementToLink.linkedUiSchemaElements || new Set()).add(
+                  action.detail.uuid
+                );
+              }
+            },
+            { error: false }
+          );
+          if (linkResult.error) {
+            return state;
+          }
+
+          elementForDetail.options = elementForDetail.options || {};
+          elementForDetail.options.detail = action.detail;
+          action.detail.parent = elementForDetail;
+          return { schema, uiSchema };
         }
       );
   }
@@ -213,14 +286,28 @@ const removeUiElement = (
     linkedSchemaElement.linkedUiSchemaElements?.delete(uuidToRemove);
   }
 
-  // remove from parent (if it exists)
-  // TODO only works for layouts
-  if (elementToRemove.parent && (elementToRemove.parent as Layout).elements) {
-    const index = (elementToRemove.parent as Layout).elements.indexOf(
-      elementToRemove
-    );
-    (elementToRemove.parent as Layout).elements.splice(index, 1);
+  // remove from parent
+  if (elementToRemove.parent) {
+    // - case: Layout
+    if ((elementToRemove.parent as LinkedLayout).elements) {
+      const index = (elementToRemove.parent as LinkedLayout).elements.indexOf(
+        elementToRemove
+      );
+      if (index !== -1) {
+        (elementToRemove.parent as LinkedLayout).elements.splice(index, 1);
+      }
+    }
+    // - case: element with detail
+    if (elementToRemove.parent.options?.detail === elementToRemove) {
+      delete elementToRemove.parent.options.detail;
+      if (Object.keys(elementToRemove.parent.options).length === 0) {
+        delete elementToRemove.parent.options;
+      }
+    }
+
+    // TODO other cases
   }
+
   return true;
 };
 
@@ -239,6 +326,7 @@ export const editorReducer = (
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
     case MOVE_UISCHEMA_ELEMENT:
     case REMOVE_UISCHEMA_ELEMENT:
+    case ADD_DETAIL:
       return combinedReducer({ schema, uiSchema }, action);
   }
   // fallback - do nothing
