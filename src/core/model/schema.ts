@@ -9,7 +9,7 @@ import traverse from 'json-schema-traverse';
 import { cloneDeep, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
-import { Parentable } from '../util/tree';
+import { getHierarchy, TreeElement } from '../util/tree';
 
 export const OBJECT: 'object' = 'object';
 export const ARRAY: 'array' = 'array';
@@ -18,12 +18,11 @@ export const OTHER: 'other' = 'other';
 
 export type SchemaElementType = 'object' | 'array' | 'primitive' | 'other';
 
-interface SchemaElementBase extends Parentable<SchemaElement> {
+interface SchemaElementBase extends TreeElement<SchemaElement> {
   type: SchemaElementType;
   schema: any;
-  other?: Map<SchemaElement, string>;
+  other?: Map<string, SchemaElement>;
   linkedUiSchemaElements?: Set<string>;
-  uuid: string;
 }
 
 export type SchemaElement =
@@ -32,21 +31,21 @@ export type SchemaElement =
   | PrimitiveElement
   | OtherElement;
 
-interface ArrayElement extends SchemaElementBase {
+export interface ArrayElement extends SchemaElementBase {
   type: 'array';
   items: SchemaElement | Array<SchemaElement>;
 }
 
-interface ObjectElement extends SchemaElementBase {
+export interface ObjectElement extends SchemaElementBase {
   type: 'object';
-  properties: Map<SchemaElement, string>;
+  properties: Map<string, SchemaElement>;
 }
 
-interface PrimitiveElement extends SchemaElementBase {
+export interface PrimitiveElement extends SchemaElementBase {
   type: 'primitive';
 }
 
-interface OtherElement extends SchemaElementBase {
+export interface OtherElement extends SchemaElementBase {
   type: 'other';
 }
 
@@ -56,7 +55,7 @@ export const getChildren = (
   const children: Array<SchemaElement> = [];
   switch (schemaElement.type) {
     case OBJECT:
-      children.push(...Array.from(schemaElement.properties.keys()));
+      children.push(...Array.from(schemaElement.properties.values()));
       break;
     case ARRAY:
       const items = Array.isArray(schemaElement.items)
@@ -66,7 +65,7 @@ export const getChildren = (
       break;
   }
   if (schemaElement.other) {
-    children.push(...Array.from(schemaElement.other.keys()));
+    children.push(...Array.from(schemaElement.other.values()));
   }
   return children;
 };
@@ -79,7 +78,7 @@ const containsAs = (
     case OBJECT:
       const propertyEntries: [SchemaElement, string][] = Array.from(
         schemaElement.properties.entries()
-      ).map(([element, prop]) => [element, `properties/${prop}`]);
+      ).map(([prop, element]) => [element, `properties/${prop}`]);
       containments.push(...propertyEntries);
       break;
     case ARRAY:
@@ -95,16 +94,33 @@ const containsAs = (
       break;
   }
   if (schemaElement.other) {
-    containments.push(...Array.from(schemaElement.other.entries()));
+    const entries: [SchemaElement, string][] = Array.from(
+      schemaElement.other.entries()
+    ).map(([prop, element]) => [element, prop]);
+    containments.push(...entries);
   }
   return new Map<SchemaElement, string>(containments);
 };
 
+/** Calculates the full path from root to the given element */
 export const getPath = (schemaElement: SchemaElement): string => {
   if (!schemaElement.parent) {
     return '';
   }
   return `${getPath(schemaElement.parent)}/${containsAs(
+    schemaElement.parent
+  ).get(schemaElement)}`;
+};
+
+/**
+ *  Calculates the scope for the given element.
+ *  This is the same as `getPath` however it stops at array elements.
+ */
+export const getScope = (schemaElement: SchemaElement): string => {
+  if (!schemaElement.parent || isArrayElement(schemaElement.parent)) {
+    return '';
+  }
+  return `${getScope(schemaElement.parent)}/${containsAs(
     schemaElement.parent
   ).get(schemaElement)}`;
 };
@@ -131,11 +147,14 @@ export const getLabel = (schemaElement: SchemaElement) => {
   if (schemaElement.schema.title) {
     return schemaElement.schema.title;
   }
-  if (
-    isObjectElement(schemaElement.parent) &&
-    schemaElement.parent.properties.has(schemaElement)
-  ) {
-    return schemaElement.parent.properties.get(schemaElement);
+  if (isObjectElement(schemaElement.parent)) {
+    for (const [prop, element] of Array.from(
+      schemaElement.parent.properties.entries()
+    )) {
+      if (element === schemaElement) {
+        return prop;
+      }
+    }
   }
   if (
     isArrayElement(schemaElement.parent) &&
@@ -196,7 +215,7 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
           isObjectElement(currentElement) &&
           path[path.length - 2] === 'properties'
         ) {
-          currentElement.properties.set(newElement, `${indexOrProp}`);
+          currentElement.properties.set(`${indexOrProp}`, newElement);
         } else if (
           isArrayElement(currentElement) &&
           path[path.length - 2] === 'items'
@@ -211,7 +230,7 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
           if (!currentElement.other) {
             currentElement.other = new Map();
           }
-          currentElement.other.set(newElement, `${indexOrProp}`);
+          currentElement.other.set(`${indexOrProp}`, newElement);
         }
         currentElement = newElement;
       },
@@ -266,7 +285,7 @@ export const buildJsonSchema = (element: SchemaElement) => {
     case OBJECT:
       if (element.properties.size > 0) {
         result.properties = {};
-        element.properties.forEach((propName, propertyElement) => {
+        element.properties.forEach((propertyElement, propName) => {
           result.properties[propName] = buildJsonSchema(propertyElement);
         });
       }
@@ -281,3 +300,11 @@ export const buildJsonSchema = (element: SchemaElement) => {
   }
   return result;
 };
+
+/**
+ * Returns the closest array which contains the given element
+ */
+export const getArrayContainer = (
+  element: SchemaElement
+): SchemaElement | undefined =>
+  getHierarchy(element).splice(1).find(isArrayElement);

@@ -5,10 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Layout } from '@jsonforms/core';
-
 import { SchemaElement } from './schema';
-import { LinkedUISchemaElement } from './uischema';
+import { LinkedLayout, LinkedUISchemaElement } from './uischema';
 
 export type SchemaAction = SetSchemaAction;
 export type UiSchemaAction =
@@ -19,7 +17,8 @@ export type CombinedAction =
   | SetSchemasAction
   | AddScopedElementToLayout
   | MoveUiSchemaElement
-  | RemoveUiSchemaElement;
+  | RemoveUiSchemaElement
+  | AddDetail;
 
 export type EditorAction = SchemaAction | UiSchemaAction | CombinedAction;
 
@@ -29,7 +28,6 @@ export const SET_UISCHEMA: 'jsonforms-editor/SET_UISCHEMA' =
   'jsonforms-editor/SET_UISCHEMA';
 export const SET_SCHEMAS: 'jsonforms-editor/SET_SCHEMAS' =
   'jsonforms-editor/SET_SCHEMAS';
-/** UI schema actions */
 export const ADD_SCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT' =
   'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
 export const ADD_UNSCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT' =
@@ -40,6 +38,8 @@ export const REMOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT'
   'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
 export const SET_UISCHEMA_OPTIONS: 'jsonforms-editor/SET_UISCHEMA_OPTIONS' =
   'jsonforms-editor/SET_UISCHEMA_OPTIONS';
+export const ADD_DETAIL: 'jsonforms-editor/ADD_DETAIL' =
+  'jsonforms-editor/ADD_DETAIL';
 
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
@@ -60,20 +60,22 @@ export interface SetSchemasAction {
 export interface AddScopedElementToLayout {
   type: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
   uiSchemaElement: LinkedUISchemaElement;
-  layout: Layout;
+  layout: LinkedLayout;
   schema: SchemaElement;
   index: number;
 }
+
 export interface AddUnscopedElementToLayout {
   type: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT';
   uiSchemaElement: LinkedUISchemaElement;
-  layout: Layout;
+  layout: LinkedLayout;
   index: number;
 }
+
 export interface MoveUiSchemaElement {
   type: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
   uiSchemaElement: LinkedUISchemaElement;
-  layout: Layout;
+  newContainer: LinkedUISchemaElement;
   index: number;
   schema?: SchemaElement;
 }
@@ -87,6 +89,12 @@ export interface SetUISchemaOptions {
   type: 'jsonforms-editor/SET_UISCHEMA_OPTIONS';
   uiSchema: LinkedUISchemaElement;
   options: { [key: string]: any };
+}
+
+export interface AddDetail {
+  type: 'jsonforms-editor/ADD_DETAIL';
+  uiSchemaElementId: string;
+  detail: LinkedUISchemaElement;
 }
 
 const setSchema = (schema: any) => ({
@@ -107,7 +115,7 @@ const setSchemas = (schema: any, uiSchema: any) => ({
 
 const addScopedElementToLayout = (
   uiSchemaElement: LinkedUISchemaElement,
-  layout: Layout,
+  layout: LinkedLayout,
   index: number,
   schema: any
 ) => ({
@@ -120,7 +128,7 @@ const addScopedElementToLayout = (
 
 const addUnscopedElementToLayout = (
   uiSchemaElement: LinkedUISchemaElement,
-  layout: Layout,
+  layout: LinkedLayout,
   index: number
 ) => ({
   type: ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
@@ -131,13 +139,13 @@ const addUnscopedElementToLayout = (
 
 const moveUiSchemaElement = (
   uiSchemaElement: LinkedUISchemaElement,
-  layout: Layout,
+  newContainer: LinkedUISchemaElement,
   index: number,
   schema?: SchemaElement
 ) => ({
   type: MOVE_UISCHEMA_ELEMENT,
   uiSchemaElement,
-  layout,
+  newContainer,
   index,
   schema,
 });
@@ -152,6 +160,15 @@ const setUiSchemaOptions = (
   options: { [key: string]: any }
 ) => ({ type: SET_UISCHEMA_OPTIONS, uiSchema, options });
 
+const addDetail = (
+  uiSchemaElementId: string,
+  detail: LinkedUISchemaElement
+) => ({
+  type: ADD_DETAIL,
+  uiSchemaElementId,
+  detail,
+});
+
 export const Actions = {
   setSchema,
   setUiSchema,
@@ -161,4 +178,5 @@ export const Actions = {
   moveUiSchemaElement,
   removeUiSchemaElement,
   setUiSchemaOptions,
+  addDetail,
 };

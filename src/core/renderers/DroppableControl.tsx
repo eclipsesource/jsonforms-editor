@@ -11,8 +11,11 @@ import { ResolvedJsonFormsDispatch } from '@jsonforms/react';
 import React from 'react';
 
 import { EditorElement } from '../../editor/components/EditorElement';
+import { LinkedControl } from '../model/uischema';
 
-interface DroppableControlProps extends ControlProps {}
+interface DroppableControlProps extends ControlProps {
+  uischema: LinkedControl;
+}
 const DroppableControl: React.FC<DroppableControlProps> = ({
   uischema,
   schema,
