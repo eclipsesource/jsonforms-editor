@@ -5,18 +5,18 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { UISchemaElement } from '@jsonforms/core';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { DndItems } from '../../core/dnd';
 import { HorizontalIcon, VerticalIcon } from '../../core/icons';
+import { LinkedUISchemaElement } from '../../core/model/uischema';
 import { createLayout } from '../../core/util/generators/uiSchema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
 
 interface UiSchemaTreeItemProps {
-  uiSchemaElement: UISchemaElement;
+  uiSchemaElement: LinkedUISchemaElement;
   label: string;
   icon?: React.ReactNode;
 }

@@ -9,10 +9,8 @@ import {
   JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
   JsonSchema,
-  Layout,
   LayoutProps,
   rankWith,
-  UISchemaElement,
   uiTypeIs,
 } from '@jsonforms/core';
 import {
@@ -25,9 +23,20 @@ import { useDrop } from 'react-dnd';
 
 import { EditorElement } from '../../editor/components/EditorElement';
 import { useDispatch } from '../context';
-import { MOVE_UI_SCHEMA_ELEMENT, NEW_UI_SCHEMA_ELEMENT } from '../dnd';
+import {
+  canDropIntoLayout,
+  canMoveSchemaElementTo,
+  MOVE_UI_SCHEMA_ELEMENT,
+  MoveUISchemaElement,
+  NEW_UI_SCHEMA_ELEMENT,
+  NewUISchemaElement,
+} from '../dnd';
 import { Actions } from '../model';
-import { getUISchemaPath, LinkedUISchemaElement } from '../model/uischema';
+import {
+  getUISchemaPath,
+  LinkedLayout,
+  LinkedUISchemaElement,
+} from '../model/uischema';
 import { isPathError } from '../util/clone';
 
 const useLayoutStyles = makeStyles((theme) => ({
@@ -49,14 +58,22 @@ const useLayoutStyles = makeStyles((theme) => ({
 
 interface DroppableLayoutProps {
   schema: JsonSchema;
-  layout: Layout;
+  layout: LinkedLayout;
   path: string;
   direction: 'row' | 'column';
   renderers?: JsonFormsRendererRegistryEntry[];
   cells?: JsonFormsCellRendererRegistryEntry[];
 }
 
-const DroppableLayout: React.FC<DroppableLayoutProps> = ({
+const DroppableLayout: React.FC<DroppableLayoutProps> = (props) => {
+  return (
+    <EditorElement wrappedElement={props.layout}>
+      <DroppableLayoutContent {...props} />
+    </EditorElement>
+  );
+};
+
+export const DroppableLayoutContent: React.FC<DroppableLayoutProps> = ({
   schema,
   layout,
   path,
@@ -66,28 +83,26 @@ const DroppableLayout: React.FC<DroppableLayoutProps> = ({
 }) => {
   const classes = useLayoutStyles();
   return (
-    <EditorElement wrappedElement={layout}>
-      <Grid
-        container
-        direction={direction}
-        spacing={direction === 'row' ? 2 : 0}
-        wrap='nowrap'
-      >
-        {renderLayoutElementsWithDrops(
-          layout,
-          schema,
-          path,
-          classes,
-          renderers,
-          cells
-        )}
-      </Grid>
-    </EditorElement>
+    <Grid
+      container
+      direction={direction}
+      spacing={direction === 'row' ? 2 : 0}
+      wrap='nowrap'
+    >
+      {renderLayoutElementsWithDrops(
+        layout,
+        schema,
+        path,
+        classes,
+        renderers,
+        cells
+      )}
+    </Grid>
   );
 };
 
 const renderLayoutElementsWithDrops = (
-  layout: Layout,
+  layout: LinkedLayout,
   schema: JsonSchema,
   path: string,
   classes: Record<'dropPointGridItem' | 'jsonformsGridItem', string>,
@@ -135,7 +150,7 @@ const renderLayoutElementsWithDrops = (
 };
 
 interface DropPointProps {
-  layout: Layout;
+  layout: LinkedLayout;
   index: number;
 }
 
@@ -151,28 +166,25 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const [{ isOver, uiSchemaElement, schema }, drop] = useDrop({
     accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT],
     canDrop: (item, monitor) => {
-      if (item.type !== MOVE_UI_SCHEMA_ELEMENT) {
-        return true;
+      switch (item.type) {
+        case NEW_UI_SCHEMA_ELEMENT:
+          return canDropIntoLayout(item as NewUISchemaElement, layout);
+        case MOVE_UI_SCHEMA_ELEMENT:
+          return canMoveSchemaElementTo(
+            item as MoveUISchemaElement,
+            layout,
+            index
+          );
       }
-      const uiSchemaElement = monitor.getItem()
-        .uiSchemaElement as LinkedUISchemaElement;
-      if (uiSchemaElement === layout || !uiSchemaElement.parent) {
-        return false;
-      }
-      if (layout !== uiSchemaElement.parent) {
-        return true;
-      }
-      const indexInParent = (uiSchemaElement.parent as Layout).elements.indexOf(
-        uiSchemaElement
-      );
-      return indexInParent !== index && indexInParent !== index - 1;
+      // fallback
+      return false;
     },
     collect: (mon) => ({
       isOver: !!mon.isOver() && mon.canDrop(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
       schema: mon.getItem()?.schema,
     }),
-    drop: (item): any => {
+    drop: (item) => {
       switch (item.type) {
         case NEW_UI_SCHEMA_ELEMENT:
           schema
@@ -193,17 +205,8 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
               );
           break;
         case MOVE_UI_SCHEMA_ELEMENT:
-          const indexInParent = (uiSchemaElement.parent as Layout).elements.indexOf(
-            uiSchemaElement
-          );
-          const moveToIndex = index < indexInParent ? index : index - 1;
           dispatch(
-            Actions.moveUiSchemaElement(
-              uiSchemaElement,
-              layout,
-              moveToIndex,
-              schema
-            )
+            Actions.moveUiSchemaElement(uiSchemaElement, layout, index, schema)
           );
           break;
       }
@@ -222,7 +225,7 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   );
 };
 
-const getDataPath = (uischema: UISchemaElement): string => {
+const getDataPath = (uischema: LinkedUISchemaElement): string => {
   const path = getUISchemaPath(uischema);
   if (isPathError(path)) {
     console.error('Could not calculate data-cy path for DropPoint', path);
@@ -236,7 +239,7 @@ const createRendererInDirection = (direction: 'row' | 'column') => ({
   path,
   ...props
 }: LayoutProps) => {
-  const layout = uischema as Layout;
+  const layout = uischema as LinkedLayout;
   return (
     <DroppableLayout
       {...props}

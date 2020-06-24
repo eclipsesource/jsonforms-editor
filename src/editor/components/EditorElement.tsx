@@ -14,7 +14,7 @@ import { useDrag } from 'react-dnd';
 import { OkCancelDialog } from '../../core/components/OkCancelDialog';
 import { useDispatch, useSchema, useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
-import { UISchemaIcon } from '../../core/icons';
+import { SchemaIcon, UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
 import {
   getUISchemaPath,
@@ -87,13 +87,9 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       } ${isSelected ? classes.elementSelected : ''}`}
       ref={drag}
       onClick={(event) => {
-        if (wrappedElement.uuid) {
-          event.stopPropagation();
-          const newSelection = { uuid: wrappedElement.uuid };
-          setSelection(newSelection);
-        } else {
-          console.error('Found element without UUID', wrappedElement);
-        }
+        event.stopPropagation();
+        const newSelection = { uuid: wrappedElement.uuid };
+        setSelection(newSelection);
       }}
     >
       <Grid
@@ -105,7 +101,11 @@ export const EditorElement: React.FC<EditorElementProps> = ({
         data-cy={`editorElement-${uiPath}-header`}
       >
         <Grid item container alignItems='center' xs>
-          <UISchemaIcon type={wrappedElement.type} />
+          {elementSchema ? (
+            <SchemaIcon type={elementSchema.type} />
+          ) : (
+            <UISchemaIcon type={wrappedElement.type} />
+          )}
         </Grid>
         <Grid
           item

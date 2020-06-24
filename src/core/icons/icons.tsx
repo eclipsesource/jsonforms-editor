@@ -59,3 +59,10 @@ interface UISchemaIconProps {
 export const UISchemaIcon: React.FC<UISchemaIconProps> = ({ type }) => {
   return React.createElement(getIconForUISchemaType(type), {});
 };
+
+interface SchemaIconProps {
+  type: SchemaElementType;
+}
+export const SchemaIcon: React.FC<SchemaIconProps> = ({ type }) => {
+  return React.createElement(getIconForSchemaType(type), {});
+};

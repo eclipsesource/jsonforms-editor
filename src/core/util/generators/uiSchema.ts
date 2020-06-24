@@ -8,14 +8,14 @@
 import { ControlElement, Layout } from '@jsonforms/core';
 import { v4 as uuid } from 'uuid';
 
-import { getPath, SchemaElement } from '../../model';
+import { getScope, SchemaElement } from '../../model';
 import { LinkedUISchemaElement } from '../../model/uischema';
 export const createControl = (
   schemaElement: SchemaElement
 ): ControlElement & LinkedUISchemaElement => {
   return {
     type: 'Control',
-    scope: `#${getPath(schemaElement)}`,
+    scope: `#${getScope(schemaElement)}`,
     uuid: uuid(),
   } as ControlElement & LinkedUISchemaElement;
 };

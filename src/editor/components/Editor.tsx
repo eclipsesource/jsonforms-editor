@@ -14,6 +14,7 @@ import { Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
 
 import { useUiSchema } from '../../core/context';
+import { DroppableArrayControlRegistration } from '../../core/renderers/DroppableArrayControl';
 import { DroppableControlRegistration } from '../../core/renderers/DroppableControl';
 import {
   DroppableHorizontalLayoutRegistration,
@@ -21,6 +22,14 @@ import {
 } from '../../core/renderers/DroppableLayout';
 import { useExportSchema } from '../../core/util/hooks';
 import { EmptyEditor } from './EmptyEditor';
+
+const renderers = [
+  ...materialRenderers,
+  DroppableHorizontalLayoutRegistration,
+  DroppableVerticalLayoutRegistration,
+  DroppableControlRegistration,
+  DroppableArrayControlRegistration,
+];
 
 const useStyles = makeStyles(() => ({
   jsonformsGridContainer: {
@@ -39,12 +48,7 @@ export const Editor: React.FC = () => {
         data={{}}
         schema={schema}
         uischema={uiSchema}
-        renderers={[
-          ...materialRenderers,
-          DroppableHorizontalLayoutRegistration,
-          DroppableVerticalLayoutRegistration,
-          DroppableControlRegistration,
-        ]}
+        renderers={renderers}
         cells={materialCells}
       />
     </Grid>

@@ -10,11 +10,13 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { DndItems } from '../../core/dnd';
-import { getIconForSchemaType } from '../../core/icons';
+import { SchemaIcon } from '../../core/icons';
 import {
   getChildren,
   getLabel,
   getPath,
+  isArrayElement,
+  isObjectElement,
   SchemaElement,
 } from '../../core/model/schema';
 import { LinkedUISchemaElement } from '../../core/model/uischema';
@@ -41,15 +43,29 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
         key={schemaElementPath}
         nodeId={schemaElementPath}
         label={getLabel(schemaElement)}
-        icon={React.createElement(getIconForSchemaType(schemaElement.type), {})}
+        icon={<SchemaIcon type={schemaElement.type} />}
         isDragging={isDragging}
       >
-        {getChildren(schemaElement).map((child) => (
+        {getChildrenToRender(schemaElement).map((child) => (
           <SchemaTreeItem schemaElement={child} key={getPath(child)} />
         ))}
       </StyledTreeItem>
     </div>
   );
+};
+
+const getChildrenToRender = (schemaElement: SchemaElement) => {
+  return getChildren(schemaElement).flatMap((child) => {
+    // if the child is the only item of an array, use its children instead
+    if (
+      isObjectElement(child) &&
+      isArrayElement(child.parent) &&
+      child.parent.items === child
+    ) {
+      return getChildren(child);
+    }
+    return [child];
+  });
 };
 
 export const SchemaTreeView: React.FC<{
