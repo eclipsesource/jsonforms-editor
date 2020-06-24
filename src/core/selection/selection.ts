@@ -5,6 +5,4 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { SchemaElement } from '../model';
-
-export type SelectedElement = SchemaElement | undefined;
+export type SelectedElement = { uuid: string } | undefined;

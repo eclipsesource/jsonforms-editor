@@ -6,15 +6,24 @@
  * ---------------------------------------------------------------------
  */
 import { ControlElement, Layout } from '@jsonforms/core';
+import { v4 as uuid } from 'uuid';
 
-export const createControl = (scope: string): ControlElement => {
+import { getPath, SchemaElement } from '../../model';
+import { LinkedUISchemaElement } from '../../model/uischema';
+export const createControl = (
+  schemaElement: SchemaElement
+): ControlElement & LinkedUISchemaElement => {
   return {
     type: 'Control',
-    scope: scope,
-  };
+    scope: `#${getPath(schemaElement)}`,
+    uuid: uuid(),
+  } as ControlElement & LinkedUISchemaElement;
 };
 
-export const createLayout = (type: string): Layout => ({
-  type: type,
-  elements: [],
-});
+export const createLayout = (type: string): Layout & LinkedUISchemaElement => {
+  return {
+    type: type,
+    elements: [],
+    uuid: uuid(),
+  } as Layout & LinkedUISchemaElement;
+};

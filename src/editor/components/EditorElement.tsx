@@ -12,7 +12,7 @@ import React from 'react';
 import { useDrag } from 'react-dnd';
 
 import { OkCancelDialog } from '../../core/components/OkCancelDialog';
-import { useDispatch, useSchema } from '../../core/context';
+import { useDispatch, useSchema, useSelection } from '../../core/context';
 import { DndItems } from '../../core/dnd';
 import { UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
@@ -21,7 +21,7 @@ import {
   hasChildren,
   LinkedUISchemaElement,
 } from '../../core/model/uischema';
-import { getFromPath } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/clone';
 
 export interface EditorElementProps {
   wrappedElement: LinkedUISchemaElement;
@@ -29,11 +29,19 @@ export interface EditorElementProps {
 }
 
 const useEditorElementStyles = makeStyles((theme) => ({
-  editorElement: (props: { isDragging: boolean }) => ({
-    border: '1px solid #D3D3D3',
+  editorElement: {
+    border: '1px solid #d3d3d3',
     padding: theme.spacing(1),
-    opacity: props.isDragging ? 0.5 : 1,
-  }),
+    opacity: 1,
+    backgroundColor: '#fafafa',
+  },
+  elementDragging: {
+    opacity: 0.5,
+  },
+  elementSelected: {
+    border: '1px solid #a9a9a9',
+    backgroundColor: 'rgba(63, 81, 181, 0.08)',
+  },
   elementHeader: {
     '&:hover $elementControls': {
       opacity: 1,
@@ -49,16 +57,14 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   children,
 }) => {
   const schema = useSchema();
-  const elementSchemaPathString = wrappedElement.linkedSchemaElements?.find(
-    (schemaElement) => schemaElement !== undefined
-  );
-  const elementSchemaPath = elementSchemaPathString?.split('/');
-  const elementSchema = elementSchemaPath
-    ? getFromPath(schema, elementSchemaPath)
-    : undefined;
-
+  const [selection, setSelection] = useSelection();
+  const dispatch = useDispatch();
   const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
     false
+  );
+  const elementSchema = tryFindByUUID(
+    schema,
+    wrappedElement.linkedSchemaElement
   );
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.moveUISchemaElement(wrappedElement, elementSchema),
@@ -66,10 +72,10 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       isDragging: !!monitor.isDragging(),
     }),
   });
-  const classes = useEditorElementStyles({ isDragging });
-  const uiPath = getUISchemaPath(wrappedElement);
-  const dispatch = useDispatch();
+  const classes = useEditorElementStyles();
 
+  const uiPath = getUISchemaPath(wrappedElement);
+  const isSelected = selection?.uuid === wrappedElement.uuid;
   return (
     <Grid
       item
@@ -77,8 +83,19 @@ export const EditorElement: React.FC<EditorElementProps> = ({
       wrap='nowrap'
       direction='column'
       data-cy={`editorElement-${uiPath}`}
-      className={classes.editorElement}
+      className={`${classes.editorElement} ${
+        isDragging ? classes.elementDragging : ''
+      } ${isSelected ? classes.elementSelected : ''}`}
       ref={drag}
+      onClick={(event) => {
+        if (wrappedElement.uuid) {
+          event.stopPropagation();
+          const newSelection = { uuid: wrappedElement.uuid };
+          setSelection(newSelection);
+        } else {
+          console.error('Found element without UUID', wrappedElement);
+        }
+      }}
     >
       <Grid
         item

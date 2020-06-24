@@ -7,6 +7,7 @@
  */
 import traverse from 'json-schema-traverse';
 import { cloneDeep, omit } from 'lodash';
+import { v4 as uuid } from 'uuid';
 
 import { Parentable } from '../util/tree';
 
@@ -21,7 +22,8 @@ interface SchemaElementBase extends Parentable<SchemaElement> {
   type: SchemaElementType;
   schema: any;
   other?: Map<SchemaElement, string>;
-  linkedUiSchemaElements?: Array<string>;
+  linkedUiSchemaElements?: Set<string>;
+  uuid: string;
 }
 
 export type SchemaElement =
@@ -155,14 +157,14 @@ const createNewElementForType = (
   switch (type) {
     case OBJECT:
       const objectCopy = cloneDeep(omit(schema, ['properties']));
-      return { type, schema: objectCopy, properties: new Map() };
+      return { type, schema: objectCopy, properties: new Map(), uuid: uuid() };
     case ARRAY:
       const arrayCopy = cloneDeep(omit(schema, ['items']));
-      return { type, schema: arrayCopy, items: [] };
+      return { type, schema: arrayCopy, items: [], uuid: uuid() };
     case PRIMITIVE:
-      return { type, schema: cloneDeep(schema) };
+      return { type, schema: cloneDeep(schema), uuid: uuid() };
     default:
-      return { type: OTHER, schema: cloneDeep(schema) };
+      return { type: OTHER, schema: cloneDeep(schema), uuid: uuid() };
   }
 };
 

@@ -8,12 +8,12 @@
 import { Layout } from '@jsonforms/core';
 
 import {
-  getCorrespondingElement,
-  getFromPath,
-  getPathString,
+  findByUUID,
   getRoot,
   isPathError,
-  PathError,
+  isUUIDError,
+  linkElements,
+  UUIDError,
   withCloneTree,
   withCloneTrees,
 } from '../util/clone';
@@ -28,6 +28,7 @@ import {
   SET_SCHEMA,
   SET_SCHEMAS,
   SET_UISCHEMA,
+  SET_UISCHEMA_OPTIONS,
   UiSchemaAction,
 } from './actions';
 import { buildSchemaTree, SchemaElement } from './schema';
@@ -56,12 +57,18 @@ export const uiSchemaReducer = (
 ) => {
   switch (action.type) {
     case SET_UISCHEMA:
+      // FIXME we need to link the uischema to the schema
       return buildLinkedUiSchemaTree(action.uiSchema);
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
         const newUIElement = action.uiSchemaElement;
         newUIElement.parent = newUiSchema;
         newUiSchema.elements.splice(action.index, 0, newUIElement);
+        return getRoot(newUiSchema as LinkedUISchemaElement);
+      });
+    case SET_UISCHEMA_OPTIONS:
+      return withCloneTree(action.uiSchema, uiSchema, (newUiSchema) => {
+        newUiSchema.options = action.options;
         return getRoot(newUiSchema as LinkedUISchemaElement);
       });
   }
@@ -90,27 +97,8 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             newUIElement
           );
 
-          const uiElementPath = getPathString(newUIElement);
-          if (!isPathError(uiElementPath)) {
-            (newSchema.linkedUiSchemaElements =
-              newSchema.linkedUiSchemaElements || []).push(uiElementPath);
-          } else {
-            console.error(
-              'An error occured when calculating the path of the ui element',
-              uiElementPath
-            );
-            return state;
-          }
-
-          const schemaPath = getPathString(newSchema);
-          if (!isPathError(schemaPath)) {
-            (newUIElement.linkedSchemaElements =
-              newUIElement.linkedSchemaElements || []).push(schemaPath);
-          } else {
-            console.error(
-              'An error occured when calculating the path of the schema element',
-              schemaPath
-            );
+          if (isUUIDError(linkElements(newUIElement, newSchema))) {
+            console.error('Could not add new UI element', newUIElement);
             return state;
           }
 
@@ -126,11 +114,15 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
         action.schema,
         state,
         (newUiSchema, newSchema) => {
-          const elementToMove = getCorrespondingElement(
-            action.uiSchemaElement,
-            newUiSchema
+          if (!action.uiSchemaElement.uuid) {
+            console.error('Found element without UUID', action.uiSchemaElement);
+            return state;
+          }
+          const elementToMove = findByUUID(
+            newUiSchema,
+            action.uiSchemaElement.uuid
           );
-          if (isPathError(elementToMove)) {
+          if (isUUIDError(elementToMove) || !elementToMove.uuid) {
             console.error(
               'Could not find corresponding element ',
               elementToMove
@@ -153,18 +145,12 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
           );
 
           // add linkedUiSchemaElements in the schema (for scoped ui elements) if such links existed before
-          if (
-            action.uiSchemaElement.linkedSchemaElements &&
-            action.uiSchemaElement.linkedSchemaElements.length > 0
-          ) {
-            const newUiSchemaPath = getPathString(elementToMove);
-            if (isPathError(newUiSchemaPath)) {
-              console.error('Could not calculate path ', newUiSchemaPath);
-              return state;
-            }
+          if (action.uiSchemaElement.linkedSchemaElement) {
             // newSchema can't be undefined when the old ui element had links to it
             (newSchema!.linkedUiSchemaElements =
-              newSchema!.linkedUiSchemaElements || []).push(newUiSchemaPath);
+              newSchema!.linkedUiSchemaElements || new Set()).add(
+              elementToMove.uuid
+            );
           }
 
           // schema is optional in this action
@@ -209,27 +195,22 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 const removeUiElement = (
   elementToRemove: LinkedUISchemaElement,
   schema?: SchemaElement
-): true | PathError => {
+): true | UUIDError => {
   // remove links to UI element in the schema (if any)
-  if (schema && elementToRemove.linkedSchemaElements) {
-    const pathToRemove = getPathString(elementToRemove);
-    if (isPathError(pathToRemove)) {
-      return pathToRemove;
+  if (schema && elementToRemove.linkedSchemaElement) {
+    const uuidToRemove = elementToRemove.uuid;
+    if (!uuidToRemove) {
+      return { id: 'noUUIDError', element: elementToRemove };
     }
     const schemaRoot = getRoot(schema);
-    for (const schemaPath of elementToRemove.linkedSchemaElements) {
-      const linkedSchemaElement = getFromPath(
-        schemaRoot,
-        schemaPath.split('/')
-      );
-      if (isPathError(linkedSchemaElement)) {
-        return linkedSchemaElement;
-      }
-      linkedSchemaElement.linkedUiSchemaElements.splice(
-        linkedSchemaElement.linkedUiSchemaElements.indexOf(pathToRemove),
-        1
-      );
+    const linkedSchemaElement: SchemaElement = findByUUID(
+      schemaRoot,
+      elementToRemove.linkedSchemaElement
+    );
+    if (isUUIDError(linkedSchemaElement)) {
+      return linkedSchemaElement;
     }
+    linkedSchemaElement.linkedUiSchemaElements?.delete(uuidToRemove);
   }
 
   // remove from parent (if it exists)
@@ -250,8 +231,9 @@ export const editorReducer = (
   switch (action.type) {
     case SET_SCHEMA:
       return { schema: schemaReducer(schema, action), uiSchema };
-    case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
     case SET_UISCHEMA:
+    case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
+    case SET_UISCHEMA_OPTIONS:
       return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
     case SET_SCHEMAS:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
