@@ -34,6 +34,8 @@ const useEditorElementStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     opacity: 1,
     backgroundColor: '#fafafa',
+    width: '100%',
+    alignSelf: 'baseline',
   },
   elementDragging: {
     opacity: 0.5,
@@ -79,9 +81,6 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   return (
     <Grid
       item
-      container
-      wrap='nowrap'
-      direction='column'
       data-cy={`editorElement-${uiPath}`}
       className={`${classes.editorElement} ${
         isDragging ? classes.elementDragging : ''

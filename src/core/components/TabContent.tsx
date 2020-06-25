@@ -15,7 +15,8 @@ export interface TabContentProps {
 
 const useStyles = makeStyles((theme) => ({
   tabContent: {
-    margin: theme.spacing(1, 0, 0, 1),
+    padding: theme.spacing(1, 1, 0, 1),
+    height: '100%',
   },
 }));
 

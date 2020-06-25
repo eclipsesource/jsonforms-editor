@@ -12,18 +12,16 @@ import { Footer } from './Footer';
 import { Header } from './Header';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: '100vh',
-  },
   main: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    flex: '1',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
+  },
+  container: {
+    display: 'grid',
+    height: '100vh',
+    gridTemplateAreas: 'header content footer',
+    gridTemplateColumns: '1fr',
+    gridTemplateRows: 'auto 1fr auto',
   },
   footer: {
     padding: theme.spacing(2, 2),
@@ -38,7 +36,9 @@ export const Layout: React.FC = ({ children }) => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Header />
+      <header>
+        <Header />
+      </header>
       <main className={classes.main}>{children}</main>
       <footer className={classes.footer}>
         <Footer />

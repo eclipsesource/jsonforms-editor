@@ -19,7 +19,7 @@ import { SelectedElement } from './core/selection';
 import { tryFindByUUID } from './core/util/clone';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
-import { Properties } from './properties';
+import { PropertiesPanel } from './properties';
 
 const useStyles = makeStyles((theme) => ({
   leftPane: {
@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
   centerPane: {
     minHeight: '200px',
     margin: theme.spacing(0, 1, 0, 1),
+    height: '100%',
+    alignItems: 'stretch',
   },
   rightPane: {
     minHeight: '200px',
@@ -36,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   reflexContainer: {
     flex: '1',
+    alignItems: 'stretch',
   },
 }));
 
@@ -105,7 +108,7 @@ const AppUi = () => {
         <ReflexSplitter propagate />
         <ReflexElement minSize={200}>
           <div className={classes.rightPane}>
-            <Properties />
+            <PropertiesPanel />
           </div>
         </ReflexElement>
       </ReflexContainer>

@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     padding: 10,
     fontSize: props.isOver ? '1.1em' : '1em',
     border: props.isOver ? '1px solid #D3D3D3' : 'none',
+    height: '100%',
   }),
 });
 
@@ -41,8 +42,10 @@ export const EmptyEditor: React.FC = () => {
   });
   const classes = useStyles({ isOver });
   return (
-    <Typography ref={drop} className={classes.root} data-cy={`nolayout-drop`}>
-      Drag and drop an element from the Palette to begin.
-    </Typography>
+    <div ref={drop} className={classes.root}>
+      <Typography data-cy={`nolayout-drop`}>
+        Drag and drop an element from the Palette to begin.
+      </Typography>
+    </div>
   );
 };
