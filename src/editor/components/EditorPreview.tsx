@@ -7,9 +7,7 @@
  */
 import React from 'react';
 
-import { useUiSchema } from '../../core/context';
-import { buildUiSchema } from '../../core/model/uischema';
-import { useExportSchema } from '../../core/util/hooks';
+import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 
 declare global {
   namespace JSX {
@@ -21,8 +19,7 @@ declare global {
 
 export const EditorPreview: React.FC = () => {
   const schema = useExportSchema();
-  const editorUISchema = useUiSchema();
-  const uiSchema = editorUISchema ? buildUiSchema(editorUISchema) : undefined;
+  const uiSchema = useExportUiSchema();
 
   const inputSchema = JSON.stringify(schema);
   const inputUISchema = JSON.stringify(uiSchema);
