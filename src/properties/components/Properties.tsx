@@ -10,7 +10,6 @@ import {
   materialRenderers,
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { Typography } from '@material-ui/core';
 import { isEmpty, isEqual } from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 
@@ -70,24 +69,17 @@ export const Properties = () => {
   if (!selection) return <NoSelection />;
 
   const properties = getProperties(uiElement, schema);
-  return (
-    <>
-      <Typography variant='h6' color='inherit' noWrap>
-        Properties
-      </Typography>
-      {properties ? (
-        <JsonForms
-          data={uiElement.options}
-          schema={properties.schema}
-          uischema={properties.uiSchema}
-          onChange={updateProperties}
-          renderers={materialRenderers}
-          cells={materialCells}
-        />
-      ) : (
-        <NoProperties />
-      )}
-    </>
+  return properties ? (
+    <JsonForms
+      data={uiElement.options}
+      schema={properties.schema}
+      uischema={properties.uiSchema}
+      onChange={updateProperties}
+      renderers={materialRenderers}
+      cells={materialCells}
+    />
+  ) : (
+    <NoProperties />
   );
 };
 const NoSelection = () => <div>No selection</div>;

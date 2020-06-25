@@ -81,8 +81,6 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   return (
     <Grid
       item
-      wrap='nowrap'
-      direction='column'
       data-cy={`editorElement-${uiPath}`}
       className={`${classes.editorElement} ${
         isDragging ? classes.elementDragging : ''

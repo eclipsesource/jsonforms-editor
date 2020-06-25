@@ -5,4 +5,4 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { Properties } from './components/Properties';
+export { PropertiesPanel } from './components/PropertiesPanel';

@@ -97,7 +97,7 @@ const renderLayoutElementsWithDrops = (
   return (
     <>
       <Grid
-        container
+        item
         key={`${path}-${0}-drop`}
         className={classes.dropPointGridItem}
         xs
