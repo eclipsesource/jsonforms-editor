@@ -97,7 +97,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             newUIElement
           );
 
-          if (isUUIDError(linkElements(newUIElement, newSchema))) {
+          if (!linkElements(newUIElement, newSchema)) {
             console.error('Could not add new UI element', newUIElement);
             return state;
           }
