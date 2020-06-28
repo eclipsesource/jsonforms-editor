@@ -18,49 +18,49 @@ import { v4 as uuid } from 'uuid';
 import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
 import { getHierarchy, TreeElement } from '../util/tree';
 
-export interface LinkedUISchemaElement
+export interface EditorUISchemaElement
   extends UISchemaElement,
-    TreeElement<LinkedUISchemaElement> {
+    TreeElement<EditorUISchemaElement> {
   linkedSchemaElement?: string;
 }
 
-export interface LinkedControl extends ControlElement, LinkedUISchemaElement {
+export interface EditorControl extends ControlElement, EditorUISchemaElement {
   type: 'Control';
 }
 
-export interface LinkedLayout extends Layout, LinkedUISchemaElement {
-  elements: LinkedUISchemaElement[];
+export interface EditorLayout extends Layout, EditorUISchemaElement {
+  elements: EditorUISchemaElement[];
 }
 
-const isLinkedUISchemaElement = (
+const isEditorUISchemaElement = (
   element: any
-): element is LinkedUISchemaElement => {
+): element is EditorUISchemaElement => {
   return !!element?.type && !!element?.uuid;
 };
 
-export const isLinkedControl = (
+export const isEditorControl = (
   element: UISchemaElement
-): element is LinkedControl => {
-  return isLinkedUISchemaElement(element) && isControl(element);
+): element is EditorControl => {
+  return isEditorUISchemaElement(element) && isControl(element);
 };
 
-export const isLinkedLayout = (
+export const isEditorLayout = (
   element: UISchemaElement
-): element is LinkedLayout => {
-  return isLinkedUISchemaElement(element) && isLayout(element);
+): element is EditorLayout => {
+  return isEditorUISchemaElement(element) && isLayout(element);
 };
 
 export const getChildren = (
-  schemaElement: LinkedUISchemaElement
-): Array<LinkedUISchemaElement> => {
-  const children: Array<LinkedUISchemaElement> = [];
-  if (isLinkedLayout(schemaElement)) {
+  schemaElement: EditorUISchemaElement
+): Array<EditorUISchemaElement> => {
+  const children: Array<EditorUISchemaElement> = [];
+  if (isEditorLayout(schemaElement)) {
     children.push(...schemaElement.elements);
   }
   return children;
 };
 
-export const hasChildren = (schemaElement: LinkedUISchemaElement): boolean => {
+export const hasChildren = (schemaElement: EditorUISchemaElement): boolean => {
   return isLayout(schemaElement) && !!(schemaElement as Layout).elements.length;
 };
 
@@ -68,18 +68,18 @@ export const hasChildren = (schemaElement: LinkedUISchemaElement): boolean => {
  * Creates a copy of the given ui schema enriched with editor fields
  * like 'parent' and 'linked schema elements'.
  */
-export const buildLinkedUiSchemaTree = (
+export const buildEditorUiSchemaTree = (
   uiSchema: UISchemaElement
-): LinkedUISchemaElement => {
+): EditorUISchemaElement => {
   // cast to any so we can freely modify it
-  const linkedUiSchema: any = cloneDeep(uiSchema);
-  traverse(linkedUiSchema, (current, parent) => {
+  const editorUiSchema: any = cloneDeep(uiSchema);
+  traverse(editorUiSchema, (current, parent) => {
     if (current) {
       current.parent = parent;
       current.uuid = uuid();
     }
   });
-  return linkedUiSchema;
+  return editorUiSchema;
 };
 
 /**
@@ -87,9 +87,9 @@ export const buildLinkedUiSchemaTree = (
  * related fields.
  */
 export const buildUiSchema = (
-  uiSchema: LinkedUISchemaElement
+  uiSchema: EditorUISchemaElement
 ): UISchemaElement => {
-  const clone: LinkedUISchemaElement = cloneDeep(uiSchema);
+  const clone: EditorUISchemaElement = cloneDeep(uiSchema);
   traverse(clone, (current) => {
     delete current.parent;
     delete current.linkedSchemaElement;
@@ -124,7 +124,7 @@ const doTraverse = <T extends UISchemaElement, C>(
 };
 
 export const getUISchemaPath = (
-  uiSchema: LinkedUISchemaElement
+  uiSchema: EditorUISchemaElement
 ): string | PathError => {
   const root = getRoot(uiSchema);
   const path = calculatePath(root, uiSchema);
@@ -139,9 +139,9 @@ export const getUISchemaPath = (
  * Returns the closes element whose detail contains the given element
  */
 export const getDetailContainer = (
-  element: LinkedUISchemaElement
-): LinkedUISchemaElement | undefined => {
-  const parentIsDetail = (el: LinkedUISchemaElement) =>
+  element: EditorUISchemaElement
+): EditorUISchemaElement | undefined => {
+  const parentIsDetail = (el: EditorUISchemaElement) =>
     el.parent?.options?.detail === el;
   return getHierarchy(element).find(parentIsDetail)?.parent;
 };
@@ -149,11 +149,11 @@ export const getDetailContainer = (
 /**
  * Indicates whether the given ui schema element is a control or contains controls
  */
-export const containsControls = (element: LinkedUISchemaElement): boolean =>
+export const containsControls = (element: EditorUISchemaElement): boolean =>
   traverse(
     element,
     (el, _parent, acc) => {
-      if (isLinkedControl(el)) {
+      if (isEditorControl(el)) {
         acc.containsControls = true;
       }
     },

@@ -33,9 +33,9 @@ import {
 } from '../dnd';
 import { Actions } from '../model';
 import {
+  EditorLayout,
+  EditorUISchemaElement,
   getUISchemaPath,
-  LinkedLayout,
-  LinkedUISchemaElement,
 } from '../model/uischema';
 import { isPathError } from '../util/clone';
 
@@ -58,7 +58,7 @@ const useLayoutStyles = makeStyles((theme) => ({
 
 interface DroppableLayoutProps {
   schema: JsonSchema;
-  layout: LinkedLayout;
+  layout: EditorLayout;
   path: string;
   direction: 'row' | 'column';
   renderers?: JsonFormsRendererRegistryEntry[];
@@ -102,7 +102,7 @@ export const DroppableLayoutContent: React.FC<DroppableLayoutProps> = ({
 };
 
 const renderLayoutElementsWithDrops = (
-  layout: LinkedLayout,
+  layout: EditorLayout,
   schema: JsonSchema,
   path: string,
   classes: Record<'dropPointGridItem' | 'jsonformsGridItem', string>,
@@ -150,7 +150,7 @@ const renderLayoutElementsWithDrops = (
 };
 
 interface DropPointProps {
-  layout: LinkedLayout;
+  layout: EditorLayout;
   index: number;
 }
 
@@ -225,7 +225,7 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   );
 };
 
-const getDataPath = (uischema: LinkedUISchemaElement): string => {
+const getDataPath = (uischema: EditorUISchemaElement): string => {
   const path = getUISchemaPath(uischema);
   if (isPathError(path)) {
     console.error('Could not calculate data-cy path for DropPoint', path);
@@ -239,7 +239,7 @@ const createRendererInDirection = (direction: 'row' | 'column') => ({
   path,
   ...props
 }: LayoutProps) => {
-  const layout = uischema as LinkedLayout;
+  const layout = uischema as EditorLayout;
   return (
     <DroppableLayout
       {...props}

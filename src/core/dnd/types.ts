@@ -8,9 +8,9 @@
 import { getArrayContainer, SchemaElement } from '../model';
 import {
   containsControls,
+  EditorLayout,
+  EditorUISchemaElement,
   getDetailContainer,
-  LinkedLayout,
-  LinkedUISchemaElement,
 } from '../model/uischema';
 import { getHierarchy } from '../util/tree';
 
@@ -22,12 +22,12 @@ export type DndType = NewUISchemaElement | MoveUISchemaElement;
 
 export interface NewUISchemaElement {
   type: 'newUiSchemaElement';
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
   schema?: SchemaElement;
 }
 
 const newUISchemaElement = (
-  uiSchemaElement: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
   schema?: SchemaElement
 ) => ({
   type: NEW_UI_SCHEMA_ELEMENT,
@@ -37,12 +37,12 @@ const newUISchemaElement = (
 
 export interface MoveUISchemaElement {
   type: 'moveUiSchemaElement';
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
   schema?: SchemaElement;
 }
 
 const moveUISchemaElement = (
-  uiSchemaElement: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
   schema?: SchemaElement
 ) => ({
   type: MOVE_UI_SCHEMA_ELEMENT,
@@ -54,7 +54,7 @@ export const DndItems = { newUISchemaElement, moveUISchemaElement };
 
 export const canDropIntoLayout = (
   item: NewUISchemaElement,
-  layout: LinkedUISchemaElement
+  layout: EditorUISchemaElement
 ) => {
   // check scope changes
   const detailContainer = getDetailContainer(layout);
@@ -72,7 +72,7 @@ export const canDropIntoLayout = (
  */
 export const canDropIntoScope = (
   item: NewUISchemaElement,
-  scopeUISchemaElement: LinkedUISchemaElement | undefined
+  scopeUISchemaElement: EditorUISchemaElement | undefined
 ) => {
   const controlObject = item.schema;
   if (controlObject) {
@@ -89,7 +89,7 @@ export const canDropIntoScope = (
  */
 const scopesMatch = (
   schemaScope: SchemaElement | undefined,
-  uiScope: LinkedUISchemaElement | undefined
+  uiScope: EditorUISchemaElement | undefined
 ) => {
   if (!schemaScope && !uiScope) {
     return true;
@@ -110,10 +110,10 @@ const getScopeChangingContainer = (element: SchemaElement) => {
 
 export const canMoveSchemaElementTo = (
   item: MoveUISchemaElement,
-  target: LinkedUISchemaElement,
+  target: EditorUISchemaElement,
   index: number
 ) => {
-  const elementToMove = item.uiSchemaElement as LinkedUISchemaElement;
+  const elementToMove = item.uiSchemaElement as EditorUISchemaElement;
   return (
     !isMoveRoot(elementToMove) &&
     !isMoveIntoItself(elementToMove, target) &&
@@ -122,19 +122,19 @@ export const canMoveSchemaElementTo = (
   );
 };
 
-const isMoveRoot = (elementToMove: LinkedUISchemaElement) =>
+const isMoveRoot = (elementToMove: EditorUISchemaElement) =>
   !elementToMove.parent;
 const isMoveIntoItself = (
-  elementToMove: LinkedUISchemaElement,
-  target: LinkedUISchemaElement
+  elementToMove: EditorUISchemaElement,
+  target: EditorUISchemaElement
 ) => getHierarchy(target).includes(elementToMove);
 const isMoveNextToItself = (
-  elementToMove: LinkedUISchemaElement,
-  target: LinkedUISchemaElement,
+  elementToMove: EditorUISchemaElement,
+  target: EditorUISchemaElement,
   index: number
 ) => {
   if (target === elementToMove.parent) {
-    const currentIndex = (target as LinkedLayout).elements.indexOf(
+    const currentIndex = (target as EditorLayout).elements.indexOf(
       elementToMove
     );
     if (currentIndex === index || currentIndex === index - 1) {
@@ -144,8 +144,8 @@ const isMoveNextToItself = (
   return false;
 };
 const isMovingControlsInterScopes = (
-  elementToMove: LinkedUISchemaElement,
-  target: LinkedUISchemaElement
+  elementToMove: EditorUISchemaElement,
+  target: EditorUISchemaElement
 ) =>
   containsControls(elementToMove) &&
   getDetailContainer(elementToMove) !== getDetailContainer(target);

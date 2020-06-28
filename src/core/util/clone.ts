@@ -8,7 +8,7 @@
 import { cloneDeep, get } from 'lodash';
 
 import { SchemaElement } from '../model';
-import { LinkedUISchemaElement } from '../model/uischema';
+import { EditorUISchemaElement } from '../model/uischema';
 import { Parentable } from './tree';
 
 interface CalculatePathError {
@@ -250,7 +250,7 @@ const doGetFromPath = (root: any, path: Array<string>): any => {
 };
 
 export const linkElements = (
-  uiSchemaElement: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
   schemaElement: SchemaElement
 ): boolean => {
   if (!uiSchemaElement.uuid) {
@@ -258,8 +258,8 @@ export const linkElements = (
     return false;
   }
 
-  (schemaElement.linkedUiSchemaElements =
-    schemaElement.linkedUiSchemaElements || new Set()).add(
+  (schemaElement.linkedUISchemaElements =
+    schemaElement.linkedUISchemaElements || new Set()).add(
     uiSchemaElement.uuid
   );
 

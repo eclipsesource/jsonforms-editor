@@ -9,12 +9,12 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useSchema, useUiSchema } from '../context';
 import { buildJsonSchema, SchemaElement } from '../model';
-import { buildUiSchema, LinkedUISchemaElement } from '../model/uischema';
+import { buildUiSchema, EditorUISchemaElement } from '../model/uischema';
 
 const doBuildJsonSchema = (schema: SchemaElement | undefined) =>
   schema ? buildJsonSchema(schema) : schema;
 
-const doBuildUiSchema = (uiSchema: LinkedUISchemaElement | undefined) =>
+const doBuildUiSchema = (uiSchema: EditorUISchemaElement | undefined) =>
   uiSchema ? buildUiSchema(uiSchema) : undefined;
 
 /**

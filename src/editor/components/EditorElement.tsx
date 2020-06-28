@@ -17,14 +17,14 @@ import { DndItems } from '../../core/dnd';
 import { SchemaIcon, UISchemaIcon } from '../../core/icons';
 import { Actions } from '../../core/model';
 import {
+  EditorUISchemaElement,
   getUISchemaPath,
   hasChildren,
-  LinkedUISchemaElement,
 } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
 
 export interface EditorElementProps {
-  wrappedElement: LinkedUISchemaElement;
+  wrappedElement: EditorUISchemaElement;
   onHoverCallback?: (isHover: boolean) => void;
 }
 

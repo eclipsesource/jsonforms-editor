@@ -8,7 +8,7 @@
 import { JsonSchema, UISchemaElement } from '@jsonforms/core';
 
 import { SchemaElement } from '../core/model';
-import { LinkedUISchemaElement } from '../core/model/uischema';
+import { EditorUISchemaElement } from '../core/model/uischema';
 
 export interface PropertiesService {
   getProperties(
@@ -24,7 +24,7 @@ interface PropertySchemas {
 
 export class ExamplePropertiesService implements PropertiesService {
   getProperties = (
-    uiElement: LinkedUISchemaElement,
+    uiElement: EditorUISchemaElement,
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
     if (

@@ -27,7 +27,7 @@ import {
   NewUISchemaElement,
 } from '../dnd';
 import { Actions } from '../model';
-import { containsControls, LinkedControl } from '../model/uischema';
+import { containsControls, EditorControl } from '../model/uischema';
 import { DroppableControlRegistration } from './DroppableControl';
 
 interface StyleProps {
@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 });
 
 interface DroppableArrayControlProps extends ArrayControlProps {
-  uischema: LinkedControl;
+  uischema: EditorControl;
 }
 const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
   uischema,
