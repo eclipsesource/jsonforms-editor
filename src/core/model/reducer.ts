@@ -32,17 +32,17 @@ import {
 } from './actions';
 import { buildSchemaTree, SchemaElement } from './schema';
 import {
-  buildLinkedUiSchemaTree,
-  isLinkedControl,
-  isLinkedLayout,
-  LinkedLayout,
-  LinkedUISchemaElement,
+  buildEditorUiSchemaTree,
+  EditorLayout,
+  EditorUISchemaElement,
+  isEditorControl,
+  isEditorLayout,
   traverse,
 } from './uischema';
 
 export interface EditorState {
   schema?: SchemaElement;
-  uiSchema?: LinkedUISchemaElement;
+  uiSchema?: EditorUISchemaElement;
 }
 
 export const schemaReducer = (
@@ -58,24 +58,24 @@ export const schemaReducer = (
 };
 
 export const uiSchemaReducer = (
-  uiSchema: LinkedUISchemaElement | undefined,
+  uiSchema: EditorUISchemaElement | undefined,
   action: UiSchemaAction
 ) => {
   switch (action.type) {
     case SET_UISCHEMA:
       // FIXME we need to link the uischema to the schema
-      return buildLinkedUiSchemaTree(action.uiSchema);
+      return buildEditorUiSchemaTree(action.uiSchema);
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
         const newUIElement = action.uiSchemaElement;
         newUIElement.parent = newUiSchema;
         newUiSchema.elements.splice(action.index, 0, newUIElement);
-        return getRoot(newUiSchema as LinkedUISchemaElement);
+        return getRoot(newUiSchema as EditorUISchemaElement);
       });
     case SET_UISCHEMA_OPTIONS:
       return withCloneTree(action.uiSchema, uiSchema, (newUiSchema) => {
         newUiSchema.options = action.options;
-        return getRoot(newUiSchema as LinkedUISchemaElement);
+        return getRoot(newUiSchema as EditorUISchemaElement);
       });
   }
   // fallback - do nothing
@@ -87,17 +87,17 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
     case SET_SCHEMAS:
       return {
         schema: buildSchemaTree(action.schema),
-        uiSchema: buildLinkedUiSchemaTree(action.uiSchema),
+        uiSchema: buildEditorUiSchemaTree(action.uiSchema),
       };
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
-        action.layout as LinkedUISchemaElement,
+        action.layout as EditorUISchemaElement,
         action.schema,
         state,
         (newUiSchema, newSchema) => {
           const newUIElement = action.uiSchemaElement;
           newUIElement.parent = newUiSchema;
-          (newUiSchema as LinkedLayout).elements.splice(
+          (newUiSchema as EditorLayout).elements.splice(
             action.index,
             0,
             newUIElement
@@ -140,22 +140,22 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 
           // link child and new parent
           elementToMove.parent = newContainer;
-          if (isLinkedLayout(newContainer)) {
+          if (isEditorLayout(newContainer)) {
             const moveRightInSameParent =
               action.newContainer === action.uiSchemaElement.parent &&
-              (action.newContainer as LinkedLayout).elements.indexOf(
+              (action.newContainer as EditorLayout).elements.indexOf(
                 action.uiSchemaElement
               ) < action.index;
             // we need to adapt the index as we removed the element previously
             const indexToUse = moveRightInSameParent
               ? action.index - 1
               : action.index;
-            (newContainer as LinkedLayout).elements.splice(
+            (newContainer as EditorLayout).elements.splice(
               indexToUse,
               0,
               elementToMove
             );
-          } else if (isLinkedControl(newContainer)) {
+          } else if (isEditorControl(newContainer)) {
             newContainer.options = {
               ...newContainer.options,
               detail: elementToMove,
@@ -166,11 +166,11 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             return state;
           }
 
-          // add linkedUiSchemaElements in the schema (for scoped ui elements) if such links existed before
+          // add linkedUISchemaElements in the schema (for scoped ui elements) if such links existed before
           if (action.uiSchemaElement.linkedSchemaElement) {
             // newSchema can't be undefined when the old ui element had links to it
-            (newSchema!.linkedUiSchemaElements =
-              newSchema!.linkedUiSchemaElements || new Set()).add(
+            (newSchema!.linkedUISchemaElements =
+              newSchema!.linkedUISchemaElements || new Set()).add(
               elementToMove.uuid
             );
           }
@@ -181,13 +181,13 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 
           return {
             schema: schemaToReturn,
-            uiSchema: getRoot(newContainer as LinkedUISchemaElement),
+            uiSchema: getRoot(newContainer as EditorUISchemaElement),
           };
         }
       );
     case REMOVE_UISCHEMA_ELEMENT:
       return withCloneTrees(
-        action.uiSchemaElement as LinkedUISchemaElement,
+        action.uiSchemaElement as EditorUISchemaElement,
         state.schema,
         state,
         (elementToRemove, newSchema) => {
@@ -239,8 +239,8 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
                   );
                   acc.error = true;
                 }
-                (schemaElementToLink.linkedUiSchemaElements =
-                  schemaElementToLink.linkedUiSchemaElements || new Set()).add(
+                (schemaElementToLink.linkedUISchemaElements =
+                  schemaElementToLink.linkedUISchemaElements || new Set()).add(
                   action.detail.uuid
                 );
               }
@@ -263,10 +263,10 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 };
 
 /** Removes the given UI element from its tree.
- *  If a SchemaElement is provided, the element to remove will be cleaned up from all linkedUiSchemaElements fields in the schema.
+ *  If a SchemaElement is provided, the element to remove will be cleaned up from all linkedUISchemaElements fields in the schema.
  */
 const removeUiElement = (
-  elementToRemove: LinkedUISchemaElement,
+  elementToRemove: EditorUISchemaElement,
   schema?: SchemaElement
 ): true | UUIDError => {
   // remove links to UI element in the schema (if any)
@@ -283,18 +283,18 @@ const removeUiElement = (
     if (isUUIDError(linkedSchemaElement)) {
       return linkedSchemaElement;
     }
-    linkedSchemaElement.linkedUiSchemaElements?.delete(uuidToRemove);
+    linkedSchemaElement.linkedUISchemaElements?.delete(uuidToRemove);
   }
 
   // remove from parent
   if (elementToRemove.parent) {
     // - case: Layout
-    if ((elementToRemove.parent as LinkedLayout).elements) {
-      const index = (elementToRemove.parent as LinkedLayout).elements.indexOf(
+    if ((elementToRemove.parent as EditorLayout).elements) {
+      const index = (elementToRemove.parent as EditorLayout).elements.indexOf(
         elementToRemove
       );
       if (index !== -1) {
-        (elementToRemove.parent as LinkedLayout).elements.splice(index, 1);
+        (elementToRemove.parent as EditorLayout).elements.splice(index, 1);
       }
     }
     // - case: element with detail

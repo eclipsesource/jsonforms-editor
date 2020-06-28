@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import { SchemaElement } from './schema';
-import { LinkedLayout, LinkedUISchemaElement } from './uischema';
+import { EditorLayout, EditorUISchemaElement } from './uischema';
 
 export type SchemaAction = SetSchemaAction;
 export type UiSchemaAction =
@@ -59,42 +59,42 @@ export interface SetSchemasAction {
 
 export interface AddScopedElementToLayout {
   type: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
-  uiSchemaElement: LinkedUISchemaElement;
-  layout: LinkedLayout;
+  uiSchemaElement: EditorUISchemaElement;
+  layout: EditorLayout;
   schema: SchemaElement;
   index: number;
 }
 
 export interface AddUnscopedElementToLayout {
   type: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT';
-  uiSchemaElement: LinkedUISchemaElement;
-  layout: LinkedLayout;
+  uiSchemaElement: EditorUISchemaElement;
+  layout: EditorLayout;
   index: number;
 }
 
 export interface MoveUiSchemaElement {
   type: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
-  uiSchemaElement: LinkedUISchemaElement;
-  newContainer: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
+  newContainer: EditorUISchemaElement;
   index: number;
   schema?: SchemaElement;
 }
 
 export interface RemoveUiSchemaElement {
   type: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
 }
 
 export interface SetUISchemaOptions {
   type: 'jsonforms-editor/SET_UISCHEMA_OPTIONS';
-  uiSchema: LinkedUISchemaElement;
+  uiSchema: EditorUISchemaElement;
   options: { [key: string]: any };
 }
 
 export interface AddDetail {
   type: 'jsonforms-editor/ADD_DETAIL';
   uiSchemaElementId: string;
-  detail: LinkedUISchemaElement;
+  detail: EditorUISchemaElement;
 }
 
 const setSchema = (schema: any) => ({
@@ -114,8 +114,8 @@ const setSchemas = (schema: any, uiSchema: any) => ({
 });
 
 const addScopedElementToLayout = (
-  uiSchemaElement: LinkedUISchemaElement,
-  layout: LinkedLayout,
+  uiSchemaElement: EditorUISchemaElement,
+  layout: EditorLayout,
   index: number,
   schema: any
 ) => ({
@@ -127,8 +127,8 @@ const addScopedElementToLayout = (
 });
 
 const addUnscopedElementToLayout = (
-  uiSchemaElement: LinkedUISchemaElement,
-  layout: LinkedLayout,
+  uiSchemaElement: EditorUISchemaElement,
+  layout: EditorLayout,
   index: number
 ) => ({
   type: ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
@@ -138,8 +138,8 @@ const addUnscopedElementToLayout = (
 });
 
 const moveUiSchemaElement = (
-  uiSchemaElement: LinkedUISchemaElement,
-  newContainer: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
+  newContainer: EditorUISchemaElement,
   index: number,
   schema?: SchemaElement
 ) => ({
@@ -150,19 +150,19 @@ const moveUiSchemaElement = (
   schema,
 });
 
-const removeUiSchemaElement = (uiSchemaElement: LinkedUISchemaElement) => ({
+const removeUiSchemaElement = (uiSchemaElement: EditorUISchemaElement) => ({
   type: REMOVE_UISCHEMA_ELEMENT,
   uiSchemaElement,
 });
 
 const setUiSchemaOptions = (
-  uiSchema: LinkedUISchemaElement,
+  uiSchema: EditorUISchemaElement,
   options: { [key: string]: any }
 ) => ({ type: SET_UISCHEMA_OPTIONS, uiSchema, options });
 
 const addDetail = (
   uiSchemaElementId: string,
-  detail: LinkedUISchemaElement
+  detail: EditorUISchemaElement
 ) => ({
   type: ADD_DETAIL,
   uiSchemaElementId,

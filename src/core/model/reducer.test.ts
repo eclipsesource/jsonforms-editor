@@ -16,15 +16,15 @@ import {
   SchemaElement,
 } from './schema';
 import {
-  buildLinkedUiSchemaTree,
-  LinkedLayout,
-  LinkedUISchemaElement,
+  buildEditorUiSchemaTree,
+  EditorLayout,
+  EditorUISchemaElement,
 } from './uischema';
 
 describe('add detail action', () => {
   const buildState = (): {
     schema: SchemaElement;
-    uiSchema: LinkedUISchemaElement;
+    uiSchema: EditorUISchemaElement;
   } => {
     const schema = buildSchemaTree({
       type: 'object',
@@ -42,13 +42,13 @@ describe('add detail action', () => {
         },
       },
     }) as ObjectElement;
-    const uiSchema = buildLinkedUiSchemaTree({
+    const uiSchema = buildEditorUiSchemaTree({
       type: 'VerticalLayout',
       elements: [
         { type: 'Control', scope: '#/properties/toys' } as ControlElement,
       ],
-    } as Layout) as LinkedLayout;
-    schema.properties.get('toys')!.linkedUiSchemaElements = new Set(
+    } as Layout) as EditorLayout;
+    schema.properties.get('toys')!.linkedUISchemaElements = new Set(
       uiSchema.elements[0].uuid
     );
     uiSchema.elements[0].linkedSchemaElement = schema.properties.get(
@@ -59,12 +59,12 @@ describe('add detail action', () => {
 
   test('add non-scoped ui schema element as detail', () => {
     const { schema, uiSchema } = buildState();
-    const newDetail = buildLinkedUiSchemaTree({
+    const newDetail = buildEditorUiSchemaTree({
       type: 'HorizontalLayout',
       elements: [],
     } as Layout);
     const addDetailAction = Actions.addDetail(
-      (uiSchema as LinkedLayout).elements[0].uuid,
+      (uiSchema as EditorLayout).elements[0].uuid,
       newDetail
     );
     const { uiSchema: newUiSchema } = combinedReducer(
@@ -72,13 +72,13 @@ describe('add detail action', () => {
       addDetailAction
     );
     expect(
-      (newUiSchema as LinkedLayout).elements[0].options!.detail
+      (newUiSchema as EditorLayout).elements[0].options!.detail
     ).toStrictEqual(newDetail);
   });
 
   test('add scoped ui schema element as detail', () => {
     const { schema, uiSchema } = buildState();
-    const newDetail = buildLinkedUiSchemaTree({
+    const newDetail = buildEditorUiSchemaTree({
       type: 'Control',
       scope: '#/properties/height',
     } as ControlElement);
@@ -86,7 +86,7 @@ describe('add detail action', () => {
       'toys'
     ) as ArrayElement).items as ObjectElement).properties.get('height')!.uuid;
     const addDetailAction = Actions.addDetail(
-      (uiSchema as LinkedLayout).elements[0].uuid,
+      (uiSchema as EditorLayout).elements[0].uuid,
       newDetail
     );
     const { schema: newSchema, uiSchema: newUiSchema } = combinedReducer(
@@ -94,13 +94,13 @@ describe('add detail action', () => {
       addDetailAction
     );
     expect(
-      (newUiSchema as LinkedLayout).elements[0].options!.detail
+      (newUiSchema as EditorLayout).elements[0].options!.detail
     ).toStrictEqual(newDetail);
     expect(
       (((newSchema as ObjectElement).properties.get('toys') as ArrayElement)
         .items as ObjectElement).properties
         .get('height')!
-        .linkedUiSchemaElements!.has(newDetail.uuid)
+        .linkedUISchemaElements!.has(newDetail.uuid)
     ).toBeTruthy();
   });
 });

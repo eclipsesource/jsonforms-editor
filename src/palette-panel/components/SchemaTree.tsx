@@ -19,7 +19,7 @@ import {
   isObjectElement,
   SchemaElement,
 } from '../../core/model/schema';
-import { LinkedUISchemaElement } from '../../core/model/uischema';
+import { EditorUISchemaElement } from '../../core/model/uischema';
 import { createControl } from '../../core/util/generators/uiSchema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
 
@@ -28,7 +28,7 @@ interface SchemaTreeItemProps {
 }
 
 const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
-  const uiSchemaElement: LinkedUISchemaElement = createControl(schemaElement);
+  const uiSchemaElement: EditorUISchemaElement = createControl(schemaElement);
 
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.newUISchemaElement(uiSchemaElement, schemaElement),
