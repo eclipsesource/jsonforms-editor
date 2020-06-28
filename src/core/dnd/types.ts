@@ -9,9 +9,9 @@
 import { getArrayContainer, SchemaElement } from '../model';
 import {
   containsControls,
+  EditorLayout,
+  EditorUISchemaElement,
   getDetailContainer,
-  LinkedLayout,
-  LinkedUISchemaElement,
 } from '../model/uischema';
 import { getHierarchy } from '../util/tree';
 
@@ -23,12 +23,12 @@ export type DndType = NewUISchemaElement | MoveUISchemaElement;
 
 export interface NewUISchemaElement {
   type: 'newUiSchemaElement';
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
   schema?: SchemaElement;
 }
 
 const newUISchemaElement = (
-  uiSchemaElement: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
   schema?: SchemaElement
 ) => ({
   type: NEW_UI_SCHEMA_ELEMENT,
@@ -38,12 +38,12 @@ const newUISchemaElement = (
 
 export interface MoveUISchemaElement {
   type: 'moveUiSchemaElement';
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
   schema?: SchemaElement;
 }
 
 const moveUISchemaElement = (
-  uiSchemaElement: LinkedUISchemaElement,
+  uiSchemaElement: EditorUISchemaElement,
   schema?: SchemaElement
 ) => ({
   type: MOVE_UI_SCHEMA_ELEMENT,
@@ -55,7 +55,7 @@ export const DndItems = { newUISchemaElement, moveUISchemaElement };
 
 export const canDropIntoLayout = (
   item: NewUISchemaElement,
-  layout: LinkedUISchemaElement
+  layout: EditorUISchemaElement
 ) => {
   // check scope changes
   const detailContainer = getDetailContainer(layout);
@@ -77,7 +77,7 @@ export const canDropIntoLayout = (
  */
 export const canDropIntoScope = (
   item: NewUISchemaElement,
-  scopeUISchemaElement: LinkedUISchemaElement | undefined
+  scopeUISchemaElement: EditorUISchemaElement | undefined
 ) => {
   // it's a control when there is a schema
   if (item.schema) {
@@ -102,10 +102,10 @@ export const canDropIntoScope = (
 
 export const canMoveSchemaElementTo = (
   item: MoveUISchemaElement,
-  layout: LinkedUISchemaElement,
+  layout: EditorUISchemaElement,
   index: number
 ) => {
-  const uiElementToMove = item.uiSchemaElement as LinkedUISchemaElement;
+  const uiElementToMove = item.uiSchemaElement as EditorUISchemaElement;
   // can't move the root element
   if (!uiElementToMove.parent) {
     return false;
@@ -116,7 +116,7 @@ export const canMoveSchemaElementTo = (
   }
   // can't move element next to itself (which would result in no change)
   if (layout === uiElementToMove.parent) {
-    const currentIndex = (uiElementToMove.parent as LinkedLayout).elements.indexOf(
+    const currentIndex = (uiElementToMove.parent as EditorLayout).elements.indexOf(
       uiElementToMove
     );
     if (currentIndex === index || currentIndex === index - 1) {

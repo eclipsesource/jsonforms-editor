@@ -10,13 +10,13 @@ import React, { useContext } from 'react';
 import { SchemaService } from '../api/schemaService';
 import { SchemaElement } from '../model';
 import { EditorAction } from '../model/actions';
-import { LinkedUISchemaElement } from '../model/uischema';
+import { EditorUISchemaElement } from '../model/uischema';
 import { SelectedElement } from '../selection';
 
 export interface EditorContext {
   schemaService: SchemaService;
   schema: SchemaElement | undefined;
-  uiSchema: LinkedUISchemaElement | undefined;
+  uiSchema: EditorUISchemaElement | undefined;
   dispatch: (action: EditorAction) => void;
   selection: SelectedElement;
   setSelection: (selection: SelectedElement) => void;
@@ -42,7 +42,7 @@ export const useSchema = (): SchemaElement | undefined => {
   return schema;
 };
 
-export const useUiSchema = (): LinkedUISchemaElement | undefined => {
+export const useUiSchema = (): EditorUISchemaElement | undefined => {
   const { uiSchema } = useEditorContext();
   return uiSchema;
 };

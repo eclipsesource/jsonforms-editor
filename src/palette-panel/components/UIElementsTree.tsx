@@ -11,12 +11,12 @@ import { useDrag } from 'react-dnd';
 
 import { DndItems } from '../../core/dnd';
 import { HorizontalIcon, VerticalIcon } from '../../core/icons';
-import { LinkedUISchemaElement } from '../../core/model/uischema';
+import { EditorUISchemaElement } from '../../core/model/uischema';
 import { createLayout } from '../../core/util/generators/uiSchema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
 
 interface UiSchemaTreeItemProps {
-  uiSchemaElement: LinkedUISchemaElement;
+  uiSchemaElement: EditorUISchemaElement;
   label: string;
   icon?: React.ReactNode;
 }

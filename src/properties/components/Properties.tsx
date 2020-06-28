@@ -20,13 +20,13 @@ import {
   useUiSchema,
 } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
-import { LinkedUISchemaElement } from '../../core/model/uischema';
+import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
 const getProperties = (
-  uiElement: LinkedUISchemaElement | undefined,
+  uiElement: EditorUISchemaElement | undefined,
   schema: SchemaElement | undefined
 ) => {
   if (!uiElement || !schema) {
@@ -46,12 +46,12 @@ export const Properties = () => {
   const schema = useSchema();
   const dispatch = useDispatch();
 
-  const uiElement: LinkedUISchemaElement = useMemo(
+  const uiElement: EditorUISchemaElement = useMemo(
     () => tryFindByUUID(uiSchema, selection?.uuid),
     [selection, uiSchema]
   );
   const canSetUISchemaOptions = (
-    uiElement: LinkedUISchemaElement | undefined,
+    uiElement: EditorUISchemaElement | undefined,
     updatedProperties: any
   ): boolean =>
     !!uiElement &&

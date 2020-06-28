@@ -9,21 +9,21 @@ import { ControlElement, Layout } from '@jsonforms/core';
 import { v4 as uuid } from 'uuid';
 
 import { getScope, SchemaElement } from '../../model';
-import { LinkedUISchemaElement } from '../../model/uischema';
+import { EditorUISchemaElement } from '../../model/uischema';
 export const createControl = (
   schemaElement: SchemaElement
-): ControlElement & LinkedUISchemaElement => {
+): ControlElement & EditorUISchemaElement => {
   return {
     type: 'Control',
     scope: `#${getScope(schemaElement)}`,
     uuid: uuid(),
-  } as ControlElement & LinkedUISchemaElement;
+  } as ControlElement & EditorUISchemaElement;
 };
 
-export const createLayout = (type: string): Layout & LinkedUISchemaElement => {
+export const createLayout = (type: string): Layout & EditorUISchemaElement => {
   return {
     type: type,
     elements: [],
     uuid: uuid(),
-  } as Layout & LinkedUISchemaElement;
+  } as Layout & EditorUISchemaElement;
 };

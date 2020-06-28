@@ -22,7 +22,7 @@ interface SchemaElementBase extends TreeElement<SchemaElement> {
   type: SchemaElementType;
   schema: any;
   other?: Map<string, SchemaElement>;
-  linkedUiSchemaElements?: Set<string>;
+  linkedUISchemaElements?: Set<string>;
 }
 
 export type SchemaElement =
