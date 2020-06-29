@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
 import { Editor } from './Editor';
-import { EditorPreview } from './EditorPreview';
+import { AngularMaterialPreview, ReactMaterialPreview } from './preview';
 
 const useStyles = makeStyles(() => ({
   editorPanel: {
@@ -31,13 +31,17 @@ export const EditorPanel = () => {
     <div className={classes.editorPanel}>
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label='Editor' />
-        <Tab label='Preview' />
+        <Tab label='Preview (Angular)' />
+        <Tab label='Preview (React)' />
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
         <Editor />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>
-        <EditorPreview />
+        <AngularMaterialPreview />
+      </TabContent>
+      <TabContent index={2} currentIndex={selectedTab}>
+        <ReactMaterialPreview />
       </TabContent>
     </div>
   );
