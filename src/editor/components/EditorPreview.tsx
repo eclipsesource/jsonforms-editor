@@ -6,11 +6,8 @@
  * ---------------------------------------------------------------------
  */
 import React from 'react';
-import { useEffect, useRef } from 'react';
 
-import { useUiSchema } from '../../core/context';
-import { buildUiSchema } from '../../core/model/uischema';
-import { useExportSchema } from '../../core/util/hooks';
+import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 
 declare global {
   namespace JSX {
@@ -21,22 +18,18 @@ declare global {
 }
 
 export const EditorPreview: React.FC = () => {
-  const ngJsonForms = useRef<JSX.IntrinsicElements['ng-jsonforms']>(null);
   const schema = useExportSchema();
-  const editorUISchema = useUiSchema();
+  const uiSchema = useExportUiSchema();
 
-  useEffect(() => {
-    const uiSchema = editorUISchema ? buildUiSchema(editorUISchema) : undefined;
-    if (ngJsonForms.current) {
-      ngJsonForms.current.ngElementStrategy.componentRef.instance.setJsonFormsInput(
-        schema,
-        uiSchema
-      );
-    }
-  }, [schema, editorUISchema]);
-  return (
+  const inputSchema = JSON.stringify(schema);
+  const inputUISchema = JSON.stringify(uiSchema);
+
+  return inputUISchema && inputSchema ? (
     <div>
-      <ng-jsonforms ref={ngJsonForms}></ng-jsonforms>
+      <ng-jsonforms
+        uischema={inputUISchema}
+        schema={inputSchema}
+      ></ng-jsonforms>
     </div>
-  );
+  ) : null;
 };
