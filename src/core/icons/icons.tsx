@@ -6,6 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import { styled } from '@material-ui/core';
+import CropFreeIcon from '@material-ui/icons/CropFree';
 import Height from '@material-ui/icons/Height';
 import InsertLinkIcon from '@material-ui/icons/InsertLink';
 import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
@@ -20,6 +21,7 @@ export const VerticalIcon = Height;
 export const HorizontalIcon = styled(Height)({
   transform: 'rotate(90deg)',
 });
+export const GroupIcon = CropFreeIcon;
 
 export const ControlIcon = InsertLinkIcon;
 export const ObjectIcon = ListAltIcon;
@@ -46,6 +48,8 @@ export const getIconForUISchemaType = (type: string) => {
       return HorizontalIcon;
     case 'VerticalLayout':
       return VerticalIcon;
+    case 'Group':
+      return GroupIcon;
     case 'Control':
       return ControlIcon;
     default:

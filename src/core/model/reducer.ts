@@ -27,8 +27,8 @@ import {
   SET_SCHEMA,
   SET_SCHEMAS,
   SET_UISCHEMA,
-  SET_UISCHEMA_OPTIONS,
   UiSchemaAction,
+  UPDATE_UISCHEMA_ELEMENT,
 } from './actions';
 import { buildSchemaTree, SchemaElement } from './schema';
 import {
@@ -72,10 +72,19 @@ export const uiSchemaReducer = (
         newUiSchema.elements.splice(action.index, 0, newUIElement);
         return getRoot(newUiSchema as EditorUISchemaElement);
       });
-    case SET_UISCHEMA_OPTIONS:
-      return withCloneTree(action.uiSchema, uiSchema, (newUiSchema) => {
-        newUiSchema.options = action.options;
-        return getRoot(newUiSchema as EditorUISchemaElement);
+    case UPDATE_UISCHEMA_ELEMENT:
+      return withCloneTree(action.uiSchemaElement, uiSchema, (newUiSchema) => {
+        const updatedUISchemaElement = {
+          ...newUiSchema,
+          ...action.changedProperties,
+        };
+        const parent = newUiSchema.parent as EditorLayout;
+        if (parent) {
+          const index = parent.elements.indexOf(newUiSchema);
+          // update element in its parent element list
+          parent.elements[index] = updatedUISchemaElement;
+        }
+        return getRoot(updatedUISchemaElement as EditorUISchemaElement);
       });
   }
   // fallback - do nothing
@@ -320,7 +329,7 @@ export const editorReducer = (
       return { schema: schemaReducer(schema, action), uiSchema };
     case SET_UISCHEMA:
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
-    case SET_UISCHEMA_OPTIONS:
+    case UPDATE_UISCHEMA_ELEMENT:
       return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
     case SET_SCHEMAS:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:

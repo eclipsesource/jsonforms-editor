@@ -5,7 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+import {
+  ControlElement,
+  JsonSchema,
+  Layout,
+  UISchemaElement,
+} from '@jsonforms/core';
 
 import { SchemaElement } from '../core/model';
 import { EditorUISchemaElement } from '../core/model/uischema';
@@ -15,6 +20,11 @@ export interface PropertiesService {
     uiElement: any,
     schemaElement: any
   ): PropertySchemas | undefined;
+
+  getDataForProperties(
+    uiElement: EditorUISchemaElement | undefined,
+    propertiesSchema: JsonSchema
+  ): any;
 }
 
 interface PropertySchemas {
@@ -35,10 +45,57 @@ export class ExamplePropertiesService implements PropertiesService {
       return {
         schema: {
           type: 'object',
-          properties: { multi: { type: 'boolean' } },
+          properties: {
+            options: {
+              type: 'object',
+              properties: {
+                multi: { type: 'boolean' },
+              },
+            },
+          },
+        },
+        uiSchema: {
+          type: 'VerticalLayout',
+          elements: [
+            {
+              type: 'Control',
+              scope: '#/properties/options/properties/multi',
+            } as ControlElement,
+          ],
+        } as Layout,
+      };
+    }
+    if (uiElement && uiElement.type === 'Group') {
+      return {
+        schema: {
+          type: 'object',
+          properties: {
+            label: { type: 'string' },
+          },
         },
       };
     }
+
     return undefined;
+  };
+
+  getDataForProperties = (
+    uiElement: EditorUISchemaElement | undefined,
+    propertiesSchema: JsonSchema
+  ) => {
+    if (!propertiesSchema.properties) {
+      return undefined;
+    }
+
+    const data = Object.keys(propertiesSchema.properties).reduce(
+      (acc, prop) => {
+        if (uiElement && uiElement[prop as keyof EditorUISchemaElement]) {
+          acc[prop] = uiElement[prop as keyof EditorUISchemaElement];
+        }
+        return acc;
+      },
+      {} as any
+    );
+    return data;
   };
 }

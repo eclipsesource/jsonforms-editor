@@ -5,6 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonSchema } from '@jsonforms/core';
 import {
   materialCells,
   materialRenderers,
@@ -25,19 +26,38 @@ import { tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
+
 const getProperties = (
   uiElement: EditorUISchemaElement | undefined,
   schema: SchemaElement | undefined
 ) => {
-  if (!uiElement || !schema) {
+  if (!uiElement) {
     return undefined;
   }
   const linkedSchemaUUID = uiElement.linkedSchemaElement;
-  if (!linkedSchemaUUID) {
-    return undefined;
-  }
-  const elementSchema = tryFindByUUID(schema, linkedSchemaUUID);
+  const elementSchema =
+    linkedSchemaUUID && schema
+      ? tryFindByUUID(schema, linkedSchemaUUID)
+      : undefined;
   return propertiesService.getProperties(uiElement, elementSchema);
+};
+
+const canUpdateUiSchemaElement = (
+  uiElement: EditorUISchemaElement | undefined,
+  updatedProperties: any
+): boolean => {
+  return (
+    !!updatedProperties &&
+    !isEmpty(updatedProperties) &&
+    !!uiElement &&
+    Object.entries(updatedProperties).every(
+      (value) =>
+        !isEqual(
+          updatedProperties[value[0] as keyof any],
+          uiElement[value[0] as keyof EditorUISchemaElement]
+        )
+    )
+  );
 };
 
 export const Properties = () => {
@@ -50,28 +70,28 @@ export const Properties = () => {
     () => tryFindByUUID(uiSchema, selection?.uuid),
     [selection, uiSchema]
   );
-  const canSetUISchemaOptions = (
-    uiElement: EditorUISchemaElement | undefined,
-    updatedProperties: any
-  ): boolean =>
-    !!uiElement &&
-    !isEqual(updatedProperties, uiElement.options) &&
-    !(uiElement.options === undefined && isEmpty(updatedProperties));
 
   const updateProperties = useCallback(
     ({ data: updatedProperties }) => {
-      if (canSetUISchemaOptions(uiElement, updatedProperties)) {
+      if (canUpdateUiSchemaElement(uiElement, updatedProperties)) {
         dispatch(Actions.setUiSchemaOptions(uiElement, updatedProperties));
       }
     },
     [dispatch, uiElement]
   );
+
+  const getData = useCallback(
+    (propertiesSchema: JsonSchema) =>
+      propertiesService.getDataForProperties(uiElement, propertiesSchema),
+    [uiElement]
+  );
+
   if (!selection) return <NoSelection />;
 
   const properties = getProperties(uiElement, schema);
   return properties ? (
     <JsonForms
-      data={uiElement.options}
+      data={getData(properties.schema)}
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}

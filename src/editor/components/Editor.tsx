@@ -16,6 +16,7 @@ import React from 'react';
 import { useUiSchema } from '../../core/context';
 import { DroppableArrayControlRegistration } from '../../core/renderers/DroppableArrayControl';
 import { DroppableControlRegistration } from '../../core/renderers/DroppableControl';
+import { DroppableGroupLayoutRegistration } from '../../core/renderers/DroppableGroupLayout';
 import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
@@ -28,6 +29,7 @@ const renderers = [
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
   DroppableControlRegistration,
+  DroppableGroupLayoutRegistration,
   DroppableArrayControlRegistration,
 ];
 

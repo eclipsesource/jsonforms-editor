@@ -6,10 +6,11 @@
  * ---------------------------------------------------------------------
  */
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { PaletteElement } from '../../core/api/paletteService';
 import { TabContent } from '../../core/components';
-import { useDispatch, useSchema } from '../../core/context';
+import { useDispatch, usePaletteService, useSchema } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { SchemaJson, UpdateResult } from './SchemaJson';
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const PalettePanel = () => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const [paletteElements, setPaletteElements] = useState<
+    Map<string, PaletteElement[]>
+  >(new Map());
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
   };
@@ -34,6 +38,13 @@ export const PalettePanel = () => {
   const schema: SchemaElement | undefined = useSchema();
   const exportSchema = useExportSchema();
   const exportUiSchema = useExportUiSchema();
+  const paletteService = usePaletteService();
+
+  useEffect(() => {
+    paletteService
+      .getPaletteElements()
+      .then((elements) => setPaletteElements(elements));
+  }, [paletteService]);
 
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
@@ -83,7 +94,10 @@ export const PalettePanel = () => {
         <Tab label='UI Schema' data-cy='uischema-tab' />
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
-        <UIElementsTree className={classes.uiElementsTree} />
+        <UIElementsTree
+          className={classes.uiElementsTree}
+          elements={paletteElements}
+        />
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>

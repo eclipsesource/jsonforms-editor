@@ -9,10 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
+import { PaletteElement } from '../../core/api/paletteService';
 import { DndItems } from '../../core/dnd';
-import { HorizontalIcon, VerticalIcon } from '../../core/icons';
 import { EditorUISchemaElement } from '../../core/model/uischema';
-import { createLayout } from '../../core/util/generators/uiSchema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
 
 interface UiSchemaTreeItemProps {
@@ -47,28 +46,36 @@ const UiSchemaTreeItem: React.FC<UiSchemaTreeItemProps> = ({
 
 interface UIElementsTreeProps {
   className?: string;
+  elements: Map<string, PaletteElement[]>;
 }
 
 export const UIElementsTree: React.FC<UIElementsTreeProps> = ({
   className,
+  elements,
 }) => {
   return (
     <div className={className}>
-      <Typography variant='h6' color='inherit' noWrap>
-        Layouts
-      </Typography>
-      <StyledTreeView defaultExpanded={['']}>
-        <UiSchemaTreeItem
-          label='Horizontal Layout'
-          icon={<HorizontalIcon />}
-          uiSchemaElement={createLayout('HorizontalLayout')}
-        />
-        <UiSchemaTreeItem
-          label='Vertical Layout'
-          icon={<VerticalIcon />}
-          uiSchemaElement={createLayout('VerticalLayout')}
-        />
-      </StyledTreeView>
+      {Array.from(elements).map((value) => {
+        const category = value[0];
+        const paletteElements = value[1];
+        return (
+          <div key={`container-${category}`}>
+            <Typography variant='h6' color='inherit' noWrap>
+              {category}
+            </Typography>
+            <StyledTreeView defaultExpanded={['']}>
+              {paletteElements.map(({ type, label, icon, uiSchemaElement }) => (
+                <UiSchemaTreeItem
+                  key={`treeitem-${type}`}
+                  label={label}
+                  icon={icon}
+                  uiSchemaElement={uiSchemaElement}
+                />
+              ))}
+            </StyledTreeView>
+          </div>
+        );
+      })}
     </div>
   );
 };
