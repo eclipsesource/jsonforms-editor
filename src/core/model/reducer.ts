@@ -78,12 +78,14 @@ export const uiSchemaReducer = (
           ...newUiSchema,
           ...action.changedProperties,
         };
-        const parent = newUiSchema.parent as EditorLayout;
-        if (parent) {
+
+        if (newUiSchema.parent && isEditorLayout(newUiSchema.parent)) {
+          const parent = newUiSchema.parent as EditorLayout;
           const index = parent.elements.indexOf(newUiSchema);
           // update element in its parent element list
           parent.elements[index] = updatedUISchemaElement;
         }
+
         return getRoot(updatedUISchemaElement as EditorUISchemaElement);
       });
   }

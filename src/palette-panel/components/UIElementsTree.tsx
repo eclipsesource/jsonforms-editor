@@ -15,27 +15,29 @@ import { EditorUISchemaElement } from '../../core/model/uischema';
 import { StyledTreeItem, StyledTreeView } from './Tree';
 
 interface UiSchemaTreeItemProps {
-  uiSchemaElement: EditorUISchemaElement;
+  uiSchemaElementProvider: () => EditorUISchemaElement;
+  type: string;
   label: string;
   icon?: React.ReactNode;
 }
 
 const UiSchemaTreeItem: React.FC<UiSchemaTreeItemProps> = ({
-  uiSchemaElement,
+  uiSchemaElementProvider,
+  type,
   label,
   icon,
 }) => {
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.newUISchemaElement(uiSchemaElement),
+    item: DndItems.newUISchemaElement(uiSchemaElementProvider()),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   });
   return (
-    <div ref={drag} data-cy={`${uiSchemaElement.type}-source`}>
+    <div ref={drag} data-cy={`${type}-source`}>
       <StyledTreeItem
-        key={uiSchemaElement.type}
-        nodeId={uiSchemaElement.type}
+        key={type}
+        nodeId={type}
         label={label}
         icon={icon}
         isDragging={isDragging}
@@ -46,7 +48,7 @@ const UiSchemaTreeItem: React.FC<UiSchemaTreeItemProps> = ({
 
 interface UIElementsTreeProps {
   className?: string;
-  elements: Map<string, PaletteElement[]>;
+  elements: PaletteElement[];
 }
 
 export const UIElementsTree: React.FC<UIElementsTreeProps> = ({
@@ -55,27 +57,20 @@ export const UIElementsTree: React.FC<UIElementsTreeProps> = ({
 }) => {
   return (
     <div className={className}>
-      {Array.from(elements).map((value) => {
-        const category = value[0];
-        const paletteElements = value[1];
-        return (
-          <div key={`container-${category}`}>
-            <Typography variant='h6' color='inherit' noWrap>
-              {category}
-            </Typography>
-            <StyledTreeView defaultExpanded={['']}>
-              {paletteElements.map(({ type, label, icon, uiSchemaElement }) => (
-                <UiSchemaTreeItem
-                  key={`treeitem-${type}`}
-                  label={label}
-                  icon={icon}
-                  uiSchemaElement={uiSchemaElement}
-                />
-              ))}
-            </StyledTreeView>
-          </div>
-        );
-      })}
+      <Typography variant='h6' color='inherit' noWrap>
+        Layouts
+      </Typography>
+      <StyledTreeView defaultExpanded={['']}>
+        {elements.map(({ type, label, icon, uiSchemaElementProvider }) => (
+          <UiSchemaTreeItem
+            key={`treeitem-${type}`}
+            type={type}
+            label={label}
+            icon={icon}
+            uiSchemaElementProvider={uiSchemaElementProvider}
+          />
+        ))}
+      </StyledTreeView>
     </div>
   );
 };

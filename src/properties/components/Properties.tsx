@@ -21,7 +21,7 @@ import {
 } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
-import { cloneTree, tryFindByUUID } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
@@ -71,10 +71,9 @@ export const Properties = () => {
   if (!selection) return <NoSelection />;
 
   const properties = getProperties(uiElement, schema);
-  const data = cloneTree(uiElement);
   return properties ? (
     <JsonForms
-      data={data}
+      data={uiElement}
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}

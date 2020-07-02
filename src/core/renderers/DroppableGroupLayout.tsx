@@ -45,7 +45,7 @@ const Group: React.FC<LayoutProps> = (props) => {
                 classes: {
                   input: classes.groupLabelInput,
                 },
-                readOnly: true, //TODO make label editable
+                readOnly: true,
               }}
               className={classes.groupLabel}
             />
