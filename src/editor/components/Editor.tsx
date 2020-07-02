@@ -17,6 +17,7 @@ import { useUiSchema } from '../../core/context';
 import { DroppableArrayControlRegistration } from '../../core/renderers/DroppableArrayControl';
 import { DroppableControlRegistration } from '../../core/renderers/DroppableControl';
 import { DroppableGroupLayoutRegistration } from '../../core/renderers/DroppableGroupLayout';
+import { DroppableLabelRegistration } from '../../core/renderers/DroppableLabel';
 import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
@@ -31,6 +32,7 @@ const renderers = [
   DroppableControlRegistration,
   DroppableGroupLayoutRegistration,
   DroppableArrayControlRegistration,
+  DroppableLabelRegistration,
 ];
 
 const useStyles = makeStyles(() => ({

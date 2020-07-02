@@ -69,6 +69,16 @@ export class ExamplePropertiesService implements PropertiesService {
         },
       };
     }
+    if (uiElement?.type === 'Label') {
+      return {
+        schema: {
+          type: 'object',
+          properties: {
+            text: { type: 'string' },
+          },
+        },
+      };
+    }
 
     return undefined;
   };

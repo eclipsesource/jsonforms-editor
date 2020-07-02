@@ -8,9 +8,9 @@
 
 import React from 'react';
 
-import { GroupIcon, HorizontalIcon, VerticalIcon } from '../icons';
+import { GroupIcon, HorizontalIcon, LabelIcon, VerticalIcon } from '../icons';
 import { EditorUISchemaElement } from '../model/uischema';
-import { createLayout } from '../util/generators/uiSchema';
+import { createLabel, createLayout } from '../util/generators/uiSchema';
 
 export interface PaletteService {
   getPaletteElements(): PaletteElement[];
@@ -41,6 +41,12 @@ const paletteElements: PaletteElement[] = [
     label: 'Group',
     icon: <GroupIcon />,
     uiSchemaElementProvider: () => createLayout('Group'),
+  },
+  {
+    type: 'Label',
+    label: 'Label',
+    icon: <LabelIcon />,
+    uiSchemaElementProvider: () => createLabel(),
   },
 ];
 

@@ -13,6 +13,7 @@ import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
 import React from 'react';
 
 import { ARRAY, OBJECT, PRIMITIVE, SchemaElementType } from '../model';
@@ -22,6 +23,8 @@ export const HorizontalIcon = styled(Height)({
   transform: 'rotate(90deg)',
 });
 export const GroupIcon = CropFreeIcon;
+
+export const LabelIcon = TextFieldsIcon;
 
 export const ControlIcon = InsertLinkIcon;
 export const ObjectIcon = ListAltIcon;
@@ -52,6 +55,8 @@ export const getIconForUISchemaType = (type: string) => {
       return GroupIcon;
     case 'Control':
       return ControlIcon;
+    case 'Label':
+      return LabelIcon;
     default:
       return OtherIcon;
   }
