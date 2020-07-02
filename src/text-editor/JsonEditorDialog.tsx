@@ -30,8 +30,12 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(2),
       flex: 1,
     },
+    dialogPaper: {
+      height: '100%', // 'MonacoEditor' uses height to grow
+      minHeight: '95vh',
+      maxHeight: '95vh',
+    },
     dialogContent: {
-      height: '90vh',
       overflow: 'hidden',
       marginTop: theme.spacing(2),
       flex: 1,
@@ -69,6 +73,7 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
       open={open}
       onClose={onCancel}
       TransitionComponent={Transition}
+      classes={{ paper: classes.dialogPaper }}
       maxWidth='lg'
       fullWidth
     >
