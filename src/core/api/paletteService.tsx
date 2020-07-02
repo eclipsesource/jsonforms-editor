@@ -13,7 +13,7 @@ import { EditorUISchemaElement } from '../model/uischema';
 import { createLayout } from '../util/generators/uiSchema';
 
 export interface PaletteService {
-  getPaletteElements(): Promise<any>;
+  getPaletteElements(): Map<string, PaletteElement[]>;
 }
 
 export interface PaletteElement {
@@ -50,5 +50,5 @@ const paletteElements: Map<string, PaletteElement[]> = new Map([
 ]);
 
 export class ExamplePaletteService implements PaletteService {
-  getPaletteElements = async () => paletteElements;
+  getPaletteElements = () => paletteElements;
 }

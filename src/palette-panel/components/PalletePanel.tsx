@@ -6,9 +6,8 @@
  * ---------------------------------------------------------------------
  */
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { PaletteElement } from '../../core/api/paletteService';
 import { TabContent } from '../../core/components';
 import { useDispatch, usePaletteService, useSchema } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
@@ -27,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const PalettePanel = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [paletteElements, setPaletteElements] = useState<
-    Map<string, PaletteElement[]>
-  >(new Map());
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
   };
@@ -39,12 +35,6 @@ export const PalettePanel = () => {
   const exportSchema = useExportSchema();
   const exportUiSchema = useExportUiSchema();
   const paletteService = usePaletteService();
-
-  useEffect(() => {
-    paletteService
-      .getPaletteElements()
-      .then((elements) => setPaletteElements(elements));
-  }, [paletteService]);
 
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
@@ -96,7 +86,7 @@ export const PalettePanel = () => {
       <TabContent index={0} currentIndex={selectedTab}>
         <UIElementsTree
           className={classes.uiElementsTree}
-          elements={paletteElements}
+          elements={paletteService.getPaletteElements()}
         />
         <SchemaTreeView schema={schema} />
       </TabContent>

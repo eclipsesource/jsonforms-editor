@@ -20,11 +20,6 @@ export interface PropertiesService {
     uiElement: any,
     schemaElement: any
   ): PropertySchemas | undefined;
-
-  getDataForProperties(
-    uiElement: EditorUISchemaElement | undefined,
-    propertiesSchema: JsonSchema
-  ): any;
 }
 
 interface PropertySchemas {
@@ -38,9 +33,8 @@ export class ExamplePropertiesService implements PropertiesService {
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
     if (
-      schemaElement &&
-      schemaElement.schema.type === 'string' &&
-      !schemaElement.schema.format
+      schemaElement?.schema.type === 'string' &&
+      !schemaElement?.schema.format
     ) {
       return {
         schema: {
@@ -65,7 +59,7 @@ export class ExamplePropertiesService implements PropertiesService {
         } as Layout,
       };
     }
-    if (uiElement && uiElement.type === 'Group') {
+    if (uiElement?.type === 'Group') {
       return {
         schema: {
           type: 'object',
@@ -77,25 +71,5 @@ export class ExamplePropertiesService implements PropertiesService {
     }
 
     return undefined;
-  };
-
-  getDataForProperties = (
-    uiElement: EditorUISchemaElement | undefined,
-    propertiesSchema: JsonSchema
-  ) => {
-    if (!propertiesSchema.properties) {
-      return undefined;
-    }
-
-    const data = Object.keys(propertiesSchema.properties).reduce(
-      (acc, prop) => {
-        if (uiElement && uiElement[prop as keyof EditorUISchemaElement]) {
-          acc[prop] = uiElement[prop as keyof EditorUISchemaElement];
-        }
-        return acc;
-      },
-      {} as any
-    );
-    return data;
   };
 }

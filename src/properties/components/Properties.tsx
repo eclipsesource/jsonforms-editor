@@ -5,13 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonSchema } from '@jsonforms/core';
 import {
   materialCells,
   materialRenderers,
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { isEmpty, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 
 import {
@@ -22,7 +21,7 @@ import {
 } from '../../core/context';
 import { Actions, SchemaElement } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
-import { tryFindByUUID } from '../../core/util/clone';
+import { cloneTree, tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
 
 const propertiesService = new ExamplePropertiesService();
@@ -46,18 +45,7 @@ const canUpdateUiSchemaElement = (
   uiElement: EditorUISchemaElement | undefined,
   updatedProperties: any
 ): boolean => {
-  return (
-    !!updatedProperties &&
-    !isEmpty(updatedProperties) &&
-    !!uiElement &&
-    Object.entries(updatedProperties).every(
-      (value) =>
-        !isEqual(
-          updatedProperties[value[0] as keyof any],
-          uiElement[value[0] as keyof EditorUISchemaElement]
-        )
-    )
-  );
+  return !isEqual(uiElement, updatedProperties);
 };
 
 export const Properties = () => {
@@ -80,18 +68,13 @@ export const Properties = () => {
     [dispatch, uiElement]
   );
 
-  const getData = useCallback(
-    (propertiesSchema: JsonSchema) =>
-      propertiesService.getDataForProperties(uiElement, propertiesSchema),
-    [uiElement]
-  );
-
   if (!selection) return <NoSelection />;
 
   const properties = getProperties(uiElement, schema);
+  const data = cloneTree(uiElement);
   return properties ? (
     <JsonForms
-      data={getData(properties.schema)}
+      data={data}
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}

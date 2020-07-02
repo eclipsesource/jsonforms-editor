@@ -7,7 +7,13 @@
  */
 import { GroupLayout, LayoutProps, rankWith, uiTypeIs } from '@jsonforms/core';
 import { withJsonFormsLayoutProps } from '@jsonforms/react';
-import { Card, CardContent, makeStyles, TextField } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import React from 'react';
 
 import { EditorElement } from '../../editor/components/EditorElement';
@@ -30,17 +36,21 @@ const Group: React.FC<LayoutProps> = (props) => {
   return (
     <EditorElement wrappedElement={groupLayout}>
       <Card>
-        <TextField
-          value={groupLayout.label ?? ''}
-          placeholder='Label'
-          InputProps={{
-            classes: {
-              input: classes.groupLabelInput,
-            },
-            readOnly: true, //TODO make label editable
-          }}
-          className={classes.groupLabel}
-        />
+        <CardHeader
+          component={() => (
+            <TextField
+              value={groupLayout.label ?? ''}
+              placeholder='Label'
+              InputProps={{
+                classes: {
+                  input: classes.groupLabelInput,
+                },
+                readOnly: true, //TODO make label editable
+              }}
+              className={classes.groupLabel}
+            />
+          )}
+        ></CardHeader>
         <CardContent>
           <DroppableLayoutContent
             {...props}
