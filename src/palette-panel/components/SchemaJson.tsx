@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 
 import { ErrorDialog } from '../../core/components/ErrorDialog';
 import { copyToClipBoard } from '../../core/util/clipboard';
-import { JsonEditorDialog } from '../../text-editor/JsonEditorDialog';
+import { JsonEditorDialog, TextType } from '../../text-editor';
 
 interface UpdateOk {
   success: true;
@@ -27,12 +27,14 @@ export type UpdateResult = UpdateOk | UpdateFail;
 interface SchemaJsonProps {
   title: string;
   schema: string;
+  type: TextType;
   updateSchema: (schema: any) => UpdateResult;
 }
 
 export const SchemaJson: React.FC<SchemaJsonProps> = ({
   title,
   schema,
+  type,
   updateSchema,
 }) => {
   const [showSchemaEditor, setShowSchemaEditor] = useState<boolean>(false);
@@ -68,6 +70,7 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
           open
           title={title}
           initialContent={schema}
+          type={type}
           onCancel={() => setShowSchemaEditor(false)}
           onApply={onApply}
         />

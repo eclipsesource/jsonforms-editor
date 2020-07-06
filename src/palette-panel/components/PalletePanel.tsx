@@ -90,6 +90,7 @@ export const PalettePanel = () => {
         <SchemaJson
           title='JSON Schema'
           schema={toText(exportSchema)}
+          type='JSON Schema'
           updateSchema={handleSchemaUpdate}
         />
       </TabContent>
@@ -97,6 +98,7 @@ export const PalettePanel = () => {
         <SchemaJson
           title='UI Schema'
           schema={toText(exportUiSchema)}
+          type='UI Schema'
           updateSchema={handleUiSchemaUpdate}
         />
       </TabContent>

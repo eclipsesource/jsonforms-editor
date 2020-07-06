@@ -10,19 +10,29 @@ describe('Edit schemas', () => {
     cy.fixture('simpleSchema').then((simpleSchema) => {
       this.simpleSchema = simpleSchema;
     });
+    cy.fixture('invalidSchema').then((invalidSchema) => {
+      this.invalidSchema = invalidSchema;
+    });
     cy.fixture('simpleUiSchema').then((simpleUiSchema) => {
       this.simpleUiSchema = simpleUiSchema;
     });
     cy.visit('/');
   });
 
+  const cyReplaceTextInFocus = (jsonObject) => {
+    cy.focused()
+      .type('{ctrl}a')
+      .type('{del}')
+      .type(JSON.stringify(jsonObject), {
+        parseSpecialCharSequences: false,
+      });
+  };
+
   const editSchema = (schema, tabSelector) => {
     cy.get(`[data-cy="${tabSelector}"]`).click();
     cy.get('[data-cy="edit-schema"]').click();
 
-    cy.focused().type('{ctrl}a').type('{del}').type(JSON.stringify(schema), {
-      parseSpecialCharSequences: false,
-    });
+    cyReplaceTextInFocus(schema);
     cy.get('[data-cy="apply"]').click();
 
     cy.get('[data-cy="schema-text"]').should(
@@ -38,12 +48,7 @@ describe('Edit schemas', () => {
       .invoke('text')
       .then((originalText) => {
         cy.get('[data-cy="edit-schema"]').click();
-        cy.focused()
-          .type('{ctrl}a')
-          .type('{del}')
-          .type(JSON.stringify(schema), {
-            parseSpecialCharSequences: false,
-          });
+        cyReplaceTextInFocus(schema);
         cy.get('[data-cy="cancel"]').click();
 
         cy.get('[data-cy="schema-text"]').should('have.text', originalText);
@@ -57,12 +62,7 @@ describe('Edit schemas', () => {
       .invoke('text')
       .then((originalText) => {
         cy.get('[data-cy="edit-schema"]').click();
-        cy.focused()
-          .type('{ctrl}a')
-          .type('{del}')
-          .type(JSON.stringify(schema), {
-            parseSpecialCharSequences: false,
-          });
+        cyReplaceTextInFocus(schema);
         cy.focused().type('{esc}');
 
         cy.get('[data-cy="schema-text"]').should('have.text', originalText);
@@ -79,6 +79,30 @@ describe('Edit schemas', () => {
 
   it('Escape Edit JSON Schema', function () {
     escapeEditSchema(this.simpleSchema, 'schema-tab');
+  });
+
+  it('Validate invalid JSON Schema', function () {
+    cy.get(`[data-cy="schema-tab"]`).click();
+
+    cy.get('[data-cy="schema-text"]')
+      .invoke('text')
+      .then((originalText) => {
+        cy.get('[data-cy="edit-schema"]').click();
+        cyReplaceTextInFocus(this.invalidSchema);
+        cy.get('.squiggly-warning').should('exist');
+      });
+  });
+
+  it('Validate valid JSON Schema', function () {
+    cy.get(`[data-cy="schema-tab"]`).click();
+
+    cy.get('[data-cy="schema-text"]')
+      .invoke('text')
+      .then((originalText) => {
+        cy.get('[data-cy="edit-schema"]').click();
+        cyReplaceTextInFocus(this.simpleSchema);
+        cy.get('.squiggly-warning').should('not.exist');
+      });
   });
 
   it('Edit UI Schema', function () {
