@@ -155,7 +155,7 @@ const removeUiSchemaElement = (uiSchemaElement: EditorUISchemaElement) => ({
   uiSchemaElement,
 });
 
-const setUiSchemaOptions = (
+const updateUISchemaElement = (
   uiSchemaElement: EditorUISchemaElement,
   changedProperties: { [key: string]: any }
 ) => ({ type: UPDATE_UISCHEMA_ELEMENT, uiSchemaElement, changedProperties });
@@ -177,6 +177,6 @@ export const Actions = {
   addUnscopedElementToLayout,
   moveUiSchemaElement,
   removeUiSchemaElement,
-  updateUISchemaElement: setUiSchemaOptions,
+  updateUISchemaElement,
   addDetail,
 };
