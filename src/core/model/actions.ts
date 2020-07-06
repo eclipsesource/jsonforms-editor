@@ -177,6 +177,6 @@ export const Actions = {
   addUnscopedElementToLayout,
   moveUiSchemaElement,
   removeUiSchemaElement,
-  setUiSchemaOptions,
+  updateUISchemaElement: setUiSchemaOptions,
   addDetail,
 };

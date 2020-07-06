@@ -52,18 +52,22 @@ export const Properties = () => {
     [selection, uiSchema]
   );
 
-  const data = omit(uiElement, [
-    'uuid',
-    'parent',
-    'elements',
-    'linkedSchemaUUID',
-    'options.detail',
-  ]);
+  const data = useMemo(
+    () =>
+      omit(uiElement, [
+        'uuid',
+        'parent',
+        'elements',
+        'linkedSchemaUUID',
+        'options.detail',
+      ]),
+    [uiElement]
+  );
 
   const updateProperties = useCallback(
     ({ data: updatedProperties }) => {
       if (!isEqual(data, updatedProperties)) {
-        dispatch(Actions.setUiSchemaOptions(uiElement, updatedProperties));
+        dispatch(Actions.updateUISchemaElement(uiElement, updatedProperties));
       }
     },
     [data, dispatch, uiElement]
