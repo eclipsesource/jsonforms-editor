@@ -6,17 +6,17 @@
  * ---------------------------------------------------------------------
  */
 
-import { ControlProps, rankWith, uiTypeIs } from '@jsonforms/core';
+import { ControlProps, rankWith } from '@jsonforms/core';
 import { ResolvedJsonFormsDispatch } from '@jsonforms/react';
 import React from 'react';
 
 import { EditorElement } from '../../editor/components/EditorElement';
 import { EditorControl } from '../model/uischema';
 
-interface DroppableControlProps extends ControlProps {
+interface DroppableElementProps extends ControlProps {
   uischema: EditorControl;
 }
-const DroppableLabel: React.FC<DroppableControlProps> = ({
+const DroppableElement: React.FC<DroppableElementProps> = ({
   uischema,
   schema,
   path,
@@ -30,15 +30,15 @@ const DroppableLabel: React.FC<DroppableControlProps> = ({
         schema={schema}
         path={path}
         renderers={renderers?.filter(
-          (r) => r.renderer !== DroppableLabelRenderer
+          (r) => r.renderer !== DroppableElementRenderer
         )}
         cells={cells}
       />
     </EditorElement>
   );
 };
-const DroppableLabelRenderer = DroppableLabel;
-export const DroppableLabelRegistration = {
-  tester: rankWith(1000, uiTypeIs('Label')),
-  renderer: DroppableLabel,
+const DroppableElementRenderer = DroppableElement;
+export const DroppableElementRegistration = {
+  tester: rankWith(50, () => true),
+  renderer: DroppableElementRenderer,
 };

@@ -80,6 +80,6 @@ const Group: React.FC<LayoutProps> = (props) => {
 };
 
 export const DroppableGroupLayoutRegistration = {
-  tester: rankWith(10, uiTypeIs('Group')),
+  tester: rankWith(100, uiTypeIs('Group')),
   renderer: withJsonFormsLayoutProps(Group),
 };

@@ -251,10 +251,10 @@ const createRendererInDirection = (direction: 'row' | 'column') => ({
 };
 
 export const DroppableHorizontalLayoutRegistration = {
-  tester: rankWith(10, uiTypeIs('HorizontalLayout')),
+  tester: rankWith(100, uiTypeIs('HorizontalLayout')),
   renderer: withJsonFormsLayoutProps(createRendererInDirection('row')),
 };
 export const DroppableVerticalLayoutRegistration = {
-  tester: rankWith(10, uiTypeIs('VerticalLayout')),
+  tester: rankWith(100, uiTypeIs('VerticalLayout')),
   renderer: withJsonFormsLayoutProps(createRendererInDirection('column')),
 };
