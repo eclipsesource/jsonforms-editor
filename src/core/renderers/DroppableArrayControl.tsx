@@ -109,7 +109,7 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
 };
 
 export const DroppableArrayControlRegistration = {
-  tester: rankWith(40, isObjectArrayControl), // less than DroppableControl
+  tester: rankWith(40, isObjectArrayControl), // less than DroppableElement
   renderer: withJsonFormsArrayControlProps(
     DroppableArrayControl as React.FC<ArrayControlProps>
   ),
