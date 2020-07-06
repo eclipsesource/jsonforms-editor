@@ -14,8 +14,14 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import { TransitionProps } from '@material-ui/core/transitions';
 import CloseIcon from '@material-ui/icons/Close';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
+
+import {
+  configureJsonSchemaValidation,
+  EditorApi,
+  TextType,
+} from '../jsonSchemaValidation';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +60,7 @@ interface JsonEditorDialogProps {
   open: boolean;
   title: string;
   initialContent: any;
+  type: TextType;
   onApply: (newContent: any) => void;
   onCancel: () => void;
 }
@@ -62,11 +69,21 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
   open,
   title,
   initialContent,
+  type,
   onApply,
   onCancel,
 }) => {
   const classes = useStyles();
   const [content, setContent] = useState(initialContent);
+
+  const configureEditor = useCallback(
+    (editor: EditorApi) => {
+      if (type === 'JSON Schema') {
+        configureJsonSchemaValidation(editor);
+      }
+    },
+    [type]
+  );
 
   return (
     <Dialog
@@ -106,6 +123,7 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
           value={content}
           onChange={(newContent) => setContent(newContent)}
           editorDidMount={(editor) => editor.focus()}
+          editorWillMount={configureEditor}
         />
       </DialogContent>
     </Dialog>
