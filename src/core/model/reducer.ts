@@ -5,6 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { assign } from 'lodash';
+
 import {
   findByUUID,
   getRoot,
@@ -74,19 +76,14 @@ export const uiSchemaReducer = (
       });
     case UPDATE_UISCHEMA_ELEMENT:
       return withCloneTree(action.uiSchemaElement, uiSchema, (newUiSchema) => {
-        const updatedUISchemaElement = {
-          ...newUiSchema,
-          ...action.changedProperties,
-        };
-
-        if (newUiSchema.parent && isEditorLayout(newUiSchema.parent)) {
-          const parent = newUiSchema.parent as EditorLayout;
-          const index = parent.elements.indexOf(newUiSchema);
-          // update element in its parent element list
-          parent.elements[index] = updatedUISchemaElement;
+        // options.detail is not part of the editable properties
+        const optionsDetail = newUiSchema.options?.detail;
+        assign(newUiSchema, action.changedProperties);
+        if (optionsDetail && !newUiSchema.options?.detail) {
+          newUiSchema.options = newUiSchema.options || {};
+          newUiSchema.options.detail = optionsDetail;
         }
-
-        return getRoot(updatedUISchemaElement as EditorUISchemaElement);
+        return getRoot(newUiSchema);
       });
   }
   // fallback - do nothing

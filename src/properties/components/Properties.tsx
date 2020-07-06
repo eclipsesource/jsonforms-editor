@@ -10,7 +10,7 @@ import {
   materialRenderers,
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { isEqual } from 'lodash';
+import { isEqual, omit } from 'lodash';
 import React, { useCallback, useMemo } from 'react';
 
 import {
@@ -41,13 +41,6 @@ const getProperties = (
   return propertiesService.getProperties(uiElement, elementSchema);
 };
 
-const canUpdateUiSchemaElement = (
-  uiElement: EditorUISchemaElement | undefined,
-  updatedProperties: any
-): boolean => {
-  return !isEqual(uiElement, updatedProperties);
-};
-
 export const Properties = () => {
   const [selection] = useSelection();
   const uiSchema = useUiSchema();
@@ -59,21 +52,30 @@ export const Properties = () => {
     [selection, uiSchema]
   );
 
+  const data = omit(uiElement, [
+    'uuid',
+    'parent',
+    'elements',
+    'linkedSchemaUUID',
+    'options.detail',
+  ]);
+
   const updateProperties = useCallback(
     ({ data: updatedProperties }) => {
-      if (canUpdateUiSchemaElement(uiElement, updatedProperties)) {
+      if (!isEqual(data, updatedProperties)) {
         dispatch(Actions.setUiSchemaOptions(uiElement, updatedProperties));
       }
     },
-    [dispatch, uiElement]
+    [data, dispatch, uiElement]
   );
 
   if (!selection) return <NoSelection />;
 
   const properties = getProperties(uiElement, schema);
+
   return properties ? (
     <JsonForms
-      data={uiElement}
+      data={data}
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}

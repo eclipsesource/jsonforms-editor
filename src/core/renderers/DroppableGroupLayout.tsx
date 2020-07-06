@@ -11,8 +11,9 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Grid,
   makeStyles,
-  TextField,
+  Typography,
 } from '@material-ui/core';
 import React from 'react';
 
@@ -23,6 +24,12 @@ import { DroppableLayoutContent } from './DroppableLayout';
 const useStyles = makeStyles((theme) => ({
   groupLabel: {
     padding: theme.spacing(2),
+    alignItems: 'baseline',
+  },
+  labelPlaceholder: {
+    fontStyle: 'italic',
+    fontWeight: 'lighter',
+    color: '#9e9e9e',
   },
   groupLabelInput: {
     fontSize: theme.typography.h6.fontSize,
@@ -38,17 +45,26 @@ const Group: React.FC<LayoutProps> = (props) => {
       <Card>
         <CardHeader
           component={() => (
-            <TextField
-              value={groupLayout.label ?? ''}
-              placeholder='Label'
-              InputProps={{
-                classes: {
-                  input: classes.groupLabelInput,
-                },
-                readOnly: true,
-              }}
+            <Grid
+              container
+              direction='row'
+              spacing={1}
               className={classes.groupLabel}
-            />
+            >
+              <Grid item>
+                <Typography>Label:</Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  className={`${
+                    groupLayout.label ? '' : classes.labelPlaceholder
+                  }`}
+                  variant='h6'
+                >
+                  {groupLayout.label ?? 'no label'}
+                </Typography>
+              </Grid>
+            </Grid>
           )}
         ></CardHeader>
         <CardContent>
