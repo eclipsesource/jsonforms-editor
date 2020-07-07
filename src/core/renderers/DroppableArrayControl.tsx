@@ -28,7 +28,7 @@ import {
 } from '../dnd';
 import { Actions } from '../model';
 import { containsControls, EditorControl } from '../model/uischema';
-import { DroppableControlRegistration } from './DroppableControl';
+import { DroppableElementRegistration } from './DroppableElement';
 
 interface StyleProps {
   isOver: boolean;
@@ -86,7 +86,7 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
   // DroppableControl removed itself before dispatching to us, we need
   // to re-add it for our children
   const renderersToUse = useMemo(() => {
-    return renderers && [...renderers, DroppableControlRegistration];
+    return renderers && [...renderers, DroppableElementRegistration];
   }, [renderers]);
 
   if (!uischema.options?.detail) {
@@ -109,7 +109,7 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
 };
 
 export const DroppableArrayControlRegistration = {
-  tester: rankWith(900, isObjectArrayControl), // less than DroppableControl
+  tester: rankWith(40, isObjectArrayControl), // less than DroppableElement
   renderer: withJsonFormsArrayControlProps(
     DroppableArrayControl as React.FC<ArrayControlProps>
   ),

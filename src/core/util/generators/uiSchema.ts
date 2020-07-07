@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { ControlElement, Layout } from '@jsonforms/core';
+import { ControlElement, LabelElement, Layout } from '@jsonforms/core';
 import { v4 as uuid } from 'uuid';
 
 import { getScope, SchemaElement } from '../../model';
@@ -26,4 +26,14 @@ export const createLayout = (type: string): Layout & EditorUISchemaElement => {
     elements: [],
     uuid: uuid(),
   } as Layout & EditorUISchemaElement;
+};
+
+export const createLabel = (
+  text?: string
+): LabelElement & EditorUISchemaElement => {
+  return {
+    type: 'Label',
+    text: text,
+    uuid: uuid(),
+  } as LabelElement & EditorUISchemaElement;
 };
