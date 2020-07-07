@@ -11,6 +11,10 @@ import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
+import {
+  ExamplePaletteService,
+  PaletteService,
+} from './core/api/paletteService';
 import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
 import { Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
@@ -47,6 +51,9 @@ const App = () => {
 
   const [selection, setSelection] = useState<SelectedElement>(undefined);
   const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
+  const [paletteService] = useState<PaletteService>(
+    new ExamplePaletteService()
+  );
   useEffect(() => {
     schemaService
       .getSchema()
@@ -77,6 +84,7 @@ const App = () => {
         selection,
         setSelection,
         schemaService,
+        paletteService,
       }}
     >
       <DndProvider backend={Backend}>

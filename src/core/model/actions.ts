@@ -12,7 +12,7 @@ export type SchemaAction = SetSchemaAction;
 export type UiSchemaAction =
   | SetUiSchemaAction
   | AddUnscopedElementToLayout
-  | SetUISchemaOptions;
+  | UpdateUiSchemaElement;
 export type CombinedAction =
   | SetSchemasAction
   | AddScopedElementToLayout
@@ -36,8 +36,8 @@ export const MOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT' =
   'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
 export const REMOVE_UISCHEMA_ELEMENT: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT' =
   'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
-export const SET_UISCHEMA_OPTIONS: 'jsonforms-editor/SET_UISCHEMA_OPTIONS' =
-  'jsonforms-editor/SET_UISCHEMA_OPTIONS';
+export const UPDATE_UISCHEMA_ELEMENT: 'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT' =
+  'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT';
 export const ADD_DETAIL: 'jsonforms-editor/ADD_DETAIL' =
   'jsonforms-editor/ADD_DETAIL';
 
@@ -85,10 +85,10 @@ export interface RemoveUiSchemaElement {
   uiSchemaElement: EditorUISchemaElement;
 }
 
-export interface SetUISchemaOptions {
-  type: 'jsonforms-editor/SET_UISCHEMA_OPTIONS';
-  uiSchema: EditorUISchemaElement;
-  options: { [key: string]: any };
+export interface UpdateUiSchemaElement {
+  type: 'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT';
+  uiSchemaElement: EditorUISchemaElement;
+  changedProperties: { [key: string]: any };
 }
 
 export interface AddDetail {
@@ -155,10 +155,10 @@ const removeUiSchemaElement = (uiSchemaElement: EditorUISchemaElement) => ({
   uiSchemaElement,
 });
 
-const setUiSchemaOptions = (
-  uiSchema: EditorUISchemaElement,
-  options: { [key: string]: any }
-) => ({ type: SET_UISCHEMA_OPTIONS, uiSchema, options });
+const updateUISchemaElement = (
+  uiSchemaElement: EditorUISchemaElement,
+  changedProperties: { [key: string]: any }
+) => ({ type: UPDATE_UISCHEMA_ELEMENT, uiSchemaElement, changedProperties });
 
 const addDetail = (
   uiSchemaElementId: string,
@@ -177,6 +177,6 @@ export const Actions = {
   addUnscopedElementToLayout,
   moveUiSchemaElement,
   removeUiSchemaElement,
-  setUiSchemaOptions,
+  updateUISchemaElement,
   addDetail,
 };

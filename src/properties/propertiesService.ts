@@ -5,7 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonSchema, UISchemaElement } from '@jsonforms/core';
+import {
+  ControlElement,
+  JsonSchema,
+  Layout,
+  UISchemaElement,
+} from '@jsonforms/core';
 
 import { SchemaElement } from '../core/model';
 import { EditorUISchemaElement } from '../core/model/uischema';
@@ -28,17 +33,43 @@ export class ExamplePropertiesService implements PropertiesService {
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
     if (
-      schemaElement &&
-      schemaElement.schema.type === 'string' &&
-      !schemaElement.schema.format
+      schemaElement?.schema.type === 'string' &&
+      !schemaElement?.schema.format
     ) {
       return {
         schema: {
           type: 'object',
-          properties: { multi: { type: 'boolean' } },
+          properties: {
+            options: {
+              type: 'object',
+              properties: {
+                multi: { type: 'boolean' },
+              },
+            },
+          },
+        },
+        uiSchema: {
+          type: 'VerticalLayout',
+          elements: [
+            {
+              type: 'Control',
+              scope: '#/properties/options/properties/multi',
+            } as ControlElement,
+          ],
+        } as Layout,
+      };
+    }
+    if (uiElement?.type === 'Group') {
+      return {
+        schema: {
+          type: 'object',
+          properties: {
+            label: { type: 'string' },
+          },
         },
       };
     }
+
     return undefined;
   };
 }

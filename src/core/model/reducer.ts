@@ -5,6 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { assign } from 'lodash';
+
 import {
   findByUUID,
   getRoot,
@@ -27,8 +29,8 @@ import {
   SET_SCHEMA,
   SET_SCHEMAS,
   SET_UISCHEMA,
-  SET_UISCHEMA_OPTIONS,
   UiSchemaAction,
+  UPDATE_UISCHEMA_ELEMENT,
 } from './actions';
 import { buildSchemaTree, SchemaElement } from './schema';
 import {
@@ -72,10 +74,16 @@ export const uiSchemaReducer = (
         newUiSchema.elements.splice(action.index, 0, newUIElement);
         return getRoot(newUiSchema as EditorUISchemaElement);
       });
-    case SET_UISCHEMA_OPTIONS:
-      return withCloneTree(action.uiSchema, uiSchema, (newUiSchema) => {
-        newUiSchema.options = action.options;
-        return getRoot(newUiSchema as EditorUISchemaElement);
+    case UPDATE_UISCHEMA_ELEMENT:
+      return withCloneTree(action.uiSchemaElement, uiSchema, (newUiSchema) => {
+        // options.detail is not part of the editable properties
+        const optionsDetail = newUiSchema.options?.detail;
+        assign(newUiSchema, action.changedProperties);
+        if (optionsDetail && !newUiSchema.options?.detail) {
+          newUiSchema.options = newUiSchema.options || {};
+          newUiSchema.options.detail = optionsDetail;
+        }
+        return getRoot(newUiSchema);
       });
   }
   // fallback - do nothing
@@ -320,7 +328,7 @@ export const editorReducer = (
       return { schema: schemaReducer(schema, action), uiSchema };
     case SET_UISCHEMA:
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
-    case SET_UISCHEMA_OPTIONS:
+    case UPDATE_UISCHEMA_ELEMENT:
       return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
     case SET_SCHEMAS:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
