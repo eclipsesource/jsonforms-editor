@@ -65,3 +65,16 @@ const useEffectAfterInit = (effect: () => void, dependencies: Array<any>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies]);
 };
+
+/** Force render by triggering an update when the dependencies change. */
+export const useUpdate = (effect: () => void, dependencies: Array<any>) => {
+  const [, setUpdateCounter] = useState(0);
+  useEffect(
+    () => {
+      effect();
+      setUpdateCounter((c) => c + 1);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [...dependencies]
+  );
+};

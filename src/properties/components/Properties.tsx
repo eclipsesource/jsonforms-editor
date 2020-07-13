@@ -23,6 +23,7 @@ import { Actions, SchemaElement } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
 import { ExamplePropertiesService } from '../propertiesService';
+import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
 
 const propertiesService = new ExamplePropertiesService();
 
@@ -41,6 +42,7 @@ const getProperties = (
   return propertiesService.getProperties(uiElement, elementSchema);
 };
 
+const renderers = [...materialRenderers, RuleEditorRendererRegistration];
 export const Properties = () => {
   const [selection] = useSelection();
   const uiSchema = useUiSchema();
@@ -83,7 +85,7 @@ export const Properties = () => {
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}
-      renderers={materialRenderers}
+      renderers={renderers}
       cells={materialCells}
     />
   ) : (
