@@ -7,12 +7,11 @@
  */
 import {
   ControlElement,
-  isLayout,
   JsonSchema,
   Layout,
   UISchemaElement,
 } from '@jsonforms/core';
-import { assign } from 'lodash';
+import { assign, cloneDeep, isEqual } from 'lodash';
 
 import { SchemaElement } from '../core/model';
 import { EditorUISchemaElement } from '../core/model/uischema';
@@ -29,96 +28,130 @@ interface PropertySchemas {
   uiSchema?: UISchemaElement;
 }
 
-const ruleSchema = {
-  rule: {
+const emptySchemas: PropertySchemas = {
+  schema: {
     type: 'object',
+    properties: {},
+  },
+  uiSchema: {
+    type: 'VerticalLayout',
+    elements: [],
+  } as Layout,
+};
+
+const createControl = (controlScope: string): ControlElement => ({
+  type: 'Control',
+  scope: controlScope,
+});
+
+interface PropertiesSchemasDecorators {
+  decorate: (
+    schemas: PropertySchemas,
+    uiElement: EditorUISchemaElement,
+    schemaElement?: SchemaElement
+  ) => PropertySchemas;
+}
+
+const multilineStringOption: PropertiesSchemasDecorators = {
+  decorate: (
+    schemas: PropertySchemas,
+    uiElement: EditorUISchemaElement,
+    schemaElement?: SchemaElement
+  ) => {
+    if (
+      schemaElement?.schema.type === 'string' &&
+      !schemaElement?.schema.format &&
+      uiElement.type === 'Control'
+    ) {
+      if (!schemas.schema.properties) schemas.schema.properties = {};
+      if (!schemas.schema.properties.options)
+        schemas.schema.properties.options = {};
+      assign(schemas.schema.properties.options, {
+        type: 'object',
+        properties: {
+          multi: { type: 'boolean' },
+        },
+      });
+
+      (schemas.uiSchema as Layout).elements.push(
+        createControl('#/properties/options/properties/multi')
+      );
+    }
+    return schemas;
   },
 };
 
-const ruleUiSchema = {
-  type: 'Control',
-  scope: '#/properties/rule',
+const labelUIElementDecorator: PropertiesSchemasDecorators = {
+  decorate: (
+    schemas: PropertySchemas,
+    uiElement: EditorUISchemaElement,
+    schemaElement?: SchemaElement
+  ) => {
+    if (uiElement?.type === 'Label') {
+      assign(schemas.schema.properties, { text: { type: 'string' } });
+
+      (schemas.uiSchema as Layout).elements.push(
+        createControl('#/properties/text')
+      );
+    }
+    return schemas;
+  },
 };
 
-const withRule = (schemas: PropertySchemas) => {
-  const schema = schemas.schema.properties
-    ? schemas.schema
-    : {
+const ruleDecorator: PropertiesSchemasDecorators = {
+  decorate: (
+    schemas: PropertySchemas,
+    uiElement: EditorUISchemaElement,
+    schemaElement?: SchemaElement
+  ) => {
+    assign(schemas.schema.properties, {
+      rule: {
         type: 'object',
-        properties: {},
-      };
-  const uiSchema =
-    schemas.uiSchema && isLayout(schemas.uiSchema)
-      ? schemas.uiSchema
-      : {
-          type: 'VerticalLayout',
-          elements: [],
-        };
-
-  assign(schema.properties, ruleSchema);
-  (uiSchema as Layout).elements.push(ruleUiSchema);
-
-  return { schema, uiSchema };
+      },
+    });
+    (schemas.uiSchema as Layout).elements.push(
+      createControl('#/properties/rule')
+    );
+    return schemas;
+  },
 };
 
+const labelDecorator: PropertiesSchemasDecorators = {
+  decorate: (
+    schemas: PropertySchemas,
+    uiElement: EditorUISchemaElement,
+    schemaElement?: SchemaElement
+  ) => {
+    if (uiElement?.type === 'Group') {
+      if (!schemas.schema.properties) schemas.schema.properties = {};
+      assign(schemas.schema.properties, { label: { type: 'string' } });
+
+      (schemas.uiSchema as Layout).elements.push(
+        createControl('#/properties/label')
+      );
+    }
+    return schemas;
+  },
+};
+
+const decorators: PropertiesSchemasDecorators[] = [
+  labelDecorator,
+  multilineStringOption,
+  labelUIElementDecorator,
+  ruleDecorator,
+];
 export class ExamplePropertiesService implements PropertiesService {
   getProperties = (
     uiElement: EditorUISchemaElement,
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
-    if (
-      schemaElement?.schema.type === 'string' &&
-      !schemaElement?.schema.format
-    ) {
-      return withRule({
-        schema: {
-          type: 'object',
-          properties: {
-            options: {
-              type: 'object',
-              properties: {
-                multi: { type: 'boolean' },
-              },
-            },
-          },
-        },
-        uiSchema: {
-          type: 'VerticalLayout',
-          elements: [
-            {
-              type: 'Control',
-              scope: '#/properties/options/properties/multi',
-            } as ControlElement,
-          ],
-        } as Layout,
-      });
-    }
-    if (uiElement?.type === 'Group') {
-      return withRule({
-        schema: {
-          type: 'object',
-          properties: {
-            label: { type: 'string' },
-          },
-        },
-      });
-    }
-    if (uiElement?.type === 'Label') {
-      return withRule({
-        schema: {
-          type: 'object',
-          properties: {
-            text: { type: 'string' },
-          },
-        },
-      });
-    }
-
-    return {
-      schema: {
-        type: 'object',
-        properties: ruleSchema,
-      },
-    };
+    const decoratedSchemas = decorators.reduce(
+      (schemas, decorator) =>
+        decorator.decorate(schemas, uiElement, schemaElement),
+      cloneDeep(emptySchemas)
+    );
+    return isEqual(decoratedSchemas, emptySchemas)
+      ? undefined
+      : decoratedSchemas;
   };
 }
