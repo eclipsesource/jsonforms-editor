@@ -22,10 +22,10 @@ import {
 import { Actions, SchemaElement } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
-import { ExamplePropertiesService } from '../propertiesService';
+import { PropertiesServiceImpl } from '../propertiesService';
 import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
 
-const propertiesService = new ExamplePropertiesService();
+const propertiesService = new PropertiesServiceImpl();
 
 const getProperties = (
   uiElement: EditorUISchemaElement | undefined,

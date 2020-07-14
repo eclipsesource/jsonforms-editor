@@ -12,29 +12,40 @@ import { Button, FormHelperText, Grid, Typography } from '@material-ui/core';
 import React, { useCallback, useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
-import { useUpdate } from '../../core/util/hooks';
+import { useEffectWithUpdate } from '../../core/util/hooks';
+import {
+  configureRuleSchemaValidation,
+  EditorApi,
+} from '../../text-editor/jsonSchemaValidation';
 
 const invalidJsonMessage = 'Not a valid rule JSON.';
 
 const isValidRule = (rule: any) => {
-  return !rule || (rule.effect && rule.condition && rule.condition.type);
+  return !rule || (rule.effect && rule.condition);
 };
 
 const RuleEditor: React.FC<ControlProps> = (props) => {
   const { data, path, handleChange, errors } = props;
   const contentRef = useRef<string>('');
   const [invalidJson, setInvalidJson] = useState(false);
-  useUpdate(() => {
-    contentRef.current = JSON.stringify(data, null, 2) ?? '';
-    setInvalidJson(false);
-  }, [data]);
+
+  const configureEditor = useCallback((editor: EditorApi) => {
+    configureRuleSchemaValidation(editor);
+  }, []);
+
+  useEffectWithUpdate(
+    useCallback(() => {
+      contentRef.current = JSON.stringify(data, null, 2) ?? '';
+      setInvalidJson(false);
+    }, [data])
+  );
+
   const onSubmitRule = useCallback(() => {
     try {
       const rule = contentRef.current
         ? JSON.parse(contentRef.current)
         : undefined;
       if (isValidRule(rule)) {
-        //clear any previous error
         setInvalidJson(false);
         handleChange(path, rule);
       } else {
@@ -51,6 +62,7 @@ const RuleEditor: React.FC<ControlProps> = (props) => {
       <Typography>Rule</Typography>
       <MonacoEditor
         language='json'
+        editorWillMount={configureEditor}
         value={contentRef.current}
         onChange={(newContent) => {
           contentRef.current = newContent;
@@ -59,6 +71,7 @@ const RuleEditor: React.FC<ControlProps> = (props) => {
         options={{
           formatOnPaste: true,
           formatOnType: true,
+          automaticLayout: true,
         }}
       />
       <Grid container direction='row' spacing={2} alignItems='center'>

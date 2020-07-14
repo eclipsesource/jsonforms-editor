@@ -54,7 +54,7 @@ const useEditorElementStyles = makeStyles((theme) => ({
   },
   rule: {
     fontWeight: 'bolder',
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     marginRight: theme.spacing(0.5),
     marginLeft: theme.spacing(1),
   },

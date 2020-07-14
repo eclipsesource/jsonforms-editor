@@ -140,7 +140,7 @@ const decorators: PropertiesSchemasDecorators[] = [
   labelUIElementDecorator,
   ruleDecorator,
 ];
-export class ExamplePropertiesService implements PropertiesService {
+export class PropertiesServiceImpl implements PropertiesService {
   getProperties = (
     uiElement: EditorUISchemaElement,
     schemaElement: SchemaElement | undefined
