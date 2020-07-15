@@ -8,6 +8,7 @@
 import React from 'react';
 
 import { useExportSchema, useExportUiSchema } from '../../../core/util/hooks';
+import { previewOptions } from './options';
 
 declare global {
   namespace JSX {
@@ -23,12 +24,14 @@ export const AngularMaterialPreview: React.FC = () => {
 
   const inputSchema = JSON.stringify(schema);
   const inputUISchema = JSON.stringify(uiSchema);
+  const options = JSON.stringify(previewOptions);
 
   return inputUISchema && inputSchema ? (
     <div>
       <ng-jsonforms
-        uischema={inputUISchema}
+        options={options}
         schema={inputSchema}
+        uischema={inputUISchema}
       ></ng-jsonforms>
     </div>
   ) : null;
