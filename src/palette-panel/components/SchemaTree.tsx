@@ -32,6 +32,9 @@ const SchemaTreeItem: React.FC<SchemaTreeItemProps> = ({ schemaElement }) => {
 
   const [{ isDragging }, drag] = useDrag({
     item: DndItems.newUISchemaElement(uiSchemaElement, schemaElement),
+    canDrag: () => {
+      return schemaElement.schema.type !== 'object';
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
