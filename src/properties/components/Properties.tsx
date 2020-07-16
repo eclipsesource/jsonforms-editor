@@ -15,6 +15,7 @@ import React, { useCallback, useMemo } from 'react';
 
 import {
   useDispatch,
+  usePropertiesService,
   useSchema,
   useSelection,
   useUiSchema,
@@ -22,25 +23,7 @@ import {
 import { Actions, SchemaElement } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
-import { PropertiesServiceImpl } from '../propertiesService';
 import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
-
-const propertiesService = new PropertiesServiceImpl();
-
-const getProperties = (
-  uiElement: EditorUISchemaElement | undefined,
-  schema: SchemaElement | undefined
-) => {
-  if (!uiElement) {
-    return undefined;
-  }
-  const linkedSchemaUUID = uiElement.linkedSchemaElement;
-  const elementSchema =
-    linkedSchemaUUID && schema
-      ? tryFindByUUID(schema, linkedSchemaUUID)
-      : undefined;
-  return propertiesService.getProperties(uiElement, elementSchema);
-};
 
 const renderers = [...materialRenderers, RuleEditorRendererRegistration];
 export const Properties = () => {
@@ -74,6 +57,22 @@ export const Properties = () => {
     },
     [data, dispatch, uiElement]
   );
+  const propertiesService = usePropertiesService();
+
+  const getProperties = (
+    uiElement: EditorUISchemaElement | undefined,
+    schema: SchemaElement | undefined
+  ) => {
+    if (!uiElement) {
+      return undefined;
+    }
+    const linkedSchemaUUID = uiElement.linkedSchemaElement;
+    const elementSchema =
+      linkedSchemaUUID && schema
+        ? tryFindByUUID(schema, linkedSchemaUUID)
+        : undefined;
+    return propertiesService.getProperties(uiElement, elementSchema);
+  };
 
   if (!selection) return <NoSelection />;
 

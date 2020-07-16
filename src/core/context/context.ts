@@ -7,6 +7,7 @@
  */
 import React, { useContext } from 'react';
 
+import { PropertiesService } from '../../properties/propertiesService';
 import { PaletteService } from '../api/paletteService';
 import { SchemaService } from '../api/schemaService';
 import { SchemaElement } from '../model';
@@ -17,6 +18,7 @@ import { SelectedElement } from '../selection';
 export interface EditorContext {
   schemaService: SchemaService;
   paletteService: PaletteService;
+  propertiesService: PropertiesService;
   schema: SchemaElement | undefined;
   uiSchema: EditorUISchemaElement | undefined;
   dispatch: (action: EditorAction) => void;
@@ -65,4 +67,9 @@ export const useDispatch = (): ((action: EditorAction) => void) => {
 export const usePaletteService = (): PaletteService => {
   const { paletteService } = useEditorContext();
   return paletteService;
+};
+
+export const usePropertiesService = (): PropertiesService => {
+  const { propertiesService } = useEditorContext();
+  return propertiesService;
 };

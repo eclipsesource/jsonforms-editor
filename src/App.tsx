@@ -24,6 +24,19 @@ import { tryFindByUUID } from './core/util/clone';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { PropertiesPanel } from './properties';
+import {
+  PropertiesSchemasDecorator,
+  PropertiesSchemasProvider,
+  PropertiesService,
+  PropertiesServiceImpl,
+} from './properties/propertiesService';
+import {
+  labelDecorator,
+  labelUIElementDecorator,
+  multilineStringOptionDecorator,
+  ruleDecorator,
+} from './properties/schemaDecorators';
+import { propertiesSchemaProvider } from './properties/schemaProviders';
 
 const useStyles = makeStyles((theme) => ({
   leftPane: {
@@ -46,13 +59,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const App = () => {
+const defaultSchemaDecorators: PropertiesSchemasDecorator[] = [
+  labelDecorator,
+  multilineStringOptionDecorator,
+  labelUIElementDecorator,
+  ruleDecorator,
+];
+const defaultSchemaProviders: PropertiesSchemasProvider[] = [
+  propertiesSchemaProvider,
+];
+interface AppProps {
+  schemaProviders?: PropertiesSchemasProvider[];
+  schemaDecorators?: PropertiesSchemasDecorator[];
+}
+const App: React.FC<AppProps> = ({ schemaProviders, schemaDecorators }) => {
+  const decorators = schemaDecorators ?? defaultSchemaDecorators;
+  const providers = schemaProviders ?? defaultSchemaProviders;
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
-
   const [selection, setSelection] = useState<SelectedElement>(undefined);
   const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
   const [paletteService] = useState<PaletteService>(
     new ExamplePaletteService()
+  );
+  const [propertiesService] = useState<PropertiesService>(
+    new PropertiesServiceImpl(providers, decorators)
   );
   useEffect(() => {
     schemaService
@@ -85,6 +115,7 @@ const App = () => {
         setSelection,
         schemaService,
         paletteService,
+        propertiesService,
       }}
     >
       <DndProvider backend={Backend}>
