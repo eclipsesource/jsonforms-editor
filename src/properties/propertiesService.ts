@@ -11,7 +11,7 @@ import {
   Layout,
   UISchemaElement,
 } from '@jsonforms/core';
-import { assign, cloneDeep, isEqual } from 'lodash';
+import { assign, isEqual } from 'lodash';
 
 import { SchemaElement } from '../core/model';
 import { EditorUISchemaElement } from '../core/model/uischema';
@@ -28,7 +28,7 @@ interface PropertySchemas {
   uiSchema?: UISchemaElement;
 }
 
-const emptySchemas: PropertySchemas = {
+const initialSchemas = (): PropertySchemas => ({
   schema: {
     type: 'object',
     properties: {},
@@ -37,7 +37,7 @@ const emptySchemas: PropertySchemas = {
     type: 'VerticalLayout',
     elements: [],
   } as Layout,
-};
+});
 
 const createControl = (controlScope: string): ControlElement => ({
   type: 'Control',
@@ -63,9 +63,12 @@ const multilineStringOption: PropertiesSchemasDecorators = {
       !schemaElement?.schema.format &&
       uiElement.type === 'Control'
     ) {
-      if (!schemas.schema.properties) schemas.schema.properties = {};
-      if (!schemas.schema.properties.options)
+      if (!schemas.schema.properties) {
+        schemas.schema.properties = {};
+      }
+      if (!schemas.schema.properties.options) {
         schemas.schema.properties.options = {};
+      }
       assign(schemas.schema.properties.options, {
         type: 'object',
         properties: {
@@ -82,11 +85,7 @@ const multilineStringOption: PropertiesSchemasDecorators = {
 };
 
 const labelUIElementDecorator: PropertiesSchemasDecorators = {
-  decorate: (
-    schemas: PropertySchemas,
-    uiElement: EditorUISchemaElement,
-    schemaElement?: SchemaElement
-  ) => {
+  decorate: (schemas: PropertySchemas, uiElement: EditorUISchemaElement) => {
     if (uiElement?.type === 'Label') {
       assign(schemas.schema.properties, { text: { type: 'string' } });
 
@@ -99,11 +98,7 @@ const labelUIElementDecorator: PropertiesSchemasDecorators = {
 };
 
 const ruleDecorator: PropertiesSchemasDecorators = {
-  decorate: (
-    schemas: PropertySchemas,
-    uiElement: EditorUISchemaElement,
-    schemaElement?: SchemaElement
-  ) => {
+  decorate: (schemas: PropertySchemas) => {
     assign(schemas.schema.properties, {
       rule: {
         type: 'object',
@@ -117,13 +112,11 @@ const ruleDecorator: PropertiesSchemasDecorators = {
 };
 
 const labelDecorator: PropertiesSchemasDecorators = {
-  decorate: (
-    schemas: PropertySchemas,
-    uiElement: EditorUISchemaElement,
-    schemaElement?: SchemaElement
-  ) => {
+  decorate: (schemas: PropertySchemas, uiElement: EditorUISchemaElement) => {
     if (uiElement?.type === 'Group') {
-      if (!schemas.schema.properties) schemas.schema.properties = {};
+      if (!schemas.schema.properties) {
+        schemas.schema.properties = {};
+      }
       assign(schemas.schema.properties, { label: { type: 'string' } });
 
       (schemas.uiSchema as Layout).elements.push(
@@ -148,9 +141,9 @@ export class PropertiesServiceImpl implements PropertiesService {
     const decoratedSchemas = decorators.reduce(
       (schemas, decorator) =>
         decorator.decorate(schemas, uiElement, schemaElement),
-      cloneDeep(emptySchemas)
+      initialSchemas()
     );
-    return isEqual(decoratedSchemas, emptySchemas)
+    return isEqual(decoratedSchemas, initialSchemas())
       ? undefined
       : decoratedSchemas;
   };

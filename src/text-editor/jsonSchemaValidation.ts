@@ -34,7 +34,6 @@ export const configureRuleSchemaValidation = (editor: EditorApi) => {
    * it in JSON Schema Draft 7*/
   editor.languages.json.jsonDefaults.setDiagnosticsOptions({
     validate: true,
-    enableSchemaRequest: true,
     schemas: [{ ...ruleSchema, fileMatch: ['*'] }, { ...jsonSchemaDraft7 }],
   });
 };
