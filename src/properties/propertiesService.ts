@@ -113,7 +113,11 @@ const ruleDecorator: PropertiesSchemasDecorators = {
 
 const labelDecorator: PropertiesSchemasDecorators = {
   decorate: (schemas: PropertySchemas, uiElement: EditorUISchemaElement) => {
-    if (uiElement?.type === 'Group') {
+    if (
+      ['Group', 'Control', 'Categorization', 'Category'].includes(
+        uiElement?.type
+      )
+    ) {
       if (!schemas.schema.properties) {
         schemas.schema.properties = {};
       }
