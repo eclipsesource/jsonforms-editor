@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSchema, useUiSchema } from '../context';
 import { buildJsonSchema, SchemaElement } from '../model';
@@ -64,4 +64,22 @@ const useEffectAfterInit = (effect: () => void, dependencies: Array<any>) => {
     effect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies]);
+};
+
+/** Force a rerender */
+export const useUpdate = () => {
+  const [, setCount] = useState(0);
+  const update = useCallback(() => {
+    setCount((count) => count + 1);
+  }, []);
+  return update;
+};
+
+/** Executes the callback and forces a rerender whenever the callback changes */
+export const useEffectWithUpdate = (effectCallback: () => void) => {
+  const update = useUpdate();
+  useEffect(() => {
+    effectCallback();
+    update();
+  }, [effectCallback, update]);
 };

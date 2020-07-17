@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 
-import { Grid, IconButton, makeStyles } from '@material-ui/core';
+import { Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import React from 'react';
 import { useDrag } from 'react-dnd';
@@ -52,6 +52,13 @@ const useEditorElementStyles = makeStyles((theme) => ({
   elementControls: {
     opacity: 0,
   },
+  rule: {
+    fontWeight: 'bolder',
+    color: theme.palette.text.primary,
+    marginRight: theme.spacing(0.5),
+    marginLeft: theme.spacing(1),
+  },
+  ruleEffect: { fontStyle: 'italic', color: theme.palette.text.secondary },
 }));
 
 export const EditorElement: React.FC<EditorElementProps> = ({
@@ -78,6 +85,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
 
   const uiPath = getUISchemaPath(wrappedElement);
   const isSelected = selection?.uuid === wrappedElement.uuid;
+  const ruleEffect = wrappedElement.rule?.effect.toLocaleUpperCase();
   return (
     <Grid
       item
@@ -106,6 +114,24 @@ export const EditorElement: React.FC<EditorElementProps> = ({
           ) : (
             <UISchemaIcon type={wrappedElement.type} />
           )}
+          {ruleEffect ? (
+            <Grid
+              item
+              container
+              direction='row'
+              alignItems='center'
+              wrap='nowrap'
+              xs
+            >
+              <Typography variant='subtitle2' className={classes.rule}>
+                {'R'}
+              </Typography>
+              <Typography
+                variant='caption'
+                className={classes.ruleEffect}
+              >{`(${ruleEffect})`}</Typography>
+            </Grid>
+          ) : null}
         </Grid>
         <Grid
           item
