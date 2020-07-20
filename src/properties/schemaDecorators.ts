@@ -10,91 +10,93 @@ import { assign } from 'lodash';
 
 import { SchemaElement } from '../core/model';
 import { EditorUISchemaElement } from '../core/model/uischema';
-import {
-  PropertiesSchemasDecorator,
-  PropertySchemas,
-} from './propertiesService';
+import { PropertySchemas, PropertySchemasDecorator } from './propertiesService';
 
-export const multilineStringOptionDecorator: PropertiesSchemasDecorator = {
-  decorate: (
-    schemas: PropertySchemas,
-    uiElement: EditorUISchemaElement,
-    schemaElement?: SchemaElement
-  ) => {
-    if (
-      schemaElement?.schema.type === 'string' &&
-      !schemaElement?.schema.format &&
-      uiElement.type === 'Control'
-    ) {
-      if (!schemas.schema.properties) {
-        schemas.schema.properties = {};
-      }
-      if (!schemas.schema.properties.options) {
-        schemas.schema.properties.options = {};
-      }
-      assign(schemas.schema.properties.options, {
-        type: 'object',
-        properties: {
-          multi: { type: 'boolean' },
-        },
-      });
-
-      (schemas.uiSchema as Layout).elements.push(
-        createControl('#/properties/options/properties/multi')
-      );
+export const multilineStringOptionDecorator: PropertySchemasDecorator = (
+  schemas: PropertySchemas,
+  uiElement: EditorUISchemaElement,
+  schemaElement?: SchemaElement
+) => {
+  if (
+    schemaElement?.schema.type === 'string' &&
+    !schemaElement?.schema.format &&
+    uiElement.type === 'Control'
+  ) {
+    if (!schemas.schema.properties) {
+      schemas.schema.properties = {};
     }
-    return schemas;
-  },
-};
-
-export const labelUIElementDecorator: PropertiesSchemasDecorator = {
-  decorate: (schemas: PropertySchemas, uiElement: EditorUISchemaElement) => {
-    if (uiElement?.type === 'Label') {
-      assign(schemas.schema.properties, { text: { type: 'string' } });
-
-      (schemas.uiSchema as Layout).elements.push(
-        createControl('#/properties/text')
-      );
+    if (!schemas.schema.properties.options) {
+      schemas.schema.properties.options = {};
     }
-    return schemas;
-  },
-};
-
-export const ruleDecorator: PropertiesSchemasDecorator = {
-  decorate: (schemas: PropertySchemas) => {
-    assign(schemas.schema.properties, {
-      rule: {
-        type: 'object',
+    assign(schemas.schema.properties.options, {
+      type: 'object',
+      properties: {
+        multi: { type: 'boolean' },
       },
     });
+
     (schemas.uiSchema as Layout).elements.push(
-      createControl('#/properties/rule')
+      createControl('#/properties/options/properties/multi')
     );
-    return schemas;
-  },
+  }
+  return schemas;
 };
 
-export const labelDecorator: PropertiesSchemasDecorator = {
-  decorate: (schemas: PropertySchemas, uiElement: EditorUISchemaElement) => {
-    if (
-      ['Group', 'Control', 'Categorization', 'Category'].includes(
-        uiElement?.type
-      )
-    ) {
-      if (!schemas.schema.properties) {
-        schemas.schema.properties = {};
-      }
-      assign(schemas.schema.properties, { label: { type: 'string' } });
+export const labelUIElementDecorator: PropertySchemasDecorator = (
+  schemas: PropertySchemas,
+  uiElement: EditorUISchemaElement
+) => {
+  if (uiElement?.type === 'Label') {
+    assign(schemas.schema.properties, { text: { type: 'string' } });
 
-      (schemas.uiSchema as Layout).elements.push(
-        createControl('#/properties/label')
-      );
+    (schemas.uiSchema as Layout).elements.push(
+      createControl('#/properties/text')
+    );
+  }
+  return schemas;
+};
+
+export const ruleDecorator: PropertySchemasDecorator = (
+  schemas: PropertySchemas
+) => {
+  assign(schemas.schema.properties, {
+    rule: {
+      type: 'object',
+    },
+  });
+  (schemas.uiSchema as Layout).elements.push(
+    createControl('#/properties/rule')
+  );
+  return schemas;
+};
+
+export const labelDecorator: PropertySchemasDecorator = (
+  schemas: PropertySchemas,
+  uiElement: EditorUISchemaElement
+) => {
+  if (
+    ['Group', 'Control', 'Categorization', 'Category'].includes(uiElement?.type)
+  ) {
+    if (!schemas.schema.properties) {
+      schemas.schema.properties = {};
     }
-    return schemas;
-  },
+    assign(schemas.schema.properties, { label: { type: 'string' } });
+
+    (schemas.uiSchema as Layout).elements.push(
+      createControl('#/properties/label')
+    );
+  }
+  return schemas;
 };
 
 const createControl = (controlScope: string): ControlElement => ({
   type: 'Control',
   scope: controlScope,
 });
+
+export const defaultSchemaDecorators: PropertySchemasDecorator[] = [
+  labelDecorator,
+  multilineStringOptionDecorator,
+  labelUIElementDecorator,
+  ruleDecorator,
+];

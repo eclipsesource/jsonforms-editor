@@ -29,12 +29,12 @@ export interface PropertySchemas {
 /**
  * Decorator for the PropertySchemas of an EditorUISchemaElement.
  */
-export interface PropertiesSchemasDecorator {
-  decorate: (
+export interface PropertySchemasDecorator {
+  (
     schemas: PropertySchemas,
     uiElement: EditorUISchemaElement,
     schemaElement?: SchemaElement
-  ) => PropertySchemas;
+  ): PropertySchemas;
 }
 
 /**
@@ -46,7 +46,7 @@ export const NOT_APPLICABLE = -1;
 /**
  * Returns a PropertySchemas object for an EditorUISchemaElement. The tester will return a ranking
  * or NOT_APPLICABLE if the provider cannot supply any schema for the given editor element. */
-export interface PropertiesSchemasProvider {
+export interface PropertySchemasProvider {
   tester: (uiElement: EditorUISchemaElement) => number;
   getPropertiesSchemas: (
     uiElement: EditorUISchemaElement,
@@ -55,20 +55,15 @@ export interface PropertiesSchemasProvider {
 }
 export class PropertiesServiceImpl implements PropertiesService {
   constructor(
-    private schemaProviders: PropertiesSchemasProvider[],
-    private schemaDecorators: PropertiesSchemasDecorator[]
+    private schemaProviders: PropertySchemasProvider[],
+    private schemaDecorators: PropertySchemasDecorator[]
   ) {}
   getProperties = (
     uiElement: EditorUISchemaElement,
     schemaElement: SchemaElement | undefined
   ): PropertySchemas | undefined => {
-    const providersWithRank = this.schemaProviders.map((provider) => ({
-      provider,
-      rank: provider.tester(uiElement),
-    }));
-    const highestRankedProvider = maxBy(providersWithRank, ({ rank }) => rank);
-    const { provider, rank } = highestRankedProvider || {};
-    if (!provider || !rank || rank === NOT_APPLICABLE) {
+    const provider = maxBy(this.schemaProviders, (p) => p.tester(uiElement));
+    if (!provider || provider.tester(uiElement) === NOT_APPLICABLE) {
       return undefined;
     }
     const elementSchemas = provider.getPropertiesSchemas(
@@ -79,8 +74,7 @@ export class PropertiesServiceImpl implements PropertiesService {
       return undefined;
     }
     const decoratedSchemas = this.schemaDecorators.reduce(
-      (schemas, decorator) =>
-        decorator.decorate(schemas, uiElement, schemaElement),
+      (schemas, decorator) => decorator(schemas, uiElement, schemaElement),
       elementSchemas
     );
     return decoratedSchemas;

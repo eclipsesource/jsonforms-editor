@@ -10,11 +10,11 @@ import { Layout } from '@jsonforms/core';
 import { EditorUISchemaElement } from '../core/model/uischema';
 import {
   NOT_APPLICABLE,
-  PropertiesSchemasProvider,
   PropertySchemas,
+  PropertySchemasProvider,
 } from './propertiesService';
 
-export const propertiesSchemaProvider: PropertiesSchemasProvider = {
+export const propertySchemaProvider: PropertySchemasProvider = {
   tester: (uiElement: EditorUISchemaElement): number => {
     if (uiElement) {
       // default schema provider

@@ -11,7 +11,7 @@ import {
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { isEqual, omit } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   useDispatch,
@@ -20,9 +20,10 @@ import {
   useSelection,
   useUiSchema,
 } from '../../core/context';
-import { Actions, SchemaElement } from '../../core/model';
+import { Actions } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
+import { PropertySchemas } from '../propertiesService';
 import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
 
 const renderers = [...materialRenderers, RuleEditorRendererRegistration];
@@ -58,25 +59,20 @@ export const Properties = () => {
     [data, dispatch, uiElement]
   );
   const propertiesService = usePropertiesService();
-
-  const getProperties = (
-    uiElement: EditorUISchemaElement | undefined,
-    schema: SchemaElement | undefined
-  ) => {
+  const [properties, setProperties] = useState<PropertySchemas>();
+  useEffect(() => {
     if (!uiElement) {
-      return undefined;
+      return;
     }
     const linkedSchemaUUID = uiElement.linkedSchemaElement;
     const elementSchema =
       linkedSchemaUUID && schema
         ? tryFindByUUID(schema, linkedSchemaUUID)
         : undefined;
-    return propertiesService.getProperties(uiElement, elementSchema);
-  };
+    setProperties(propertiesService.getProperties(uiElement, elementSchema));
+  }, [propertiesService, schema, uiElement]);
 
   if (!selection) return <NoSelection />;
-
-  const properties = getProperties(uiElement, schema);
 
   return properties ? (
     <JsonForms
