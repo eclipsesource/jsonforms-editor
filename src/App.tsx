@@ -24,6 +24,12 @@ import { tryFindByUUID } from './core/util/clone';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { PropertiesPanel } from './properties';
+import {
+  PropertiesService,
+  PropertiesServiceImpl,
+  PropertySchemasDecorator,
+  PropertySchemasProvider,
+} from './properties/propertiesService';
 
 const useStyles = makeStyles((theme) => ({
   leftPane: {
@@ -46,13 +52,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const App = () => {
+interface AppProps {
+  schemaProviders: PropertySchemasProvider[];
+  schemaDecorators: PropertySchemasDecorator[];
+}
+const App: React.FC<AppProps> = ({ schemaProviders, schemaDecorators }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
-
   const [selection, setSelection] = useState<SelectedElement>(undefined);
   const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
   const [paletteService] = useState<PaletteService>(
     new ExamplePaletteService()
+  );
+  const [propertiesService] = useState<PropertiesService>(
+    new PropertiesServiceImpl(schemaProviders, schemaDecorators)
   );
   useEffect(() => {
     schemaService
@@ -85,6 +97,7 @@ const App = () => {
         setSelection,
         schemaService,
         paletteService,
+        propertiesService,
       }}
     >
       <DndProvider backend={Backend}>

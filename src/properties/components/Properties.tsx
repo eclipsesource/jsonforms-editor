@@ -11,36 +11,20 @@ import {
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { isEqual, omit } from 'lodash';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
   useDispatch,
+  usePropertiesService,
   useSchema,
   useSelection,
   useUiSchema,
 } from '../../core/context';
-import { Actions, SchemaElement } from '../../core/model';
+import { Actions } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/clone';
-import { PropertiesServiceImpl } from '../propertiesService';
+import { PropertySchemas } from '../propertiesService';
 import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
-
-const propertiesService = new PropertiesServiceImpl();
-
-const getProperties = (
-  uiElement: EditorUISchemaElement | undefined,
-  schema: SchemaElement | undefined
-) => {
-  if (!uiElement) {
-    return undefined;
-  }
-  const linkedSchemaUUID = uiElement.linkedSchemaElement;
-  const elementSchema =
-    linkedSchemaUUID && schema
-      ? tryFindByUUID(schema, linkedSchemaUUID)
-      : undefined;
-  return propertiesService.getProperties(uiElement, elementSchema);
-};
 
 const renderers = [...materialRenderers, RuleEditorRendererRegistration];
 export const Properties = () => {
@@ -74,10 +58,21 @@ export const Properties = () => {
     },
     [data, dispatch, uiElement]
   );
+  const propertiesService = usePropertiesService();
+  const [properties, setProperties] = useState<PropertySchemas>();
+  useEffect(() => {
+    if (!uiElement) {
+      return;
+    }
+    const linkedSchemaUUID = uiElement.linkedSchemaElement;
+    const elementSchema =
+      linkedSchemaUUID && schema
+        ? tryFindByUUID(schema, linkedSchemaUUID)
+        : undefined;
+    setProperties(propertiesService.getProperties(uiElement, elementSchema));
+  }, [propertiesService, schema, uiElement]);
 
   if (!selection) return <NoSelection />;
-
-  const properties = getProperties(uiElement, schema);
 
   return properties ? (
     <JsonForms
