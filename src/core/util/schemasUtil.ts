@@ -6,7 +6,6 @@
  * ---------------------------------------------------------------------
  */
 import { get } from 'lodash';
-import { v4 as uuid } from 'uuid';
 
 import { EditorState, SchemaElement } from '../model';
 import {
@@ -14,7 +13,6 @@ import {
   isEditorControl,
   traverse,
 } from '../model/uischema';
-import { withCloneTrees } from './clone';
 import { Parentable } from './tree';
 
 interface CalculatePathError {
@@ -225,36 +223,25 @@ export const linkElements = (
   return true;
 };
 
-export const buildAndLinkUISchema = (
+export const linkSchemas = (
   schema: SchemaElement | undefined,
-  uiSchema: any
+  uiSchema: EditorUISchemaElement | undefined
 ): EditorState => {
-  return withCloneTrees(
-    schema,
-    uiSchema,
-    { schema, uiSchema },
-    (newSchema, newUISchema) => {
-      if (!newUISchema) {
-        return { schema, uiSchema };
+  if (!schema || !uiSchema) {
+    return { schema, uiSchema };
+  }
+  traverse(uiSchema, (current) => {
+    if (isEditorControl(current)) {
+      const linkedElement = getSchemaElementFromScope(schema, current.scope);
+      if (linkedElement && !isPathError(linkedElement)) {
+        linkElements(current, linkedElement);
       }
-      traverse(newUISchema, (current, parent) => {
-        if (current) {
-          current.parent = parent;
-          current.uuid = uuid();
-        }
-        if (newSchema && isEditorControl(current)) {
-          const linkedElement = getLinkedElement(newSchema, current.scope);
-          if (linkedElement && !isPathError(linkedElement)) {
-            linkElements(current, linkedElement);
-          }
-        }
-      });
-      return { schema: newSchema, uiSchema: newUISchema };
     }
-  );
+  });
+  return { schema, uiSchema };
 };
 
-export const getLinkedElement = (
+const getSchemaElementFromScope = (
   schema: SchemaElement,
   scope: string
 ): SchemaElement | undefined => {

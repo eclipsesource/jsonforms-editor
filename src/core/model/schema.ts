@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import traverse from 'json-schema-traverse';
-import { cloneDeep, omit } from 'lodash';
+import { cloneDeep, cloneDeepWith, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { getHierarchy, TreeElement } from '../util/tree';
@@ -305,13 +305,13 @@ export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
   if (!schema) {
     return schema;
   }
-  const clone = cloneDeep(schema) as any;
-  traverse(clone, (current: any) => {
+
+  return cloneDeepWith(schema, (current: any) => {
     delete current.linkedUISchemaElements;
     switch (schema.type) {
       case OBJECT:
         if (schema.properties.size > 0) {
-          clone.properties = Array.from(schema.properties).reduce(
+          current.properties = Array.from(schema.properties).reduce(
             (acc, [key, value]) => {
               acc.set(key, cleanLinkedElements(value));
               return acc;
@@ -322,15 +322,14 @@ export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
         break;
       case ARRAY:
         if (Array.isArray(schema.items)) {
-          clone.items = schema.items.map(cleanLinkedElements);
+          current.items = schema.items.map(cleanLinkedElements);
         } else {
-          clone.items = cleanLinkedElements(schema.items);
+          current.items = cleanLinkedElements(schema.items);
         }
         break;
     }
+    return current;
   });
-
-  return clone;
 };
 
 /**

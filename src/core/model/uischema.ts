@@ -13,6 +13,7 @@ import {
   UISchemaElement,
 } from '@jsonforms/core';
 import { cloneDeep } from 'lodash';
+import { v4 as uuid } from 'uuid';
 
 import {
   calculatePath,
@@ -66,6 +67,24 @@ export const getChildren = (
 
 export const hasChildren = (schemaElement: EditorUISchemaElement): boolean => {
   return isLayout(schemaElement) && !!(schemaElement as Layout).elements.length;
+};
+
+/**
+ * Creates a copy of the given ui schema enriched with editor fields
+ * like 'parent' and 'linked schema elements'.
+ */
+export const buildEditorUiSchemaTree = (
+  uiSchema: UISchemaElement
+): EditorUISchemaElement => {
+  // cast to any so we can freely modify it
+  const editorUiSchema: any = cloneDeep(uiSchema);
+  traverse(editorUiSchema, (current, parent) => {
+    if (current) {
+      current.parent = parent;
+      current.uuid = uuid();
+    }
+  });
+  return editorUiSchema;
 };
 
 /**

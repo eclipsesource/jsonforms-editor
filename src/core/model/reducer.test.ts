@@ -5,13 +5,13 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { ControlElement } from '@jsonforms/core';
+import { ControlElement, Layout } from '@jsonforms/core';
 
 import {
   createControlWithScope,
   createLayout,
 } from '../util/generators/uiSchema';
-import { buildAndLinkUISchema } from '../util/schemasUtil';
+import { linkSchemas } from '../util/schemasUtil';
 import { Actions } from './actions';
 import { combinedReducer } from './reducer';
 import {
@@ -20,14 +20,18 @@ import {
   ObjectElement,
   SchemaElement,
 } from './schema';
-import { EditorLayout, EditorUISchemaElement } from './uischema';
+import {
+  buildEditorUiSchemaTree,
+  EditorLayout,
+  EditorUISchemaElement,
+} from './uischema';
 
 describe('add detail action', () => {
   const buildState = (): {
     schema: SchemaElement;
     uiSchema: EditorUISchemaElement;
   } => {
-    const state = buildAndLinkUISchema(
+    const state = linkSchemas(
       buildSchemaTree({
         type: 'object',
         properties: {
@@ -44,12 +48,12 @@ describe('add detail action', () => {
           },
         },
       }),
-      {
+      buildEditorUiSchemaTree({
         type: 'VerticalLayout',
         elements: [
           { type: 'Control', scope: '#/properties/toys' } as ControlElement,
         ],
-      }
+      } as Layout)
     );
     const schema = state.schema as ObjectElement;
     const uiSchema = state.uiSchema as EditorLayout;
