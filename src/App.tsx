@@ -20,7 +20,7 @@ import { Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
-import { tryFindByUUID } from './core/util/clone';
+import { tryFindByUUID } from './core/util/schemasUtil';
 import { EditorPanel } from './editor';
 import { PalettePanel } from './palette-panel';
 import { PropertiesPanel } from './properties';

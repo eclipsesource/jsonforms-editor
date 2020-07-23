@@ -22,7 +22,7 @@ import {
 } from '../../core/context';
 import { Actions } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
-import { tryFindByUUID } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/schemasUtil';
 import { PropertySchemas } from '../propertiesService';
 import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
 
@@ -44,7 +44,7 @@ export const Properties = () => {
         'uuid',
         'parent',
         'elements',
-        'linkedSchemaUUID',
+        'linkedSchemaElement',
         'options.detail',
       ]),
     [uiElement]

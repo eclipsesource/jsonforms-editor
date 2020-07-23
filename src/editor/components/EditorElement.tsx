@@ -21,7 +21,7 @@ import {
   getUISchemaPath,
   hasChildren,
 } from '../../core/model/uischema';
-import { tryFindByUUID } from '../../core/util/clone';
+import { tryFindByUUID } from '../../core/util/schemasUtil';
 
 export interface EditorElementProps {
   wrappedElement: EditorUISchemaElement;

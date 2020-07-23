@@ -8,19 +8,18 @@
 import { SchemaElement } from './schema';
 import { EditorLayout, EditorUISchemaElement } from './uischema';
 
-export type SchemaAction = SetSchemaAction;
-export type UiSchemaAction =
-  | SetUiSchemaAction
-  | AddUnscopedElementToLayout
-  | UpdateUiSchemaElement;
+export type UiSchemaAction = AddUnscopedElementToLayout | UpdateUiSchemaElement;
+
 export type CombinedAction =
+  | SetUiSchemaAction
+  | SetSchemaAction
   | SetSchemasAction
   | AddScopedElementToLayout
   | MoveUiSchemaElement
   | RemoveUiSchemaElement
   | AddDetail;
 
-export type EditorAction = SchemaAction | UiSchemaAction | CombinedAction;
+export type EditorAction = UiSchemaAction | CombinedAction;
 
 export const SET_SCHEMA: 'jsonforms-editor/SET_SCHEMA' =
   'jsonforms-editor/SET_SCHEMA';

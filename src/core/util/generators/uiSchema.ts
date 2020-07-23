@@ -10,12 +10,19 @@ import { v4 as uuid } from 'uuid';
 
 import { getScope, SchemaElement } from '../../model';
 import { EditorUISchemaElement } from '../../model/uischema';
+
 export const createControl = (
   schemaElement: SchemaElement
 ): ControlElement & EditorUISchemaElement => {
+  return createControlWithScope(`#${getScope(schemaElement)}`);
+};
+
+export const createControlWithScope = (
+  scope: string
+): ControlElement & EditorUISchemaElement => {
   return {
     type: 'Control',
-    scope: `#${getScope(schemaElement)}`,
+    scope: scope,
     uuid: uuid(),
   } as ControlElement & EditorUISchemaElement;
 };
