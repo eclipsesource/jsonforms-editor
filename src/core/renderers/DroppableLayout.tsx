@@ -37,7 +37,7 @@ import {
   EditorUISchemaElement,
   getUISchemaPath,
 } from '../model/uischema';
-import { isPathError } from '../util/clone';
+import { isPathError } from '../util/schemasUtil';
 
 const useLayoutStyles = makeStyles((theme) => ({
   dropPointGridItem: {

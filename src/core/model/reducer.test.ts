@@ -5,8 +5,13 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { ControlElement, Layout } from '@jsonforms/core';
+import { ControlElement } from '@jsonforms/core';
 
+import {
+  createControlWithScope,
+  createLayout,
+} from '../util/generators/uiSchema';
+import { buildAndLinkUISchema } from '../util/schemasUtil';
 import { Actions } from './actions';
 import { combinedReducer } from './reducer';
 import {
@@ -15,39 +20,41 @@ import {
   ObjectElement,
   SchemaElement,
 } from './schema';
-import {
-  buildEditorUiSchemaTree,
-  EditorLayout,
-  EditorUISchemaElement,
-} from './uischema';
+import { EditorLayout, EditorUISchemaElement } from './uischema';
 
 describe('add detail action', () => {
   const buildState = (): {
     schema: SchemaElement;
     uiSchema: EditorUISchemaElement;
   } => {
-    const schema = buildSchemaTree({
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        toys: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              name: { type: 'string' },
-              height: { type: 'number' },
+    const state = buildAndLinkUISchema(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          toys: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                height: { type: 'number' },
+              },
             },
           },
         },
-      },
-    }) as ObjectElement;
-    const uiSchema = buildEditorUiSchemaTree({
-      type: 'VerticalLayout',
-      elements: [
-        { type: 'Control', scope: '#/properties/toys' } as ControlElement,
-      ],
-    } as Layout) as EditorLayout;
+      }),
+      {
+        type: 'VerticalLayout',
+        elements: [
+          { type: 'Control', scope: '#/properties/toys' } as ControlElement,
+        ],
+      }
+    );
+    const schema = state.schema as ObjectElement;
+    const uiSchema = state.uiSchema as EditorLayout;
+    expect(schema).toBeDefined();
+    expect(uiSchema).toBeDefined();
     schema.properties.get('toys')!.linkedUISchemaElements = new Set(
       uiSchema.elements[0].uuid
     );
@@ -59,10 +66,7 @@ describe('add detail action', () => {
 
   test('add non-scoped ui schema element as detail', () => {
     const { schema, uiSchema } = buildState();
-    const newDetail = buildEditorUiSchemaTree({
-      type: 'HorizontalLayout',
-      elements: [],
-    } as Layout);
+    const newDetail = createLayout('HorizontalLayout');
     const addDetailAction = Actions.addDetail(
       (uiSchema as EditorLayout).elements[0].uuid,
       newDetail
@@ -78,10 +82,7 @@ describe('add detail action', () => {
 
   test('add scoped ui schema element as detail', () => {
     const { schema, uiSchema } = buildState();
-    const newDetail = buildEditorUiSchemaTree({
-      type: 'Control',
-      scope: '#/properties/height',
-    } as ControlElement);
+    const newDetail = createControlWithScope('#/properties/height');
     newDetail.linkedSchemaElement = (((schema as ObjectElement).properties.get(
       'toys'
     ) as ArrayElement).items as ObjectElement).properties.get('height')!.uuid;

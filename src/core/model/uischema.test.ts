@@ -7,57 +7,86 @@
  */
 import { ControlElement } from '@jsonforms/core';
 
-import { getRoot } from '../util/clone';
 import {
-  buildEditorUiSchemaTree,
+  createControlWithScope,
+  createLayout,
+} from '../util/generators/uiSchema';
+import { buildAndLinkUISchema, getRoot } from '../util/schemasUtil';
+import {
   containsControls,
+  EditorControl,
   EditorLayout,
   getDetailContainer,
 } from './uischema';
 
 test('set uuids on single element', () => {
   const element = simpleControl();
-  const enrichedElement = buildEditorUiSchemaTree(element);
+  const { uiSchema: enrichedElement } = buildAndLinkUISchema(
+    undefined,
+    element
+  );
   expect(enrichedElement).toHaveProperty('uuid');
 });
 
 test('set uuids on nested elements', () => {
   const layout = simpleLayout();
-  const enrichedLayout = buildEditorUiSchemaTree(layout) as EditorLayout;
+  const { uiSchema: enrichedLayout } = buildAndLinkUISchema(undefined, layout);
   expect(enrichedLayout).toHaveProperty('uuid');
-  expect(enrichedLayout.elements[0]).toHaveProperty('uuid');
-  expect(enrichedLayout.elements[1]).toHaveProperty('uuid');
+  expect((enrichedLayout as EditorLayout).elements[0]).toHaveProperty('uuid');
+  expect((enrichedLayout as EditorLayout).elements[1]).toHaveProperty('uuid');
 });
 
 test('set uuids on detail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedLayout = buildEditorUiSchemaTree(controlWithDetail);
+  const { uiSchema: enrichedLayout } = buildAndLinkUISchema(
+    undefined,
+    controlWithDetail
+  );
   expect(enrichedLayout).toHaveProperty('uuid');
-  expect(enrichedLayout.options!.detail.elements[0]).toHaveProperty('uuid');
-  expect(enrichedLayout.options!.detail.elements[1]).toHaveProperty('uuid');
+  expect(
+    (enrichedLayout as EditorLayout).options!.detail.elements[0]
+  ).toHaveProperty('uuid');
+  expect(
+    (enrichedLayout as EditorLayout).options!.detail.elements[1]
+  ).toHaveProperty('uuid');
 });
 
 test('set parent on detail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedLayout = buildEditorUiSchemaTree(controlWithDetail);
-  expect(getRoot(enrichedLayout.options!.detail)).toBe(enrichedLayout);
-  expect(getRoot(enrichedLayout.options!.detail.elements[0])).toBe(
+  const { uiSchema: enrichedLayout } = buildAndLinkUISchema(
+    undefined,
+    controlWithDetail
+  );
+  expect(getRoot((enrichedLayout as EditorLayout).options!.detail)).toBe(
     enrichedLayout
   );
+  expect(
+    getRoot((enrichedLayout as EditorLayout).options!.detail.elements[0])
+  ).toBe(enrichedLayout);
 });
 
 test('isInDetail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedControlWithDetail = buildEditorUiSchemaTree(controlWithDetail);
-  expect(getDetailContainer(enrichedControlWithDetail)).toBeFalsy();
-  expect(getDetailContainer(enrichedControlWithDetail.options!.detail)).toBe(
-    enrichedControlWithDetail
+  const { uiSchema: enrichedControlWithDetail } = buildAndLinkUISchema(
+    undefined,
+    controlWithDetail
   );
+  expect(enrichedControlWithDetail).toBeDefined();
   expect(
-    getDetailContainer(enrichedControlWithDetail.options!.detail.elements[0])
+    getDetailContainer(enrichedControlWithDetail as EditorControl)
+  ).toBeFalsy();
+  expect(
+    getDetailContainer(
+      (enrichedControlWithDetail as EditorControl).options!.detail
+    )
+  ).toBe(enrichedControlWithDetail);
+  expect(
+    getDetailContainer(
+      (enrichedControlWithDetail as EditorControl).options!.detail.elements[0]
+    )
   ).toBe(enrichedControlWithDetail);
 });
 
@@ -79,7 +108,10 @@ const simpleLayout = () => ({
   elements: [simpleControl(), simpleControl()],
 });
 
-const simpleEditorControl = () => buildEditorUiSchemaTree(simpleControl());
+const simpleEditorControl = () => createControlWithScope('#');
 
-const simpleEditorLayout = (): EditorLayout =>
-  buildEditorUiSchemaTree(simpleLayout()) as EditorLayout;
+const simpleEditorLayout = (): EditorLayout => {
+  const layout = createLayout('VerticalLayout') as EditorLayout;
+  layout.elements = [simpleEditorControl(), simpleEditorControl()];
+  return layout;
+};

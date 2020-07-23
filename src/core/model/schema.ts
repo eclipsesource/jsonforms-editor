@@ -70,7 +70,7 @@ export const getChildren = (
   return children;
 };
 
-const containsAs = (
+export const containsAs = (
   schemaElement: SchemaElement
 ): Map<SchemaElement, string> => {
   const containments: [SchemaElement, string][] = [];
@@ -323,6 +323,35 @@ export const buildJsonSchema = (element: SchemaElement) => {
       break;
   }
   return result;
+};
+
+export const cleanLinkedElements = (schema: SchemaElement): any => {
+  const clone = cloneDeep(schema) as any;
+  traverse(clone, (current: any) => {
+    delete current.linkedUISchemaElements;
+    switch (schema.type) {
+      case OBJECT:
+        if (schema.properties.size > 0) {
+          clone.properties = Array.from(schema.properties).reduce(
+            (acc, [key, value]) => {
+              acc.set(key, cleanLinkedElements(value));
+              return acc;
+            },
+            new Map<string, SchemaElement>()
+          );
+        }
+        break;
+      case ARRAY:
+        if (Array.isArray(schema.items)) {
+          clone.items = schema.items.map(cleanLinkedElements);
+        } else {
+          clone.items = cleanLinkedElements(schema.items);
+        }
+        break;
+    }
+  });
+
+  return clone;
 };
 
 /**
