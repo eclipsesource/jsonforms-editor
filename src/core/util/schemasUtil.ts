@@ -264,23 +264,3 @@ export const getLinkedElement = (
   const validPathSegments = scope.split('/').filter(validSegment);
   return getFromPath(schemaRoot, validPathSegments);
 };
-
-export const buildUISchemaAndLinks = (
-  uiSchema: EditorUISchemaElement,
-  findLinkedElement: (scope: string) => SchemaElement | undefined
-): EditorUISchemaElement => {
-  const clone: any = cloneDeep(uiSchema);
-  traverse(clone, (current, parent) => {
-    if (current) {
-      current.parent = parent;
-      current.uuid = uuid();
-    }
-    if (isEditorControl(current)) {
-      const linkedElement = findLinkedElement(current.scope);
-      if (linkedElement) {
-        linkElements(current, linkedElement);
-      }
-    }
-  });
-  return clone;
-};
