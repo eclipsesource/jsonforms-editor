@@ -79,9 +79,9 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
           <FormControlLabel
             control={
               <Switch
+                data-cy='debug-toggle'
                 checked={showDebugSchema}
                 onChange={() => setShowDebugSchema((showDebug) => !showDebug)}
-                name='checkedB'
                 color='primary'
               />
             }
