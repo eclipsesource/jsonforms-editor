@@ -301,7 +301,10 @@ export const buildJsonSchema = (element: SchemaElement) => {
   return result;
 };
 
-export const cleanLinkedElements = (schema: SchemaElement): any => {
+export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
+  if (!schema) {
+    return schema;
+  }
   const clone = cloneDeep(schema) as any;
   traverse(clone, (current: any) => {
     delete current.linkedUISchemaElements;

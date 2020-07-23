@@ -82,7 +82,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case SET_UISCHEMA:
       return buildAndLinkUISchema(
-        state.schema ? cleanLinkedElements(state.schema) : state.schema,
+        cleanLinkedElements(state.schema),
         action.uiSchema
       );
     case SET_SCHEMAS:
