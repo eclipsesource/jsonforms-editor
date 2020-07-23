@@ -5,7 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { IconButton, Toolbar } from '@material-ui/core';
+import {
+  FormControlLabel,
+  IconButton,
+  Switch,
+  Toolbar,
+} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import React, { useState } from 'react';
@@ -27,6 +32,7 @@ export type UpdateResult = UpdateOk | UpdateFail;
 interface SchemaJsonProps {
   title: string;
   schema: string;
+  debugSchema?: string;
   type: TextType;
   updateSchema: (schema: any) => UpdateResult;
 }
@@ -34,11 +40,17 @@ interface SchemaJsonProps {
 export const SchemaJson: React.FC<SchemaJsonProps> = ({
   title,
   schema,
+  debugSchema,
   type,
   updateSchema,
 }) => {
   const [showSchemaEditor, setShowSchemaEditor] = useState<boolean>(false);
   const [updateErrorText, setUpdateErrorText] = useState<string>('');
+  const showDebugControls =
+    debugSchema && process.env.NODE_ENV === 'development';
+  const [showDebugSchema, setShowDebugSchema] = useState<boolean>(
+    !!showDebugControls
+  );
   const showErrorDialog = Boolean(updateErrorText);
   const onApply = (newSchema: string) => {
     const updateResult = updateSchema(newSchema);
@@ -63,8 +75,21 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
         >
           <EditIcon />
         </IconButton>
+        {showDebugControls ? (
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showDebugSchema}
+                onChange={() => setShowDebugSchema((showDebug) => !showDebug)}
+                name='checkedB'
+                color='primary'
+              />
+            }
+            label='Debug'
+          />
+        ) : null}
       </Toolbar>
-      <pre data-cy='schema-text'>{schema}</pre>
+      <pre data-cy='schema-text'>{showDebugSchema ? debugSchema : schema}</pre>
       {showSchemaEditor && (
         <JsonEditorDialog
           open

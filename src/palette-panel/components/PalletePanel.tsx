@@ -6,11 +6,22 @@
  * ---------------------------------------------------------------------
  */
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
+import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
-import { useDispatch, usePaletteService, useSchema } from '../../core/context';
-import { Actions, SchemaElement } from '../../core/model';
+import {
+  useDispatch,
+  usePaletteService,
+  useSchema,
+  useUiSchema,
+} from '../../core/context';
+import {
+  Actions,
+  SchemaElement,
+  toPrintableDebugObject,
+} from '../../core/model';
+import { buildDebugUISchema } from '../../core/model/uischema';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
@@ -33,9 +44,10 @@ export const PalettePanel = () => {
   const dispatch = useDispatch();
   const schema: SchemaElement | undefined = useSchema();
   const exportSchema = useExportSchema();
+  const uiSchema = useUiSchema();
   const exportUiSchema = useExportUiSchema();
   const paletteService = usePaletteService();
-
+  const devEnvironment = process.env.NODE_ENV === 'development';
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
       const newSchemaObject = JSON.parse(newSchema);
@@ -94,6 +106,11 @@ export const PalettePanel = () => {
         <SchemaJson
           title='JSON Schema'
           schema={toText(exportSchema)}
+          debugSchema={
+            schema && devEnvironment
+              ? toText(toPrintableDebugObject(cloneDeep(schema)))
+              : undefined
+          }
           type='JSON Schema'
           updateSchema={handleSchemaUpdate}
         />
@@ -102,6 +119,11 @@ export const PalettePanel = () => {
         <SchemaJson
           title='UI Schema'
           schema={toText(exportUiSchema)}
+          debugSchema={
+            uiSchema && devEnvironment
+              ? toText(buildDebugUISchema(uiSchema))
+              : undefined
+          }
           type='UI Schema'
           updateSchema={handleUiSchemaUpdate}
         />

@@ -98,6 +98,16 @@ export const buildUiSchema = (
   return clone;
 };
 
+export const buildDebugUISchema = (
+  uiSchema: EditorUISchemaElement
+): UISchemaElement => {
+  const clone: any = cloneDeep(uiSchema);
+  traverse(clone, (current) => {
+    current.parent = current.parent?.uuid;
+  });
+  return clone;
+};
+
 export const traverse = <T extends UISchemaElement, C>(
   uiSchema: T,
   pre: (uiSchema: T, parent: T | undefined, context: C) => void,

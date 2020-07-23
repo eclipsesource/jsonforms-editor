@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import traverse from 'json-schema-traverse';
-import { cloneDeep, omit } from 'lodash';
+import { assign, cloneDeep, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { getHierarchy, TreeElement } from '../util/tree';
@@ -134,6 +134,19 @@ export const toPrintableObject = (schemaElement: SchemaElement): any => ({
     toPrintableObject(el),
   ]),
 });
+
+export const toPrintableDebugObject = (debugSchema: SchemaElement): any => {
+  return assign(debugSchema, {
+    parent: debugSchema.parent?.uuid,
+    children: Array.from(containsAs(debugSchema)).map(([el, key]) => [
+      key,
+      toPrintableDebugObject(el),
+    ]),
+    linkedUISchemaElements: debugSchema.linkedUISchemaElements
+      ? Array.from(debugSchema.linkedUISchemaElements.values())
+      : undefined,
+  });
+};
 
 const isElementOfType = <T extends SchemaElement>(type: string) => (
   schemaElement: SchemaElement | undefined
