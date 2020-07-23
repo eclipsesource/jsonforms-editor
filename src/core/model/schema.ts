@@ -125,27 +125,33 @@ export const getScope = (schemaElement: SchemaElement): string => {
   ).get(schemaElement)}`;
 };
 
-export const toPrintableObject = (schemaElement: SchemaElement): any => ({
-  type: schemaElement.type,
-  path: getPath(schemaElement),
-  schema: schemaElement.schema,
-  children: Array.from(containsAs(schemaElement)).map(([el, key]) => [
-    key,
-    toPrintableObject(el),
-  ]),
-});
-
-export const toPrintableDebugObject = (debugSchema: SchemaElement): any => {
-  return assign(debugSchema, {
+export const toPrintableObject = (debugSchema: SchemaElement): any => {
+  const clone = cloneDeep(debugSchema);
+  const printableProps: any = {
     parent: debugSchema.parent?.uuid,
-    children: Array.from(containsAs(debugSchema)).map(([el, key]) => [
-      key,
-      toPrintableDebugObject(el),
-    ]),
     linkedUISchemaElements: debugSchema.linkedUISchemaElements
       ? Array.from(debugSchema.linkedUISchemaElements.values())
       : undefined,
-  });
+  };
+  switch (debugSchema.type) {
+    case OBJECT:
+      if (debugSchema.properties.size > 0) {
+        printableProps.properties = Array.from(debugSchema.properties).map(
+          ([key, value]) => {
+            return { name: key, value: toPrintableObject(value) };
+          }
+        );
+      }
+      break;
+    case ARRAY:
+      if (Array.isArray(debugSchema.items)) {
+        printableProps.items = debugSchema.items.map(toPrintableObject);
+      } else {
+        printableProps.items = toPrintableObject(debugSchema.items);
+      }
+      break;
+  }
+  return assign(clone, printableProps);
 };
 
 const isElementOfType = <T extends SchemaElement>(type: string) => (

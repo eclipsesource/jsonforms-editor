@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 
 import { ErrorDialog } from '../../core/components/ErrorDialog';
 import { copyToClipBoard } from '../../core/util/clipboard';
+import { env } from '../../env';
 import { JsonEditorDialog, TextType } from '../../text-editor';
 
 interface UpdateOk {
@@ -46,8 +47,7 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
 }) => {
   const [showSchemaEditor, setShowSchemaEditor] = useState<boolean>(false);
   const [updateErrorText, setUpdateErrorText] = useState<string>('');
-  const showDebugControls =
-    debugSchema && process.env.NODE_ENV === 'development';
+  const showDebugControls = debugSchema && env().DEBUG === 'true';
   const [showDebugSchema, setShowDebugSchema] = useState<boolean>(
     !!showDebugControls
   );
@@ -64,7 +64,11 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
     <>
       <Toolbar>
         <IconButton
-          onClick={() => copyToClipBoard(schema)}
+          onClick={() =>
+            copyToClipBoard(
+              showDebugSchema && debugSchema ? debugSchema : schema
+            )
+          }
           data-cy='copy-clipboard'
         >
           <FileCopyIcon />

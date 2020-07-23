@@ -6,7 +6,6 @@
  * ---------------------------------------------------------------------
  */
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
-import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
@@ -16,13 +15,10 @@ import {
   useSchema,
   useUiSchema,
 } from '../../core/context';
-import {
-  Actions,
-  SchemaElement,
-  toPrintableDebugObject,
-} from '../../core/model';
+import { Actions, SchemaElement, toPrintableObject } from '../../core/model';
 import { buildDebugUISchema } from '../../core/model/uischema';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
+import { env } from '../../env';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
 import { UIElementsTree } from './UIElementsTree';
@@ -47,7 +43,7 @@ export const PalettePanel = () => {
   const uiSchema = useUiSchema();
   const exportUiSchema = useExportUiSchema();
   const paletteService = usePaletteService();
-  const devEnvironment = process.env.NODE_ENV === 'development';
+  const showDebugSchema = env().DEBUG === 'true';
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
       const newSchemaObject = JSON.parse(newSchema);
@@ -107,8 +103,8 @@ export const PalettePanel = () => {
           title='JSON Schema'
           schema={toText(exportSchema)}
           debugSchema={
-            schema && devEnvironment
-              ? toText(toPrintableDebugObject(cloneDeep(schema)))
+            schema && showDebugSchema
+              ? toText(toPrintableObject(schema))
               : undefined
           }
           type='JSON Schema'
@@ -120,7 +116,7 @@ export const PalettePanel = () => {
           title='UI Schema'
           schema={toText(exportUiSchema)}
           debugSchema={
-            uiSchema && devEnvironment
+            uiSchema && showDebugSchema
               ? toText(buildDebugUISchema(uiSchema))
               : undefined
           }
