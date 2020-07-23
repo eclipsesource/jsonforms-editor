@@ -5,16 +5,16 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { assign } from 'lodash';
+import { assign, cloneDeep } from 'lodash';
 
 import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
-  buildAndLinkUISchema,
   findByUUID,
   getRoot,
   isPathError,
   isUUIDError,
   linkElements,
+  linkSchemas,
   UUIDError,
 } from '../util/schemasUtil';
 import {
@@ -33,6 +33,7 @@ import {
 } from './actions';
 import { buildSchemaTree, cleanLinkedElements, SchemaElement } from './schema';
 import {
+  buildEditorUiSchemaTree,
   EditorLayout,
   EditorUISchemaElement,
   isEditorControl,
@@ -76,19 +77,19 @@ export const uiSchemaReducer = (
 export const combinedReducer = (state: EditorState, action: CombinedAction) => {
   switch (action.type) {
     case SET_SCHEMA:
-      return buildAndLinkUISchema(
+      return linkSchemas(
         buildSchemaTree(action.schema),
-        state.uiSchema
+        cloneDeep(state.uiSchema)
       );
     case SET_UISCHEMA:
-      return buildAndLinkUISchema(
+      return linkSchemas(
         cleanLinkedElements(state.schema),
-        action.uiSchema
+        buildEditorUiSchemaTree(action.uiSchema)
       );
     case SET_SCHEMAS:
-      return buildAndLinkUISchema(
+      return linkSchemas(
         buildSchemaTree(action.schema),
-        action.uiSchema
+        buildEditorUiSchemaTree(action.uiSchema)
       );
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
