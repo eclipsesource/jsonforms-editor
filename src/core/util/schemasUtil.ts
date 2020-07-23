@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { cloneDeep, get } from 'lodash';
+import { get } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { EditorState, SchemaElement } from '../model';
