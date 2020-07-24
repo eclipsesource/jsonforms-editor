@@ -35,6 +35,12 @@ describe('Edit schemas', () => {
     cyReplaceTextInFocus(schema);
     cy.get('[data-cy="apply"]').click();
 
+    cy.get('[data-cy="debug-toggle"]').then(($toggle) => {
+      if ($toggle.find('input')[0].checked) {
+        $toggle.click();
+      }
+    });
+
     cy.get('[data-cy="schema-text"]').should(
       'have.text',
       JSON.stringify(schema, null, 2)
