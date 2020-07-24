@@ -70,7 +70,7 @@ export const getChildren = (
   return children;
 };
 
-export const containsAs = (
+const containsAs = (
   schemaElement: SchemaElement
 ): Map<SchemaElement, string> => {
   const containments: [SchemaElement, string][] = [];
@@ -325,6 +325,7 @@ export const buildJsonSchema = (element: SchemaElement) => {
   return result;
 };
 
+/** Removes all linkedUiSchemaElements from the given schema */
 export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
   if (!schema) {
     return schema;
