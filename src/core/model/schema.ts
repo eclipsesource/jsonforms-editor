@@ -151,6 +151,11 @@ export const toPrintableObject = (debugSchema: SchemaElement): any => {
       }
       break;
   }
+  if (debugSchema.other) {
+    printableProps.other = Array.from(debugSchema.other.values()).map(
+      toPrintableObject
+    );
+  }
   return assign(clone, printableProps);
 };
 
