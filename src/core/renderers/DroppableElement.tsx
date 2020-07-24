@@ -8,7 +8,8 @@
 
 import { ControlProps, rankWith } from '@jsonforms/core';
 import { ResolvedJsonFormsDispatch } from '@jsonforms/react';
-import React from 'react';
+import { omit } from 'lodash';
+import React, { useMemo } from 'react';
 
 import { EditorElement } from '../../editor/components/EditorElement';
 import { EditorControl } from '../model/uischema';
@@ -23,10 +24,11 @@ const DroppableElement: React.FC<DroppableElementProps> = ({
   renderers,
   cells,
 }) => {
+  const editorUiSchema = useMemo(() => omit(uischema, ['rule']), [uischema]);
   return (
     <EditorElement wrappedElement={uischema}>
       <ResolvedJsonFormsDispatch
-        uischema={uischema}
+        uischema={editorUiSchema}
         schema={schema}
         path={path}
         renderers={renderers?.filter(
