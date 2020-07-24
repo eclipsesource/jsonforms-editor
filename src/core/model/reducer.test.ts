@@ -17,6 +17,7 @@ import { combinedReducer } from './reducer';
 import {
   ArrayElement,
   buildSchemaTree,
+  getChildren,
   ObjectElement,
   SchemaElement,
 } from './schema';
@@ -107,5 +108,103 @@ describe('add detail action', () => {
         .get('height')!
         .linkedUISchemaElements!.has(newDetail.uuid)
     ).toBeTruthy();
+  });
+});
+
+describe('SET_SCHEMA action', () => {
+  test('schema elements are linked after SET_SCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setSchemaAction = Actions.setSchema({
+      type: 'object',
+      properties: {
+        name: { type: 'string', default: 'foo' },
+      },
+    });
+    const { schema, uiSchema } = combinedReducer(initialState, setSchemaAction);
+    const nameProperty = getChildren(schema as SchemaElement)[0];
+    expect(nameProperty?.uuid).toBeDefined();
+    expect(uiSchema?.linkedSchemaElement).toStrictEqual(nameProperty?.uuid);
+    expect(
+      nameProperty?.linkedUISchemaElements?.values().next().value
+    ).toStrictEqual(uiSchema?.uuid);
+  });
+
+  test('no unmatched UUIDs left behind after SET_SCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setSchemaAction = Actions.setSchema({
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    });
+    // we rename the 'name' property -> no linked UI elements should exist
+    const { schema } = combinedReducer(initialState, setSchemaAction);
+    const schemaChildren = getChildren(schema as SchemaElement);
+    expect(schemaChildren.length).toBe(1);
+    expect(schemaChildren[0].linkedUISchemaElements).toBeUndefined();
+  });
+});
+
+describe('REMOVE_UISCHEMA_ELEMENT action', () => {
+  test('UIElements with broken links to SchemaElements should be removable', () => {
+    //SETUP
+    const brokenState = combinedReducer(
+      linkSchemas(
+        buildSchemaTree({
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+        }),
+        buildEditorUiSchemaTree({
+          type: 'VerticalLayout',
+          elements: [
+            { type: 'Control', scope: '#/properties/name' } as ControlElement,
+          ],
+        } as Layout)
+      ),
+      Actions.setSchema({
+        type: 'object',
+        properties: {},
+      })
+    );
+
+    const brokenControl = (brokenState.uiSchema as EditorLayout).elements[0];
+    const removeBrokenElementAction = Actions.removeUiSchemaElement(
+      brokenControl
+    );
+
+    // REMOVE BROKEN CONTROL
+    const { uiSchema: updatedSchema } = combinedReducer(
+      brokenState,
+      removeBrokenElementAction
+    );
+
+    expect((updatedSchema as EditorLayout).elements).toBeDefined();
+    expect((updatedSchema as EditorLayout).elements.length).toBe(0);
   });
 });

@@ -282,10 +282,9 @@ const removeUiElement = (
       schemaRoot,
       elementToRemove.linkedSchemaElement
     );
-    if (isUUIDError(linkedSchemaElement)) {
-      return linkedSchemaElement;
+    if (!isUUIDError(linkedSchemaElement)) {
+      linkedSchemaElement.linkedUISchemaElements?.delete(uuidToRemove);
     }
-    linkedSchemaElement.linkedUISchemaElements?.delete(uuidToRemove);
   }
 
   // remove from parent
