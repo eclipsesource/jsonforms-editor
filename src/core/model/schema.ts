@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import traverse from 'json-schema-traverse';
-import { assign, cloneDeep, cloneDeepWith, omit } from 'lodash';
+import { assign, cloneDeep, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { getHierarchy, TreeElement } from '../util/tree';
@@ -330,30 +330,28 @@ export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
     return schema;
   }
 
-  return cloneDeepWith(schema, (current: any) => {
-    delete current.linkedUISchemaElements;
-    switch (schema.type) {
-      case OBJECT:
-        if (schema.properties.size > 0) {
-          current.properties = Array.from(schema.properties).reduce(
-            (acc, [key, value]) => {
-              acc.set(key, cleanLinkedElements(value));
-              return acc;
-            },
-            new Map<string, SchemaElement>()
-          );
-        }
-        break;
-      case ARRAY:
-        if (Array.isArray(schema.items)) {
-          current.items = schema.items.map(cleanLinkedElements);
-        } else {
-          current.items = cleanLinkedElements(schema.items);
-        }
-        break;
-    }
-    return current;
-  });
+  delete schema.linkedUISchemaElements;
+  switch (schema.type) {
+    case OBJECT:
+      if (schema.properties.size > 0) {
+        schema.properties = Array.from(schema.properties).reduce(
+          (acc, [key, value]) => {
+            acc.set(key, cleanLinkedElements(value));
+            return acc;
+          },
+          new Map<string, SchemaElement>()
+        );
+      }
+      break;
+    case ARRAY:
+      if (Array.isArray(schema.items)) {
+        schema.items = schema.items.map(cleanLinkedElements);
+      } else {
+        schema.items = cleanLinkedElements(schema.items);
+      }
+      break;
+  }
+  return schema;
 };
 
 /**

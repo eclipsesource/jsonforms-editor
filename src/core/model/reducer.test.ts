@@ -141,7 +141,28 @@ describe('SET_SCHEMA action', () => {
     ).toStrictEqual(uiSchema?.uuid);
   });
 
-  test('no unmatched UUIDs left behind after SET_SCHEMA', () => {
+  test('no unmatched UUIDs left in UI Schema after SET_SCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setSchemaAction = Actions.setSchema(undefined);
+    const { schema, uiSchema } = combinedReducer(initialState, setSchemaAction);
+    expect(schema).toBeUndefined();
+    expect(uiSchema).toBeDefined();
+    expect(uiSchema?.linkedSchemaElement).toBeUndefined();
+  });
+
+  test('no unmatched UUIDs left behind in schema after SET_SCHEMA', () => {
     const initialState = linkSchemas(
       buildSchemaTree({
         type: 'object',
@@ -206,5 +227,90 @@ describe('REMOVE_UISCHEMA_ELEMENT action', () => {
 
     expect((updatedSchema as EditorLayout).elements).toBeDefined();
     expect((updatedSchema as EditorLayout).elements.length).toBe(0);
+  });
+});
+
+describe('SET_UISCHEMA action', () => {
+  test('schema elements are linked after SET_UISCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setUiSchemaAction = Actions.setUiSchema({
+      type: 'VerticalLayout',
+      elements: [
+        { type: 'Control', scope: '#/properties/name' } as ControlElement,
+      ],
+    } as Layout);
+    const { schema, uiSchema } = combinedReducer(
+      initialState,
+      setUiSchemaAction
+    );
+    const nameProperty = getChildren(schema as SchemaElement)[0];
+    expect(nameProperty?.uuid).toBeDefined();
+    const nameControl = (uiSchema as EditorLayout).elements[0];
+    expect(nameControl?.uuid).toBeDefined();
+    expect(nameControl?.linkedSchemaElement).toStrictEqual(nameProperty?.uuid);
+    expect(
+      nameProperty?.linkedUISchemaElements?.values().next().value
+    ).toStrictEqual(nameControl?.uuid);
+  });
+
+  test('no unmatched UUIDs left in schema after SET_UISCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setUiSchemaAction = Actions.setUiSchema(undefined);
+    const { schema, uiSchema } = combinedReducer(
+      initialState,
+      setUiSchemaAction
+    );
+    expect(uiSchema).toBeUndefined();
+    expect(schema).toBeDefined();
+    expect(schema?.linkedUISchemaElements).toBeUndefined();
+  });
+
+  test('no unmatched UUIDs left behind in schema after SET_UISCHEMA', () => {
+    const initialState = linkSchemas(
+      buildSchemaTree({
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          foo: { type: 'string' },
+        },
+      }),
+      buildEditorUiSchemaTree({
+        type: 'Control',
+        scope: '#/properties/name',
+      } as ControlElement)
+    );
+
+    const setUiSchemaAction = Actions.setUiSchema({
+      type: 'Control',
+      scope: '#/properties/foo',
+    } as ControlElement);
+    const { schema } = combinedReducer(initialState, setUiSchemaAction);
+    const schemaChildren = getChildren(schema as SchemaElement);
+    expect(schemaChildren[0].linkedUISchemaElements).toBeUndefined();
+    expect(schemaChildren[1].linkedUISchemaElements).toBeDefined();
   });
 });

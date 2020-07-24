@@ -174,3 +174,16 @@ export const containsControls = (element: EditorUISchemaElement): boolean =>
     },
     { containsControls: false }
   ).containsControls;
+
+export const cleanUiSchemaLinks = (
+  element: EditorUISchemaElement | undefined
+): EditorUISchemaElement | undefined => {
+  if (!element) {
+    return element;
+  }
+  traverse(element, (current) => {
+    delete current.linkedSchemaElement;
+    return current;
+  });
+  return element;
+};

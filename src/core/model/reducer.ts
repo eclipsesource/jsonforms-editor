@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { assign, cloneDeep } from 'lodash';
+import { assign } from 'lodash';
 
 import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
@@ -34,6 +34,7 @@ import {
 import { buildSchemaTree, cleanLinkedElements, SchemaElement } from './schema';
 import {
   buildEditorUiSchemaTree,
+  cleanUiSchemaLinks,
   EditorLayout,
   EditorUISchemaElement,
   isEditorControl,
@@ -77,15 +78,19 @@ export const uiSchemaReducer = (
 export const combinedReducer = (state: EditorState, action: CombinedAction) => {
   switch (action.type) {
     case SET_SCHEMA:
-      return linkSchemas(
-        buildSchemaTree(action.schema),
-        cloneDeep(state.uiSchema)
-      );
+      return withCloneTree(state.uiSchema, state, (clonedUiSchema) => {
+        return linkSchemas(
+          buildSchemaTree(action.schema),
+          cleanUiSchemaLinks(clonedUiSchema)
+        );
+      });
     case SET_UISCHEMA:
-      return linkSchemas(
-        cleanLinkedElements(state.schema),
-        buildEditorUiSchemaTree(action.uiSchema)
-      );
+      return withCloneTree(state.schema, state, (clonedSchema) => {
+        return linkSchemas(
+          cleanLinkedElements(clonedSchema),
+          buildEditorUiSchemaTree(action.uiSchema)
+        );
+      });
     case SET_SCHEMAS:
       return linkSchemas(
         buildSchemaTree(action.schema),
