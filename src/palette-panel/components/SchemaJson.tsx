@@ -5,13 +5,19 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { IconButton, Toolbar } from '@material-ui/core';
+import {
+  FormControlLabel,
+  IconButton,
+  Switch,
+  Toolbar,
+} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import React, { useState } from 'react';
 
 import { ErrorDialog } from '../../core/components/ErrorDialog';
 import { copyToClipBoard } from '../../core/util/clipboard';
+import { env } from '../../env';
 import { JsonEditorDialog, TextType } from '../../text-editor';
 
 interface UpdateOk {
@@ -27,6 +33,7 @@ export type UpdateResult = UpdateOk | UpdateFail;
 interface SchemaJsonProps {
   title: string;
   schema: string;
+  debugSchema?: string;
   type: TextType;
   updateSchema: (schema: any) => UpdateResult;
 }
@@ -34,11 +41,16 @@ interface SchemaJsonProps {
 export const SchemaJson: React.FC<SchemaJsonProps> = ({
   title,
   schema,
+  debugSchema,
   type,
   updateSchema,
 }) => {
   const [showSchemaEditor, setShowSchemaEditor] = useState<boolean>(false);
   const [updateErrorText, setUpdateErrorText] = useState<string>('');
+  const showDebugControls = debugSchema && env().DEBUG === 'true';
+  const [showDebugSchema, setShowDebugSchema] = useState<boolean>(
+    !!showDebugControls
+  );
   const showErrorDialog = Boolean(updateErrorText);
   const onApply = (newSchema: string) => {
     const updateResult = updateSchema(newSchema);
@@ -52,7 +64,11 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
     <>
       <Toolbar>
         <IconButton
-          onClick={() => copyToClipBoard(schema)}
+          onClick={() =>
+            copyToClipBoard(
+              showDebugSchema && debugSchema ? debugSchema : schema
+            )
+          }
           data-cy='copy-clipboard'
         >
           <FileCopyIcon />
@@ -63,8 +79,21 @@ export const SchemaJson: React.FC<SchemaJsonProps> = ({
         >
           <EditIcon />
         </IconButton>
+        {showDebugControls ? (
+          <FormControlLabel
+            control={
+              <Switch
+                data-cy='debug-toggle'
+                checked={showDebugSchema}
+                onChange={() => setShowDebugSchema((showDebug) => !showDebug)}
+                color='primary'
+              />
+            }
+            label='Debug'
+          />
+        ) : null}
       </Toolbar>
-      <pre data-cy='schema-text'>{schema}</pre>
+      <pre data-cy='schema-text'>{showDebugSchema ? debugSchema : schema}</pre>
       {showSchemaEditor && (
         <JsonEditorDialog
           open

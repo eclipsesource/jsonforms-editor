@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------
  */
 import traverse from 'json-schema-traverse';
-import { cloneDeep, omit } from 'lodash';
+import { assign, cloneDeep, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
 import { getHierarchy, TreeElement } from '../util/tree';
@@ -125,15 +125,39 @@ export const getScope = (schemaElement: SchemaElement): string => {
   ).get(schemaElement)}`;
 };
 
-export const toPrintableObject = (schemaElement: SchemaElement): any => ({
-  type: schemaElement.type,
-  path: getPath(schemaElement),
-  schema: schemaElement.schema,
-  children: Array.from(containsAs(schemaElement)).map(([el, key]) => [
-    key,
-    toPrintableObject(el),
-  ]),
-});
+export const toPrintableObject = (debugSchema: SchemaElement): any => {
+  const clone = cloneDeep(debugSchema);
+  const printableProps: any = {
+    parent: debugSchema.parent?.uuid,
+    linkedUISchemaElements: debugSchema.linkedUISchemaElements
+      ? Array.from(debugSchema.linkedUISchemaElements.values())
+      : undefined,
+  };
+  switch (debugSchema.type) {
+    case OBJECT:
+      if (debugSchema.properties.size > 0) {
+        printableProps.properties = Array.from(debugSchema.properties).map(
+          ([key, value]) => {
+            return { name: key, value: toPrintableObject(value) };
+          }
+        );
+      }
+      break;
+    case ARRAY:
+      if (Array.isArray(debugSchema.items)) {
+        printableProps.items = debugSchema.items.map(toPrintableObject);
+      } else {
+        printableProps.items = toPrintableObject(debugSchema.items);
+      }
+      break;
+  }
+  if (debugSchema.other) {
+    printableProps.other = Array.from(debugSchema.other).map(([key, value]) => {
+      return { name: key, value: toPrintableObject(value) };
+    });
+  }
+  return assign(clone, printableProps);
+};
 
 const isElementOfType = <T extends SchemaElement>(type: string) => (
   schemaElement: SchemaElement | undefined

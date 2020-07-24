@@ -9,9 +9,16 @@ import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
-import { useDispatch, usePaletteService, useSchema } from '../../core/context';
-import { Actions, SchemaElement } from '../../core/model';
+import {
+  useDispatch,
+  usePaletteService,
+  useSchema,
+  useUiSchema,
+} from '../../core/context';
+import { Actions, SchemaElement, toPrintableObject } from '../../core/model';
+import { buildDebugUISchema } from '../../core/model/uischema';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
+import { env } from '../../env';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
 import { UIElementsTree } from './UIElementsTree';
@@ -33,9 +40,10 @@ export const PalettePanel = () => {
   const dispatch = useDispatch();
   const schema: SchemaElement | undefined = useSchema();
   const exportSchema = useExportSchema();
+  const uiSchema = useUiSchema();
   const exportUiSchema = useExportUiSchema();
   const paletteService = usePaletteService();
-
+  const showDebugSchema = env().DEBUG === 'true';
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
       const newSchemaObject = JSON.parse(newSchema);
@@ -94,6 +102,11 @@ export const PalettePanel = () => {
         <SchemaJson
           title='JSON Schema'
           schema={toText(exportSchema)}
+          debugSchema={
+            schema && showDebugSchema
+              ? toText(toPrintableObject(schema))
+              : undefined
+          }
           type='JSON Schema'
           updateSchema={handleSchemaUpdate}
         />
@@ -102,6 +115,11 @@ export const PalettePanel = () => {
         <SchemaJson
           title='UI Schema'
           schema={toText(exportUiSchema)}
+          debugSchema={
+            uiSchema && showDebugSchema
+              ? toText(buildDebugUISchema(uiSchema))
+              : undefined
+          }
           type='UI Schema'
           updateSchema={handleUiSchemaUpdate}
         />
