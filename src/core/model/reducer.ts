@@ -7,16 +7,16 @@
  */
 import { assign } from 'lodash';
 
+import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
   findByUUID,
   getRoot,
   isPathError,
   isUUIDError,
   linkElements,
+  linkSchemas,
   UUIDError,
-  withCloneTree,
-  withCloneTrees,
-} from '../util/clone';
+} from '../util/schemasUtil';
 import {
   ADD_DETAIL,
   ADD_SCOPED_ELEMENT_TO_LAYOUT,
@@ -25,16 +25,16 @@ import {
   EditorAction,
   MOVE_UISCHEMA_ELEMENT,
   REMOVE_UISCHEMA_ELEMENT,
-  SchemaAction,
   SET_SCHEMA,
   SET_SCHEMAS,
   SET_UISCHEMA,
   UiSchemaAction,
   UPDATE_UISCHEMA_ELEMENT,
 } from './actions';
-import { buildSchemaTree, SchemaElement } from './schema';
+import { buildSchemaTree, cleanLinkedElements, SchemaElement } from './schema';
 import {
   buildEditorUiSchemaTree,
+  cleanUiSchemaLinks,
   EditorLayout,
   EditorUISchemaElement,
   isEditorControl,
@@ -47,26 +47,11 @@ export interface EditorState {
   uiSchema?: EditorUISchemaElement;
 }
 
-export const schemaReducer = (
-  schema: SchemaElement | undefined,
-  action: SchemaAction
-) => {
-  switch (action.type) {
-    case SET_SCHEMA:
-      return buildSchemaTree(action.schema);
-  }
-  // fallback - do nothing
-  return schema;
-};
-
 export const uiSchemaReducer = (
   uiSchema: EditorUISchemaElement | undefined,
   action: UiSchemaAction
 ) => {
   switch (action.type) {
-    case SET_UISCHEMA:
-      // FIXME we need to link the uischema to the schema
-      return buildEditorUiSchemaTree(action.uiSchema);
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
         const newUIElement = action.uiSchemaElement;
@@ -92,11 +77,25 @@ export const uiSchemaReducer = (
 
 export const combinedReducer = (state: EditorState, action: CombinedAction) => {
   switch (action.type) {
+    case SET_SCHEMA:
+      return withCloneTree(state.uiSchema, state, (clonedUiSchema) => {
+        return linkSchemas(
+          buildSchemaTree(action.schema),
+          cleanUiSchemaLinks(clonedUiSchema)
+        );
+      });
+    case SET_UISCHEMA:
+      return withCloneTree(state.schema, state, (clonedSchema) => {
+        return linkSchemas(
+          cleanLinkedElements(clonedSchema),
+          buildEditorUiSchemaTree(action.uiSchema)
+        );
+      });
     case SET_SCHEMAS:
-      return {
-        schema: buildSchemaTree(action.schema),
-        uiSchema: buildEditorUiSchemaTree(action.uiSchema),
-      };
+      return linkSchemas(
+        buildSchemaTree(action.schema),
+        buildEditorUiSchemaTree(action.uiSchema)
+      );
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
         action.layout as EditorUISchemaElement,
@@ -288,10 +287,9 @@ const removeUiElement = (
       schemaRoot,
       elementToRemove.linkedSchemaElement
     );
-    if (isUUIDError(linkedSchemaElement)) {
-      return linkedSchemaElement;
+    if (!isUUIDError(linkedSchemaElement)) {
+      linkedSchemaElement.linkedUISchemaElements?.delete(uuidToRemove);
     }
-    linkedSchemaElement.linkedUISchemaElements?.delete(uuidToRemove);
   }
 
   // remove from parent
@@ -319,24 +317,23 @@ const removeUiElement = (
   return true;
 };
 
-export const editorReducer = (
-  { schema, uiSchema }: EditorState,
-  action: EditorAction
-) => {
+export const editorReducer = (state: EditorState, action: EditorAction) => {
   switch (action.type) {
-    case SET_SCHEMA:
-      return { schema: schemaReducer(schema, action), uiSchema };
-    case SET_UISCHEMA:
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
     case UPDATE_UISCHEMA_ELEMENT:
-      return { schema: schema, uiSchema: uiSchemaReducer(uiSchema, action) };
+      return {
+        schema: state.schema,
+        uiSchema: uiSchemaReducer(state.uiSchema, action),
+      };
+    case SET_SCHEMA:
+    case SET_UISCHEMA:
     case SET_SCHEMAS:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
     case MOVE_UISCHEMA_ELEMENT:
     case REMOVE_UISCHEMA_ELEMENT:
     case ADD_DETAIL:
-      return combinedReducer({ schema, uiSchema }, action);
+      return combinedReducer(state, action);
   }
   // fallback - do nothing
-  return { schema, uiSchema };
+  return state;
 };

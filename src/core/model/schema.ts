@@ -325,6 +325,36 @@ export const buildJsonSchema = (element: SchemaElement) => {
   return result;
 };
 
+/** Removes all linkedUiSchemaElements from the given schema */
+export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
+  if (!schema) {
+    return schema;
+  }
+
+  delete schema.linkedUISchemaElements;
+  switch (schema.type) {
+    case OBJECT:
+      if (schema.properties.size > 0) {
+        schema.properties = Array.from(schema.properties).reduce(
+          (acc, [key, value]) => {
+            acc.set(key, cleanLinkedElements(value));
+            return acc;
+          },
+          new Map<string, SchemaElement>()
+        );
+      }
+      break;
+    case ARRAY:
+      if (Array.isArray(schema.items)) {
+        schema.items = schema.items.map(cleanLinkedElements);
+      } else {
+        schema.items = cleanLinkedElements(schema.items);
+      }
+      break;
+  }
+  return schema;
+};
+
 /**
  * Returns the closest array which contains the given element
  */

@@ -15,7 +15,12 @@ import {
 import { cloneDeep } from 'lodash';
 import { v4 as uuid } from 'uuid';
 
-import { calculatePath, getRoot, isPathError, PathError } from '../util/clone';
+import {
+  calculatePath,
+  getRoot,
+  isPathError,
+  PathError,
+} from '../util/schemasUtil';
 import { getHierarchy, TreeElement } from '../util/tree';
 
 export interface EditorUISchemaElement
@@ -169,3 +174,16 @@ export const containsControls = (element: EditorUISchemaElement): boolean =>
     },
     { containsControls: false }
   ).containsControls;
+
+export const cleanUiSchemaLinks = (
+  element: EditorUISchemaElement | undefined
+): EditorUISchemaElement | undefined => {
+  if (!element) {
+    return element;
+  }
+  traverse(element, (current) => {
+    delete current.linkedSchemaElement;
+    return current;
+  });
+  return element;
+};

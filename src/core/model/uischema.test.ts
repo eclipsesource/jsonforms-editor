@@ -7,10 +7,15 @@
  */
 import { ControlElement } from '@jsonforms/core';
 
-import { getRoot } from '../util/clone';
+import {
+  createControlWithScope,
+  createLayout,
+} from '../util/generators/uiSchema';
+import { getRoot } from '../util/schemasUtil';
 import {
   buildEditorUiSchemaTree,
   containsControls,
+  EditorControl,
   EditorLayout,
   getDetailContainer,
 } from './uischema';
@@ -32,7 +37,9 @@ test('set uuids on nested elements', () => {
 test('set uuids on detail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedLayout = buildEditorUiSchemaTree(controlWithDetail);
+  const enrichedLayout = buildEditorUiSchemaTree(
+    controlWithDetail
+  ) as EditorLayout;
   expect(enrichedLayout).toHaveProperty('uuid');
   expect(enrichedLayout.options!.detail.elements[0]).toHaveProperty('uuid');
   expect(enrichedLayout.options!.detail.elements[1]).toHaveProperty('uuid');
@@ -41,7 +48,9 @@ test('set uuids on detail', () => {
 test('set parent on detail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedLayout = buildEditorUiSchemaTree(controlWithDetail);
+  const enrichedLayout = buildEditorUiSchemaTree(
+    controlWithDetail
+  ) as EditorLayout;
   expect(getRoot(enrichedLayout.options!.detail)).toBe(enrichedLayout);
   expect(getRoot(enrichedLayout.options!.detail.elements[0])).toBe(
     enrichedLayout
@@ -51,7 +60,10 @@ test('set parent on detail', () => {
 test('isInDetail', () => {
   const controlWithDetail = simpleControl();
   controlWithDetail.options = { detail: simpleLayout() };
-  const enrichedControlWithDetail = buildEditorUiSchemaTree(controlWithDetail);
+  const enrichedControlWithDetail = buildEditorUiSchemaTree(
+    controlWithDetail
+  ) as EditorControl;
+  expect(enrichedControlWithDetail).toBeDefined();
   expect(getDetailContainer(enrichedControlWithDetail)).toBeFalsy();
   expect(getDetailContainer(enrichedControlWithDetail.options!.detail)).toBe(
     enrichedControlWithDetail
@@ -79,7 +91,10 @@ const simpleLayout = () => ({
   elements: [simpleControl(), simpleControl()],
 });
 
-const simpleEditorControl = () => buildEditorUiSchemaTree(simpleControl());
+const simpleEditorControl = () => createControlWithScope('#');
 
-const simpleEditorLayout = (): EditorLayout =>
-  buildEditorUiSchemaTree(simpleLayout()) as EditorLayout;
+const simpleEditorLayout = (): EditorLayout => {
+  const layout = createLayout('VerticalLayout') as EditorLayout;
+  layout.elements = [simpleEditorControl(), simpleEditorControl()];
+  return layout;
+};
