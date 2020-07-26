@@ -1,80 +1,16 @@
 {
-  "name": "jsonforms-editor",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@jsonforms/core": "^2.4.0-beta.0",
-    "@jsonforms/material-renderers": "^2.4.0-beta.0",
-    "@jsonforms/react": "^2.4.0-beta.0",
-    "@material-ui/core": "^4.9.14",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.53",
-    "@rescripts/cli": "0.0.14",
-    "@rescripts/utilities": "0.0.7",
-    "@types/json-schema-traverse": "^0.4.0",
-    "@types/lodash": "^4.14.153",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-header": "^3.0.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-simple-import-sort": "^5.0.3",
-    "json-schema-traverse": "^0.4.1",
-    "lodash": "^4.17.15",
-    "monaco-editor-webpack-plugin": "^1.9.0",
-    "prettier": "^2.0.5",
-    "react": "^16.13.1",
-    "react-dnd": "^10.0.2",
-    "react-dnd-html5-backend": "^10.0.2",
-    "react-dom": "^16.13.1",
-    "react-monaco-editor": "^0.36.0",
-    "react-redux": "^7.2.0",
-    "react-reflex": "^3.0.22",
-    "react-scripts": "3.4.1",
-    "react-spring": "^8.0.27",
-    "redux": "^4.0.5",
-    "typescript": "^3.9.6",
-    "uuid": "^8.1.0"
-  },
+  "name": "root",
   "scripts": {
-    "start": "rescripts start",
-    "build": "rescripts build",
-    "test": "rescripts test",
-    "eject": "react-scripts eject",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run --config video=false",
-    "cypress:ci": "BROWSER=none start-server-and-test start http://localhost:3000 cypress:run",
-    "lint": "eslint --ext js,jsx,ts,tsx src cypress"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "lerna": "lerna",
+    "init": "lerna bootstrap --hoist",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "start": "cd app && npm run start",
+    "cypress:open": "cd app && npm run cypress:open",
+    "cypress:ci": "cd app && npm run cypress:ci"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "cypress": "^4.5.0",
-    "eslint-plugin-cypress": "^2.10.3",
-    "start-server-and-test": "^1.11.0"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!(monaco-editor)/)"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy",
-      "monaco-editor": "<rootDir>/node_modules/react-monaco-editor"
-    }
+    "lerna": "^3.22.1"
   }
 }

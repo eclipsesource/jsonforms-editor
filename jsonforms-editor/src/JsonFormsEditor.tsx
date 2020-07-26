@@ -5,6 +5,9 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import './JsonFormsEditor.css';
+import 'react-reflex/styles.css';
+
 import { makeStyles } from '@material-ui/core';
 import React, { useEffect, useReducer, useState } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -52,11 +55,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface AppProps {
+interface JsonFormsEditorProps {
   schemaProviders: PropertySchemasProvider[];
   schemaDecorators: PropertySchemasDecorator[];
 }
-const App: React.FC<AppProps> = ({ schemaProviders, schemaDecorators }) => {
+export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
+  schemaProviders,
+  schemaDecorators,
+}) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
   const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
@@ -101,13 +107,13 @@ const App: React.FC<AppProps> = ({ schemaProviders, schemaDecorators }) => {
       }}
     >
       <DndProvider backend={Backend}>
-        <AppUi />
+        <JsonFormsEditorUi />
       </DndProvider>
     </EditorContextInstance.Provider>
   );
 };
 
-const AppUi = () => {
+const JsonFormsEditorUi = () => {
   const classes = useStyles();
   return (
     <Layout>
@@ -136,5 +142,3 @@ const AppUi = () => {
     </Layout>
   );
 };
-
-export default App;
