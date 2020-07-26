@@ -7,9 +7,14 @@
  */
 import { cloneDeep } from 'lodash';
 
+// Error imports needed for declaration generation (declaration:true in tsconfig)
 import {
   calculatePath,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  CalculatePathError,
   getFromPath,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  GetPathError,
   getRoot,
   isPathError,
   PathError,

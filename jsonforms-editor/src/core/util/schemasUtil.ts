@@ -15,12 +15,12 @@ import {
 } from '../model/uischema';
 import { Parentable } from './tree';
 
-interface CalculatePathError {
+export interface CalculatePathError {
   id: 'calulatePathError';
   root: any;
   element: any;
 }
-interface GetPathError {
+export interface GetPathError {
   id: 'getPathError';
   root: any;
   path: Array<string>;

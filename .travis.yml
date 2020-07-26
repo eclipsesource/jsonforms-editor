@@ -7,7 +7,8 @@ install:
   - npm ci
 
 script:
+  - npm run init
   - npm run build
-  - npm test -- --watchAll=false
+  - npm test
   - npm run cypress:ci
   - npm run lint
