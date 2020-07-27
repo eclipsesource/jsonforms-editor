@@ -362,3 +362,17 @@ export const getArrayContainer = (
   element: SchemaElement
 ): SchemaElement | undefined =>
   getHierarchy(element).splice(1).find(isArrayElement);
+
+export const generateEmptyData = (
+  schema: SchemaElement,
+  data: any = {}
+): object => {
+  if (isObjectElement(schema)) {
+    Object.entries(schema.properties).forEach(([key, value]) => {
+      if (isObjectElement(value)) {
+        data[key] = generateEmptyData(value, {});
+      }
+    });
+  }
+  return data;
+};
