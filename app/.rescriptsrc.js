@@ -16,12 +16,9 @@ const addLibrarySrc = (babelLoader) => {
   return babelLoader;
 };
 
-const addLibrarySrcWhenSpecified = () => (config) => {
-  if (process.env.REACT_APP_BUILD_FROM_SOURCE === 'true') {
-    const babelLoaderPaths = getPaths(isBabelLoader, config);
-    return edit(addLibrarySrc, babelLoaderPaths, config);
-  }
-  return config;
+const addLibrarySrcInBabelLoader = () => (config) => {
+  const babelLoaderPaths = getPaths(isBabelLoader, config);
+  return edit(addLibrarySrc, babelLoaderPaths, config);
 };
 
 module.exports = [
@@ -31,5 +28,5 @@ module.exports = [
       languages: ['json'],
     })
   ),
-  addLibrarySrcWhenSpecified(),
+  addLibrarySrcInBabelLoader(),
 ];

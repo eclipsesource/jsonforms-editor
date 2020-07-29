@@ -24,19 +24,13 @@ The app is based on `create-react-app`.
 We use `rescripts` to customize non-configurable CRA features:
 
 - We add the `MonacoWebpackPlugin` to the build
-- In development we also add the `@jsonforms/editor` sources to the build. See [development mode](#development-mode).
+- We also add the `@jsonforms/editor` sources to the build.
+
+By consuming the sources we don't exactly behave like a regular consumer of the library.
+See the [testapp](../testapp) for smoke tests regarding this use case.
 
 ### Scripts
 
 - Start the app with `npm start`
 - Run unit tests with `npm run test`
 - Run UI tests with `npm run cypress:open`
-
-### Development mode
-
-The development server of the app also includes the typescript library build.
-This is controlled via the `REACT_APP_BUILD_FROM_SOURCE=true` environment variable.
-Set to `false` to test the regular build in the development server.
-Note that you then need to rebuild the `@jsonforms/editor` library component with every change.
-
-In `@jsonforms/editor` we switch between the modes via the `index.js` main.
