@@ -8,7 +8,7 @@
 import JsonFormsEditor, {
   defaultSchemaDecorators,
   propertySchemaProvider,
-} from '@jsonforms/editor';
+} from '@jsonforms/editor/src';
 import React from 'react';
 
 export const App = () => (
