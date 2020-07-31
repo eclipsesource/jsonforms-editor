@@ -12,6 +12,7 @@ import {
   EditorUISchemaElement,
   getDetailContainer,
 } from '../model/uischema';
+import { tryFindByUUID } from '../util/schemasUtil';
 import { getHierarchy } from '../util/tree';
 
 export const NEW_UI_SCHEMA_ELEMENT: 'newUiSchemaElement' = 'newUiSchemaElement';
@@ -23,16 +24,16 @@ export type DndType = NewUISchemaElement | MoveUISchemaElement;
 export interface NewUISchemaElement {
   type: 'newUiSchemaElement';
   uiSchemaElement: EditorUISchemaElement;
-  schema?: SchemaElement;
+  schemaUUID?: string;
 }
 
 const newUISchemaElement = (
   uiSchemaElement: EditorUISchemaElement,
-  schema?: SchemaElement
+  schemaUUID?: string
 ) => ({
   type: NEW_UI_SCHEMA_ELEMENT,
   uiSchemaElement,
-  schema,
+  schemaUUID,
 });
 
 export interface MoveUISchemaElement {
@@ -54,11 +55,12 @@ export const DndItems = { newUISchemaElement, moveUISchemaElement };
 
 export const canDropIntoLayout = (
   item: NewUISchemaElement,
+  rootSchema: SchemaElement | undefined,
   layout: EditorUISchemaElement
 ) => {
   // check scope changes
   const detailContainer = getDetailContainer(layout);
-  return canDropIntoScope(item, detailContainer);
+  return canDropIntoScope(item, rootSchema, detailContainer);
 };
 
 /**
@@ -72,9 +74,10 @@ export const canDropIntoLayout = (
  */
 export const canDropIntoScope = (
   item: NewUISchemaElement,
+  rootSchema: SchemaElement | undefined,
   scopeUISchemaElement: EditorUISchemaElement | undefined
 ) => {
-  const controlObject = item.schema;
+  const controlObject = tryFindByUUID(rootSchema, item.schemaUUID);
   if (controlObject) {
     const scopeSchemaElement = getScopeChangingContainer(controlObject);
     if (!scopesMatch(scopeSchemaElement, scopeUISchemaElement)) {

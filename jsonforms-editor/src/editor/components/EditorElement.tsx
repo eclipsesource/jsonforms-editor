@@ -147,7 +147,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
             onClick={() => {
               hasChildren(wrappedElement)
                 ? setOpenConfirmRemoveDialog(true)
-                : dispatch(Actions.removeUiSchemaElement(wrappedElement));
+                : dispatch(Actions.removeUiSchemaElement(wrappedElement.uuid));
             }}
           >
             <DeleteIcon />
@@ -157,7 +157,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
             open={openConfirmRemoveDialog}
             text={'Remove element and all its contents from the UI Schema?'}
             onOk={() => {
-              dispatch(Actions.removeUiSchemaElement(wrappedElement));
+              dispatch(Actions.removeUiSchemaElement(wrappedElement.uuid));
               setOpenConfirmRemoveDialog(false);
             }}
             onCancel={() => setOpenConfirmRemoveDialog(false)}

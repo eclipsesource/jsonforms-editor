@@ -33,7 +33,7 @@ export const Properties = () => {
   const schema = useSchema();
   const dispatch = useDispatch();
 
-  const uiElement: EditorUISchemaElement = useMemo(
+  const uiElement: EditorUISchemaElement | undefined = useMemo(
     () => tryFindByUUID(uiSchema, selection?.uuid),
     [selection, uiSchema]
   );
@@ -52,8 +52,10 @@ export const Properties = () => {
 
   const updateProperties = useCallback(
     ({ data: updatedProperties }) => {
-      if (!isEqual(data, updatedProperties)) {
-        dispatch(Actions.updateUISchemaElement(uiElement, updatedProperties));
+      if (uiElement && !isEqual(data, updatedProperties)) {
+        dispatch(
+          Actions.updateUISchemaElement(uiElement.uuid, updatedProperties)
+        );
       }
     },
     [data, dispatch, uiElement]

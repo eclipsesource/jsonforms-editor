@@ -216,7 +216,7 @@ describe('REMOVE_UISCHEMA_ELEMENT action', () => {
 
     const brokenControl = (brokenState.uiSchema as EditorLayout).elements[0];
     const removeBrokenElementAction = Actions.removeUiSchemaElement(
-      brokenControl
+      brokenControl.uuid
     );
 
     // REMOVE BROKEN CONTROL
