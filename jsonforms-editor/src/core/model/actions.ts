@@ -59,34 +59,34 @@ export interface SetSchemasAction {
 export interface AddScopedElementToLayout {
   type: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
   uiSchemaElement: EditorUISchemaElement;
-  layout: EditorLayout;
-  schema: SchemaElement;
+  layoutUUID: string;
+  schemaUUID: string;
   index: number;
 }
 
 export interface AddUnscopedElementToLayout {
   type: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT';
   uiSchemaElement: EditorUISchemaElement;
-  layout: EditorLayout;
+  layoutUUID: string;
   index: number;
 }
 
 export interface MoveUiSchemaElement {
   type: 'jsonforms-editor/MOVE_UISCHEMA_ELEMENT';
-  uiSchemaElement: EditorUISchemaElement;
-  newContainer: EditorUISchemaElement;
+  elementUUID: string;
+  newContainerUUID: string;
   index: number;
-  schema?: SchemaElement;
+  schemaUUID?: string;
 }
 
 export interface RemoveUiSchemaElement {
   type: 'jsonforms-editor/REMOVE_UISCHEMA_ELEMENT';
-  uiSchemaElement: EditorUISchemaElement;
+  elementUUID: string;
 }
 
 export interface UpdateUiSchemaElement {
   type: 'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT';
-  uiSchemaElement: EditorUISchemaElement;
+  elementUUID: string;
   changedProperties: { [key: string]: any };
 }
 
@@ -114,50 +114,50 @@ const setSchemas = (schema: any, uiSchema: any) => ({
 
 const addScopedElementToLayout = (
   uiSchemaElement: EditorUISchemaElement,
-  layout: EditorLayout,
+  layoutUUID: string,
   index: number,
-  schema: any
+  schemaUUID: string
 ) => ({
   type: ADD_SCOPED_ELEMENT_TO_LAYOUT,
   uiSchemaElement,
-  layout,
+  layoutUUID,
   index,
-  schema,
+  schemaUUID,
 });
 
 const addUnscopedElementToLayout = (
   uiSchemaElement: EditorUISchemaElement,
-  layout: EditorLayout,
+  layoutUUID: string,
   index: number
 ) => ({
   type: ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
   uiSchemaElement,
-  layout,
+  layoutUUID,
   index,
 });
 
 const moveUiSchemaElement = (
-  uiSchemaElement: EditorUISchemaElement,
-  newContainer: EditorUISchemaElement,
+  elementUUID: string,
+  newContainerUUID: string,
   index: number,
-  schema?: SchemaElement
+  schemaUUID?: string
 ) => ({
   type: MOVE_UISCHEMA_ELEMENT,
-  uiSchemaElement,
-  newContainer,
+  elementUUID,
+  newContainerUUID,
   index,
-  schema,
+  schemaUUID,
 });
 
-const removeUiSchemaElement = (uiSchemaElement: EditorUISchemaElement) => ({
+const removeUiSchemaElement = (elementUUID: string) => ({
   type: REMOVE_UISCHEMA_ELEMENT,
-  uiSchemaElement,
+  elementUUID,
 });
 
 const updateUISchemaElement = (
-  uiSchemaElement: EditorUISchemaElement,
+  elementUUID: string,
   changedProperties: { [key: string]: any }
-) => ({ type: UPDATE_UISCHEMA_ELEMENT, uiSchemaElement, changedProperties });
+) => ({ type: UPDATE_UISCHEMA_ELEMENT, elementUUID, changedProperties });
 
 const addDetail = (
   uiSchemaElementId: string,

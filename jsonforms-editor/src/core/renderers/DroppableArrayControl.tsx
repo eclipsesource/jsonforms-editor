@@ -19,7 +19,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import React, { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 
-import { useDispatch } from '../context';
+import { useDispatch, useSchema } from '../context';
 import {
   canDropIntoScope,
   MOVE_UI_SCHEMA_ELEMENT,
@@ -53,12 +53,17 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
   cells,
 }) => {
   const dispatch = useDispatch();
+  const rootSchema = useSchema();
   const [{ isOver, uiSchemaElement }, drop] = useDrop({
     accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT],
     canDrop: (item): boolean => {
       switch (item.type) {
         case NEW_UI_SCHEMA_ELEMENT:
-          return canDropIntoScope(item as NewUISchemaElement, uischema);
+          return canDropIntoScope(
+            item as NewUISchemaElement,
+            rootSchema,
+            uischema
+          );
         case MOVE_UI_SCHEMA_ELEMENT:
           // move as a new detail is only allowed when there are no controls
           return !containsControls(uiSchemaElement);
@@ -76,7 +81,9 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
           dispatch(Actions.addDetail(uischema.uuid, uiSchemaElement));
           break;
         case MOVE_UI_SCHEMA_ELEMENT:
-          dispatch(Actions.moveUiSchemaElement(uiSchemaElement, uischema, 0));
+          dispatch(
+            Actions.moveUiSchemaElement(uiSchemaElement.uuid, uischema.uuid, 0)
+          );
           break;
       }
     },

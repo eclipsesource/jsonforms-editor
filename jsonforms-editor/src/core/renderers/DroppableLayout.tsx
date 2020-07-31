@@ -22,7 +22,7 @@ import React from 'react';
 import { useDrop } from 'react-dnd';
 
 import { EditorElement } from '../../editor/components/EditorElement';
-import { useDispatch } from '../context';
+import { useDispatch, useSchema } from '../context';
 import {
   canDropIntoLayout,
   canMoveSchemaElementTo,
@@ -163,12 +163,17 @@ const useDropPointStyles = makeStyles({
 
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
-  const [{ isOver, uiSchemaElement, schema }, drop] = useDrop({
+  const rootSchema = useSchema();
+  const [{ isOver, uiSchemaElement, schemaUUID }, drop] = useDrop({
     accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT],
     canDrop: (item, monitor) => {
       switch (item.type) {
         case NEW_UI_SCHEMA_ELEMENT:
-          return canDropIntoLayout(item as NewUISchemaElement, layout);
+          return canDropIntoLayout(
+            item as NewUISchemaElement,
+            rootSchema,
+            layout
+          );
         case MOVE_UI_SCHEMA_ELEMENT:
           return canMoveSchemaElementTo(
             item as MoveUISchemaElement,
@@ -182,31 +187,36 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
     collect: (mon) => ({
       isOver: !!mon.isOver() && mon.canDrop(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
-      schema: mon.getItem()?.schema,
+      schemaUUID: mon.getItem()?.schemaUUID,
     }),
     drop: (item) => {
       switch (item.type) {
         case NEW_UI_SCHEMA_ELEMENT:
-          schema
+          schemaUUID
             ? dispatch(
                 Actions.addScopedElementToLayout(
                   uiSchemaElement,
-                  layout,
+                  layout.uuid,
                   index,
-                  schema
+                  schemaUUID
                 )
               )
             : dispatch(
                 Actions.addUnscopedElementToLayout(
                   uiSchemaElement,
-                  layout,
+                  layout.uuid,
                   index
                 )
               );
           break;
         case MOVE_UI_SCHEMA_ELEMENT:
           dispatch(
-            Actions.moveUiSchemaElement(uiSchemaElement, layout, index, schema)
+            Actions.moveUiSchemaElement(
+              uiSchemaElement.uuid,
+              layout.uuid,
+              index,
+              schemaUUID
+            )
           );
           break;
       }

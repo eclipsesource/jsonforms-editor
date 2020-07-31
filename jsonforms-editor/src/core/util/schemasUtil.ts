@@ -37,11 +37,11 @@ export type PathError = CalculatePathError | GetPathError;
 export const isPathError = <T>(result: T | PathError): result is PathError =>
   isCalculatePathError(result) || isGetPathError(result);
 
-interface NoUUIDError {
+export interface NoUUIDError {
   id: 'noUUIDError';
   element: any;
 }
-interface GetByUUIDError {
+export interface GetByUUIDError {
   id: 'getByUUIDError';
   root: any;
   uuid: string;
@@ -67,29 +67,34 @@ export const getRoot = <T extends Parentable<T>>(
   return element;
 };
 
-export const findByUUID = (uiSchema: any, uuid: string): any | UUIDError => {
-  const root = getRoot(uiSchema);
-  const element = doFindByUUID(root, uuid);
-  if (!element) {
+export const findByUUID = (element: any, uuid: string): any => {
+  const root = getRoot(element);
+  const result = doFindByUUID(root, uuid);
+  if (!result) {
     return {
       id: 'getByUUIDError',
       root: root,
       uuid: uuid,
     };
   }
-  return element;
+  return result;
 };
 
-export const tryFindByUUID = (
-  uiSchema: any,
+export const tryFindByUUID = <T>(
+  element: T,
   uuid: string | undefined
-): any | undefined => {
-  if (!uuid || !uiSchema) return undefined;
-  const findResult = findByUUID(uiSchema, uuid);
+): T | undefined => {
+  if (!uuid || !element) return undefined;
+  const findResult = findByUUID(element, uuid);
   return isUUIDError(findResult) ? undefined : findResult;
 };
 
 const doFindByUUID = (root: any, uuid: string): any | UUIDError => {
+  if (!uuid) {
+    return {
+      id: 'noUUIDError',
+    };
+  }
   if (root && root.uuid === uuid) {
     return root;
   }
@@ -140,16 +145,16 @@ export const getPathString = (object: any): string | PathError => {
 };
 
 const doCalculatePath = (root: any, object: any): Array<string> | undefined => {
-  if (root === object) {
+  if (object.uuid && root.uuid === object.uuid) {
     return [];
   }
   const entries = root instanceof Map ? root.entries() : Object.entries(root);
   for (const [key, value] of Array.from(entries)) {
-    if (value === object) {
+    if (object.uuid && value?.uuid === object.uuid) {
       return [key];
     }
     // some mappings are 'reversed'
-    if (key === object) {
+    if (object.uuid && key?.uuid === object.uuid) {
       return [value];
     }
     if (typeof value === 'object' && key !== 'parent') {
@@ -244,7 +249,7 @@ export const linkSchemas = (
 const getSchemaElementFromScope = (
   schema: SchemaElement,
   scope: string
-): SchemaElement | undefined => {
+): SchemaElement | GetPathError | undefined => {
   const schemaRoot = getRoot(schema);
   const validSegment = (pathSegment: string) =>
     pathSegment !== '#' && pathSegment !== undefined && pathSegment !== '';

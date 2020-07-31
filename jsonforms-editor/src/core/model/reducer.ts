@@ -11,7 +11,6 @@ import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
   findByUUID,
   getRoot,
-  isPathError,
   isUUIDError,
   linkElements,
   linkSchemas,
@@ -53,23 +52,41 @@ export const uiSchemaReducer = (
 ) => {
   switch (action.type) {
     case ADD_UNSCOPED_ELEMENT_TO_LAYOUT:
-      return withCloneTree(action.layout, uiSchema, (newUiSchema) => {
-        const newUIElement = action.uiSchemaElement;
-        newUIElement.parent = newUiSchema;
-        newUiSchema.elements.splice(action.index, 0, newUIElement);
-        return getRoot(newUiSchema as EditorUISchemaElement);
-      });
+      return uiSchema
+        ? withCloneTree(
+            uiSchema,
+            action.layoutUUID,
+            uiSchema,
+            (newUiSchema) => {
+              const newUIElement = action.uiSchemaElement;
+              newUIElement.parent = newUiSchema;
+              (newUiSchema as EditorLayout).elements.splice(
+                action.index,
+                0,
+                newUIElement
+              );
+              return getRoot(newUiSchema as EditorUISchemaElement);
+            }
+          )
+        : uiSchema;
     case UPDATE_UISCHEMA_ELEMENT:
-      return withCloneTree(action.uiSchemaElement, uiSchema, (newUiSchema) => {
-        // options.detail is not part of the editable properties
-        const optionsDetail = newUiSchema.options?.detail;
-        assign(newUiSchema, action.changedProperties);
-        if (optionsDetail && !newUiSchema.options?.detail) {
-          newUiSchema.options = newUiSchema.options || {};
-          newUiSchema.options.detail = optionsDetail;
-        }
-        return getRoot(newUiSchema);
-      });
+      return uiSchema
+        ? withCloneTree(
+            uiSchema,
+            action.elementUUID,
+            uiSchema,
+            (newUiSchema) => {
+              // options.detail is not part of the editable properties
+              const optionsDetail = newUiSchema.options?.detail;
+              assign(newUiSchema, action.changedProperties);
+              if (optionsDetail && !newUiSchema.options?.detail) {
+                newUiSchema.options = newUiSchema.options || {};
+                newUiSchema.options.detail = optionsDetail;
+              }
+              return getRoot(newUiSchema);
+            }
+          )
+        : uiSchema;
   }
   // fallback - do nothing
   return uiSchema;
@@ -78,14 +95,19 @@ export const uiSchemaReducer = (
 export const combinedReducer = (state: EditorState, action: CombinedAction) => {
   switch (action.type) {
     case SET_SCHEMA:
-      return withCloneTree(state.uiSchema, state, (clonedUiSchema) => {
-        return linkSchemas(
-          buildSchemaTree(action.schema),
-          cleanUiSchemaLinks(clonedUiSchema)
-        );
-      });
+      return withCloneTree(
+        state.uiSchema,
+        undefined,
+        state,
+        (clonedUiSchema) => {
+          return linkSchemas(
+            buildSchemaTree(action.schema),
+            cleanUiSchemaLinks(clonedUiSchema)
+          );
+        }
+      );
     case SET_UISCHEMA:
-      return withCloneTree(state.schema, state, (clonedSchema) => {
+      return withCloneTree(state.schema, undefined, state, (clonedSchema) => {
         return linkSchemas(
           cleanLinkedElements(clonedSchema),
           buildEditorUiSchemaTree(action.uiSchema)
@@ -98,8 +120,10 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
-        action.layout as EditorUISchemaElement,
-        action.schema,
+        state.uiSchema,
+        action.layoutUUID,
+        state.schema,
+        action.schemaUUID,
         state,
         (newUiSchema, newSchema) => {
           const newUIElement = action.uiSchemaElement;
@@ -110,7 +134,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             newUIElement
           );
 
-          if (!linkElements(newUIElement, newSchema)) {
+          if (!newSchema || !linkElements(newUIElement, newSchema)) {
             console.error('Could not add new UI element', newUIElement);
             return state;
           }
@@ -123,14 +147,13 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case MOVE_UISCHEMA_ELEMENT:
       return withCloneTrees(
-        action.newContainer,
-        action.schema,
+        state.uiSchema,
+        action.newContainerUUID,
+        state.schema,
+        action.schemaUUID,
         state,
         (newContainer, newSchema) => {
-          const elementToMove = findByUUID(
-            newContainer,
-            action.uiSchemaElement.uuid
-          );
+          const elementToMove = findByUUID(newContainer, action.elementUUID);
           if (isUUIDError(elementToMove)) {
             console.error(
               'Could not find corresponding element ',
@@ -138,21 +161,26 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             );
             return state;
           }
-
+          const oldParentUUID = elementToMove.parent?.uuid;
+          const oldIndexInParent = elementToMove.parent
+            ? (elementToMove.parent as EditorLayout).elements.indexOf(
+                elementToMove
+              )
+            : -1;
           const removeResult = removeUiElement(elementToMove, newSchema);
-          if (isPathError(removeResult)) {
+          if (isUUIDError(removeResult)) {
             console.error('Could not remove ui element ', removeResult);
             return state;
           }
 
           // link child and new parent
           elementToMove.parent = newContainer;
-          if (isEditorLayout(newContainer)) {
+          if (newContainer && isEditorLayout(newContainer)) {
             const moveRightInSameParent =
-              action.newContainer === action.uiSchemaElement.parent &&
-              (action.newContainer as EditorLayout).elements.indexOf(
-                action.uiSchemaElement
-              ) < action.index;
+              action.newContainerUUID === oldParentUUID &&
+              oldIndexInParent !== -1 &&
+              oldIndexInParent < action.index;
+
             // we need to adapt the index as we removed the element previously
             const indexToUse = moveRightInSameParent
               ? action.index - 1
@@ -162,7 +190,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
               0,
               elementToMove
             );
-          } else if (isEditorControl(newContainer)) {
+          } else if (newContainer && isEditorControl(newContainer)) {
             newContainer.options = {
               ...newContainer.options,
               detail: elementToMove,
@@ -174,7 +202,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
           }
 
           // add linkedUISchemaElements in the schema (for scoped ui elements) if such links existed before
-          if (action.uiSchemaElement.linkedSchemaElement) {
+          if (elementToMove.linkedSchemaElement) {
             // newSchema can't be undefined when the old ui element had links to it
             (newSchema!.linkedUISchemaElements =
               newSchema!.linkedUISchemaElements || new Set()).add(
@@ -184,7 +212,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
 
           // schema is optional in this action
           const schemaToReturn =
-            action.schema !== undefined ? getRoot(newSchema) : state.schema;
+            action.schemaUUID !== undefined ? getRoot(newSchema) : state.schema;
 
           return {
             schema: schemaToReturn,
@@ -194,17 +222,23 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case REMOVE_UISCHEMA_ELEMENT:
       return withCloneTrees(
-        action.uiSchemaElement as EditorUISchemaElement,
+        state.uiSchema,
+        action.elementUUID,
         state.schema,
+        undefined,
         state,
         (elementToRemove, newSchema) => {
+          if (!elementToRemove) {
+            console.error('Could not remove ui element ', elementToRemove);
+            return state;
+          }
           const removeResult = removeUiElement(elementToRemove, newSchema);
-          if (isPathError(removeResult)) {
+          if (isUUIDError(removeResult)) {
             console.error('Could not remove ui element ', removeResult);
             return state;
           }
           // check whether the element to remove was the root element
-          const uiSchemaToReturn = action.uiSchemaElement.parent
+          const uiSchemaToReturn = elementToRemove.parent
             ? getRoot(elementToRemove)
             : undefined;
           return {
@@ -216,7 +250,9 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
     case ADD_DETAIL:
       return withCloneTrees(
         state.schema,
+        undefined,
         state.uiSchema,
+        undefined,
         state,
         (schema, uiSchema) => {
           const elementForDetail = findByUUID(
