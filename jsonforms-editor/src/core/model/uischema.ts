@@ -157,7 +157,7 @@ export const getDetailContainer = (
   element: EditorUISchemaElement
 ): EditorUISchemaElement | undefined => {
   const parentIsDetail = (el: EditorUISchemaElement) =>
-    el.parent?.options?.detail && el.parent.options.detail.uuid === el.uuid;
+    el.parent?.options?.detail?.uuid === el.uuid;
 
   return getHierarchy(element).find(parentIsDetail)?.parent;
 };
