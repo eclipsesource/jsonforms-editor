@@ -21,7 +21,6 @@ import { Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
-import { EditorElement } from '../../editor/components/EditorElement';
 import { useDispatch, useSchema } from '../context';
 import {
   canDropIntoLayout,
@@ -38,6 +37,7 @@ import {
   getUISchemaPath,
 } from '../model/uischema';
 import { isPathError } from '../util/schemasUtil';
+import { DroppableElementRegistration } from './DroppableElement';
 
 const useLayoutStyles = makeStyles((theme) => ({
   dropPointGridItem: {
@@ -65,15 +65,7 @@ interface DroppableLayoutProps {
   cells?: JsonFormsCellRendererRegistryEntry[];
 }
 
-const DroppableLayout: React.FC<DroppableLayoutProps> = (props) => {
-  return (
-    <EditorElement wrappedElement={props.layout}>
-      <DroppableLayoutContent {...props} />
-    </EditorElement>
-  );
-};
-
-export const DroppableLayoutContent: React.FC<DroppableLayoutProps> = ({
+export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
   schema,
   layout,
   path,
@@ -89,28 +81,6 @@ export const DroppableLayoutContent: React.FC<DroppableLayoutProps> = ({
       spacing={direction === 'row' ? 2 : 0}
       wrap='nowrap'
     >
-      {renderLayoutElementsWithDrops(
-        layout,
-        schema,
-        path,
-        classes,
-        renderers,
-        cells
-      )}
-    </Grid>
-  );
-};
-
-const renderLayoutElementsWithDrops = (
-  layout: EditorLayout,
-  schema: JsonSchema,
-  path: string,
-  classes: Record<'dropPointGridItem' | 'jsonformsGridItem', string>,
-  renderers?: JsonFormsRendererRegistryEntry[],
-  cells?: JsonFormsCellRendererRegistryEntry[]
-) => {
-  return (
-    <>
       <Grid
         item
         key={`${path}-${0}-drop`}
@@ -131,7 +101,9 @@ const renderLayoutElementsWithDrops = (
               uischema={child}
               schema={schema}
               path={path}
-              renderers={renderers}
+              renderers={
+                renderers && [...renderers, DroppableElementRegistration]
+              }
               cells={cells}
             />
           </Grid>
@@ -145,7 +117,7 @@ const renderLayoutElementsWithDrops = (
           </Grid>
         </React.Fragment>
       ))}
-    </>
+    </Grid>
   );
 };
 
@@ -247,6 +219,7 @@ const getDataPath = (uischema: EditorUISchemaElement): string => {
 const createRendererInDirection = (direction: 'row' | 'column') => ({
   uischema,
   path,
+  renderers,
   ...props
 }: LayoutProps) => {
   const layout = uischema as EditorLayout;
@@ -256,15 +229,16 @@ const createRendererInDirection = (direction: 'row' | 'column') => ({
       path={path}
       layout={layout}
       direction={direction}
+      renderers={renderers}
     />
   );
 };
 
 export const DroppableHorizontalLayoutRegistration = {
-  tester: rankWith(100, uiTypeIs('HorizontalLayout')),
+  tester: rankWith(45, uiTypeIs('HorizontalLayout')),
   renderer: withJsonFormsLayoutProps(createRendererInDirection('row')),
 };
 export const DroppableVerticalLayoutRegistration = {
-  tester: rankWith(100, uiTypeIs('VerticalLayout')),
+  tester: rankWith(45, uiTypeIs('VerticalLayout')),
   renderer: withJsonFormsLayoutProps(createRendererInDirection('column')),
 };

@@ -17,9 +17,8 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 
-import { EditorElement } from '../../editor/components/EditorElement';
 import { EditorLayout } from '../model/uischema';
-import { DroppableLayoutContent } from './DroppableLayout';
+import { DroppableLayout } from './DroppableLayout';
 
 const useStyles = makeStyles((theme) => ({
   groupLabel: {
@@ -41,45 +40,39 @@ const Group: React.FC<LayoutProps> = (props) => {
   const groupLayout = uischema as GroupLayout & EditorLayout;
   const classes = useStyles();
   return (
-    <EditorElement wrappedElement={groupLayout}>
-      <Card>
-        <CardHeader
-          component={() => (
-            <Grid
-              container
-              direction='row'
-              spacing={1}
-              className={classes.groupLabel}
-            >
-              <Grid item>
-                <Typography>Label:</Typography>
-              </Grid>
-              <Grid item>
-                <Typography
-                  className={`${
-                    groupLayout.label ? '' : classes.labelPlaceholder
-                  }`}
-                  variant='h6'
-                >
-                  {groupLayout.label ?? 'no label'}
-                </Typography>
-              </Grid>
+    <Card>
+      <CardHeader
+        component={() => (
+          <Grid
+            container
+            direction='row'
+            spacing={1}
+            className={classes.groupLabel}
+          >
+            <Grid item>
+              <Typography>Label:</Typography>
             </Grid>
-          )}
-        ></CardHeader>
-        <CardContent>
-          <DroppableLayoutContent
-            {...props}
-            layout={groupLayout}
-            direction={'column'}
-          />
-        </CardContent>
-      </Card>
-    </EditorElement>
+            <Grid item>
+              <Typography
+                className={`${
+                  groupLayout.label ? '' : classes.labelPlaceholder
+                }`}
+                variant='h6'
+              >
+                {groupLayout.label ?? 'no label'}
+              </Typography>
+            </Grid>
+          </Grid>
+        )}
+      ></CardHeader>
+      <CardContent>
+        <DroppableLayout {...props} layout={groupLayout} direction={'column'} />
+      </CardContent>
+    </Card>
   );
 };
 
 export const DroppableGroupLayoutRegistration = {
-  tester: rankWith(100, uiTypeIs('Group')),
+  tester: rankWith(45, uiTypeIs('Group')),
   renderer: withJsonFormsLayoutProps(Group),
 };
