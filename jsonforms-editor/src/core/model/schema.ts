@@ -354,10 +354,9 @@ export const cleanLinkedElements = (
       break;
     case ARRAY:
       if (Array.isArray(schema.items)) {
-        schema.items =
-          (schema.items
-            .map(cleanLinkedElements)
-            .filter((item) => item !== undefined) as SchemaElement[]) ?? [];
+        schema.items = schema.items
+          .map(cleanLinkedElements)
+          .filter((item) => item !== undefined) as SchemaElement[];
       } else {
         schema.items = cleanLinkedElements(schema.items) ?? [];
       }
