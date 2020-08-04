@@ -5,8 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { SchemaElement } from './schema';
-import { EditorLayout, EditorUISchemaElement } from './uischema';
+import { EditorUISchemaElement } from './uischema';
 
 export type UiSchemaAction = AddUnscopedElementToLayout | UpdateUiSchemaElement;
 
