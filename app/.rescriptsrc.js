@@ -1,32 +1,48 @@
-const { appendWebpackPlugin, edit, getPaths } = require('@rescripts/utilities');
+const {
+  appendWebpackPlugin,
+  editWebpackPlugin,
+  edit,
+  getPaths,
+} = require('@rescripts/utilities');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-const isBabelLoader = (inQuestion) =>
-  inQuestion &&
-  inQuestion.loader &&
-  inQuestion.loader.includes('babel-loader') &&
-  inQuestion.include &&
-  inQuestion.include.includes('app');
+const includesAppSrc = (inQuestion) =>
+  inQuestion && inQuestion.include && inQuestion.include.includes('app/src');
 
-const addLibrarySrc = (babelLoader) => {
-  babelLoader.include = [
-    babelLoader.include,
-    babelLoader.include.replace('app/src', 'jsonforms-editor/src'),
+const addLibrarySrc = (loader) => {
+  loader.include = [
+    loader.include,
+    loader.include.replace('app/src', 'jsonforms-editor/src'),
   ];
-  return babelLoader;
+  return loader;
 };
 
-const addLibrarySrcInBabelLoader = () => (config) => {
-  const babelLoaderPaths = getPaths(isBabelLoader, config);
-  return edit(addLibrarySrc, babelLoaderPaths, config);
+const adaptAppSources = () => (config) => {
+  const paths = getPaths(includesAppSrc, config);
+  return edit(addLibrarySrc, paths, config);
 };
 
-module.exports = [
+const reportTypeCheckOnFilesOutsideOfApp = () => (config) =>
+  editWebpackPlugin(
+    (plugin) => {
+      plugin.reportFiles.unshift('../**');
+      return plugin;
+    },
+    'ForkTsCheckerWebpackPlugin',
+    config
+  );
+
+const addMonacoPlugin = () => (config) =>
   appendWebpackPlugin(
     new MonacoWebpackPlugin({
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
       languages: ['json'],
-    })
-  ),
-  addLibrarySrcInBabelLoader(),
+    }),
+    config
+  );
+
+module.exports = [
+  addMonacoPlugin(),
+  adaptAppSources(),
+  reportTypeCheckOnFilesOutsideOfApp(),
 ];
