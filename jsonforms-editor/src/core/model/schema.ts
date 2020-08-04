@@ -5,6 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonSchema } from '@jsonforms/core';
 import traverse from 'json-schema-traverse';
 import { assign, cloneDeep, omit } from 'lodash';
 import { v4 as uuid } from 'uuid';
@@ -194,7 +195,7 @@ export const getLabel = (schemaElement: SchemaElement) => {
 };
 
 const createNewElementForType = (
-  schema: any,
+  schema: JsonSchema,
   type: SchemaElementType
 ): SchemaElement => {
   switch (type) {
@@ -211,12 +212,14 @@ const createNewElementForType = (
   }
 };
 
-const createSingleElement = (schema: any) =>
+const createSingleElement = (schema: JsonSchema) =>
   createNewElementForType(schema, determineType(schema));
 
 const getUndefined = (): SchemaElement | undefined => undefined;
 
-export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
+export const buildSchemaTree = (
+  schema: JsonSchema
+): SchemaElement | undefined => {
   // workaround needed because of TS compiler issue
   // https://github.com/Microsoft/TypeScript/issues/11498
   let currentElement: SchemaElement | undefined = getUndefined();
@@ -224,7 +227,7 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
   traverse(schema, {
     cb: {
       pre: (
-        currentSchema: any,
+        currentSchema: JsonSchema,
         pointer,
         rootSchema,
         parentPointer,
@@ -271,7 +274,7 @@ export const buildSchemaTree = (schema: any): SchemaElement | undefined => {
   return currentElement;
 };
 
-const determineType = (schema: any): SchemaElementType => {
+const determineType = (schema: JsonSchema): SchemaElementType => {
   if (!schema) {
     return OTHER;
   }
@@ -303,7 +306,7 @@ const determineType = (schema: any): SchemaElementType => {
   return OTHER;
 };
 
-export const buildJsonSchema = (element: SchemaElement) => {
+export const buildJsonSchema = (element: SchemaElement): JsonSchema => {
   const result = cloneDeep(element.schema);
   switch (element.type) {
     case OBJECT:
@@ -326,7 +329,9 @@ export const buildJsonSchema = (element: SchemaElement) => {
 };
 
 /** Removes all linkedUiSchemaElements from the given schema */
-export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
+export const cleanLinkedElements = (
+  schema: SchemaElement | undefined
+): SchemaElement | undefined => {
   if (!schema) {
     return schema;
   }
@@ -337,7 +342,10 @@ export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
       if (schema.properties.size > 0) {
         schema.properties = Array.from(schema.properties).reduce(
           (acc, [key, value]) => {
-            acc.set(key, cleanLinkedElements(value));
+            const cleanedElement = cleanLinkedElements(value);
+            if (cleanedElement) {
+              acc.set(key, cleanedElement);
+            }
             return acc;
           },
           new Map<string, SchemaElement>()
@@ -346,9 +354,12 @@ export const cleanLinkedElements = (schema: SchemaElement | undefined): any => {
       break;
     case ARRAY:
       if (Array.isArray(schema.items)) {
-        schema.items = schema.items.map(cleanLinkedElements);
+        schema.items =
+          (schema.items
+            .map(cleanLinkedElements)
+            .filter((item) => item !== undefined) as SchemaElement[]) ?? [];
       } else {
-        schema.items = cleanLinkedElements(schema.items);
+        schema.items = cleanLinkedElements(schema.items) ?? [];
       }
       break;
   }
@@ -368,7 +379,7 @@ export const generateEmptyData = (
   data: any = {}
 ): object => {
   if (isObjectElement(schema)) {
-    Object.entries(schema.properties).forEach(([key, value]) => {
+    Array.from(schema.properties).forEach(([key, value]) => {
       if (isObjectElement(value)) {
         data[key] = generateEmptyData(value, {});
       }

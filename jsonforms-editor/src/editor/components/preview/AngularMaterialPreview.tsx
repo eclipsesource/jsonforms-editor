@@ -7,6 +7,7 @@
  */
 import React, { useMemo } from 'react';
 
+import { useSchema } from '../../../core/context';
 import { generateEmptyData } from '../../../core/model';
 import { useExportSchema, useExportUiSchema } from '../../../core/util/hooks';
 import { previewOptions } from './options';
@@ -22,7 +23,11 @@ declare global {
 export const AngularMaterialPreview: React.FC = () => {
   const schema = useExportSchema();
   const uiSchema = useExportUiSchema();
-  const data = useMemo(() => generateEmptyData(schema), [schema]);
+  const editorSchema = useSchema();
+  const data = useMemo(
+    () => (editorSchema ? generateEmptyData(editorSchema) : {}),
+    [editorSchema]
+  );
   const inputSchema = JSON.stringify(schema);
   const inputUISchema = JSON.stringify(uiSchema);
   const inputData = JSON.stringify(data);
