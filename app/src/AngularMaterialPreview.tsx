@@ -5,12 +5,14 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import {
+  generateEmptyData,
+  previewOptions,
+  useExportSchema,
+  useExportUiSchema,
+  useSchema,
+} from '@jsonforms/editor';
 import React, { useMemo } from 'react';
-
-import { useSchema } from '../../../core/context';
-import { generateEmptyData } from '../../../core/model';
-import { useExportSchema, useExportUiSchema } from '../../../core/util/hooks';
-import { previewOptions } from './options';
 
 declare global {
   namespace JSX {

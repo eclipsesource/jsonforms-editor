@@ -55,7 +55,7 @@ export const isEditorLayout = (
   return isEditorUISchemaElement(element) && isLayout(element);
 };
 
-export const getChildren = (
+export const getUiSchemaChildren = (
   schemaElement: EditorUISchemaElement
 ): Array<EditorUISchemaElement> => {
   const children: Array<EditorUISchemaElement> = [];

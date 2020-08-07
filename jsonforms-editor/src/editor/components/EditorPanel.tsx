@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 
 import { TabContent } from '../../core/components';
 import { Editor } from './Editor';
-import { AngularMaterialPreview, ReactMaterialPreview } from './preview';
 
 const useStyles = makeStyles(() => ({
   editorPanel: {
@@ -21,7 +20,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const EditorPanel = () => {
+export interface EditorTab {
+  name: string;
+  Component: React.ComponentType;
+}
+
+interface EditorPanelProps {
+  editorTabs?: EditorTab[];
+}
+export const EditorPanel: React.FC<EditorPanelProps> = ({ editorTabs }) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
@@ -31,18 +38,26 @@ export const EditorPanel = () => {
     <div className={classes.editorPanel}>
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label='Editor' />
-        <Tab label='Preview (Angular)' />
-        <Tab label='Preview (React)' />
+        {editorTabs
+          ? editorTabs.map((tab) => (
+              <Tab key={`tab-${tab.name}`} label={tab.name} />
+            ))
+          : null}
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
         <Editor />
       </TabContent>
-      <TabContent index={1} currentIndex={selectedTab}>
-        <AngularMaterialPreview />
-      </TabContent>
-      <TabContent index={2} currentIndex={selectedTab}>
-        <ReactMaterialPreview />
-      </TabContent>
+      {editorTabs
+        ? editorTabs.map((tab, index) => (
+            <TabContent
+              key={`content-${index + 1}`}
+              index={index + 1}
+              currentIndex={selectedTab}
+            >
+              <tab.Component />
+            </TabContent>
+          ))
+        : null}
     </div>
   );
 };

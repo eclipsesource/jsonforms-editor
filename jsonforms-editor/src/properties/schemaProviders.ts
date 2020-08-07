@@ -33,3 +33,5 @@ export const propertySchemaProvider: PropertySchemasProvider = {
     } as Layout,
   }),
 };
+
+export const defaultSchemaProviders = [propertySchemaProvider];
