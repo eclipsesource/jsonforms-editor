@@ -2,12 +2,12 @@ import React from 'react';
 
 import JsonFormsEditor, {
   defaultSchemaDecorators,
-  propertySchemaProvider,
+  defaultSchemaProviders,
 } from '@jsonforms/editor';
 
 export const App = () => (
   <JsonFormsEditor
-    schemaProviders={[propertySchemaProvider]}
+    schemaProviders={defaultSchemaProviders}
     schemaDecorators={defaultSchemaDecorators}
   />
 );
