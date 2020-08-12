@@ -11,7 +11,7 @@ import {
   useExportSchema,
   useExportUiSchema,
   useSchema,
-} from '@jsonforms/editor';
+} from '@jsonforms/editor/src';
 import React, { useMemo } from 'react';
 
 declare global {

@@ -6,21 +6,23 @@
  * ---------------------------------------------------------------------
  */
 import JsonFormsEditor, {
-  defaultEditorTabs,
   defaultSchemaDecorators,
   defaultSchemaProviders,
-} from '@jsonforms/editor';
+  ReactMaterialPreview,
+} from '@jsonforms/editor/src';
 import React from 'react';
 
-import { AngularMaterialPreview } from './AngularMaterialPreview';
+import { AngularMaterialPreview } from './components/AngularMaterialPreview';
+import { Footer } from './components/Footer';
 
 export const App = () => (
   <JsonFormsEditor
     schemaProviders={defaultSchemaProviders}
     schemaDecorators={defaultSchemaDecorators}
     editorTabs={[
-      ...defaultEditorTabs,
+      { name: 'Preview (React)', Component: ReactMaterialPreview },
       { name: 'Preview (Angular)', Component: AngularMaterialPreview },
     ]}
+    footer={Footer}
   />
 );

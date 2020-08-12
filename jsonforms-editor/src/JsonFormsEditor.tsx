@@ -9,13 +9,7 @@ import './JsonFormsEditor.css';
 import 'react-reflex/styles.css';
 
 import { makeStyles } from '@material-ui/core';
-import React, {
-  ComponentType,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from 'react';
+import React, { ComponentType, useEffect, useReducer, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
@@ -72,9 +66,9 @@ interface JsonFormsEditorProps {
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   schemaProviders,
   schemaDecorators,
-  editorTabs: editorAdditionalTabs,
-  header,
-  footer,
+  editorTabs: editorTabsProp = defaultEditorTabs,
+  header = Header,
+  footer = Footer,
 }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
@@ -85,33 +79,10 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   const [propertiesService] = useState<PropertiesService>(
     new PropertiesServiceImpl(schemaProviders, schemaDecorators)
   );
-  const editorTabs = useMemo(() => {
-    if (editorAdditionalTabs === null) {
-      return undefined;
-    } else if (editorAdditionalTabs === undefined) {
-      return defaultEditorTabs;
-    } else {
-      return editorAdditionalTabs;
-    }
-  }, [editorAdditionalTabs]);
-  const headerComponent = useMemo(() => {
-    if (header === null) {
-      return undefined;
-    } else if (header === undefined) {
-      return Header;
-    } else {
-      return header;
-    }
-  }, [header]);
-  const footerComponent = useMemo(() => {
-    if (footer === null) {
-      return undefined;
-    } else if (footer === undefined) {
-      return Footer;
-    } else {
-      return footer;
-    }
-  }, [footer]);
+  const editorTabs = editorTabsProp ?? undefined;
+  const headerComponent = header ?? undefined;
+  const footerComponent = footer ?? undefined;
+
   useEffect(() => {
     schemaService
       .getSchema()

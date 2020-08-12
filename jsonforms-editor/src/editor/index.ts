@@ -11,6 +11,7 @@ import { ReactMaterialPreview } from './components/preview';
 export { EditorPanel } from './components/EditorPanel';
 
 export type { EditorTab } from './components/EditorPanel';
+
 export const defaultEditorTabs: EditorTab[] = [
-  { name: 'Preview (React)', Component: ReactMaterialPreview },
+  { name: 'Preview', Component: ReactMaterialPreview },
 ];
