@@ -5,5 +5,5 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export * from './AngularMaterialPreview';
+export { previewOptions } from './options';
 export * from './ReactMaterialPreview';

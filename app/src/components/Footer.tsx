@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { Container, makeStyles, Typography } from '@material-ui/core';
+import { Container, Link, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 
 const useStyles = makeStyles(() => ({
@@ -16,13 +16,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const Copyright: React.FC = () => (
+  <Typography variant='body2' color='textSecondary'>
+    {'Copyright © '}
+    <Link color='inherit' href='https://eclipsesource.com' target='_blank'>
+      EclipseSource
+    </Link>
+    {' ' + new Date().getFullYear()}
+  </Typography>
+);
+
 export const Footer: React.FC = () => {
   const classes = useStyles();
   return (
     <Container className={classes.container}>
-      <Typography variant='body2' color='textSecondary'>
-        {`Copyright © ${new Date().getFullYear()}`}
-      </Typography>
+      <Copyright />
     </Container>
   );
 };

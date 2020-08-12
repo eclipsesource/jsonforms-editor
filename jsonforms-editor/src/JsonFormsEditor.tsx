@@ -9,7 +9,7 @@ import './JsonFormsEditor.css';
 import 'react-reflex/styles.css';
 
 import { makeStyles } from '@material-ui/core';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { ComponentType, useEffect, useReducer, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
@@ -19,12 +19,13 @@ import {
   PaletteService,
 } from './core/api/paletteService';
 import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
-import { Layout } from './core/components';
+import { Footer, Header, Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
 import { tryFindByUUID } from './core/util/schemasUtil';
-import { EditorPanel } from './editor';
+import { defaultEditorTabs, EditorPanel } from './editor';
+import { EditorTab } from './editor/components/EditorPanel';
 import { PalettePanel } from './palette-panel';
 import { PropertiesPanel } from './properties';
 import {
@@ -58,10 +59,16 @@ const useStyles = makeStyles((theme) => ({
 interface JsonFormsEditorProps {
   schemaProviders: PropertySchemasProvider[];
   schemaDecorators: PropertySchemasDecorator[];
+  editorTabs?: EditorTab[] | null;
+  header?: ComponentType | null;
+  footer?: ComponentType | null;
 }
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   schemaProviders,
   schemaDecorators,
+  editorTabs: editorTabsProp = defaultEditorTabs,
+  header = Header,
+  footer = Footer,
 }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
@@ -72,6 +79,10 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   const [propertiesService] = useState<PropertiesService>(
     new PropertiesServiceImpl(schemaProviders, schemaDecorators)
   );
+  const editorTabs = editorTabsProp ?? undefined;
+  const headerComponent = header ?? undefined;
+  const footerComponent = footer ?? undefined;
+
   useEffect(() => {
     schemaService
       .getSchema()
@@ -107,16 +118,29 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
       }}
     >
       <DndProvider backend={Backend}>
-        <JsonFormsEditorUi />
+        <JsonFormsEditorUi
+          editorTabs={editorTabs}
+          header={headerComponent}
+          footer={footerComponent}
+        />
       </DndProvider>
     </EditorContextInstance.Provider>
   );
 };
 
-const JsonFormsEditorUi = () => {
+interface JsonFormsEditorUiProps {
+  editorTabs?: EditorTab[];
+  header?: ComponentType;
+  footer?: ComponentType;
+}
+const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
+  editorTabs,
+  header,
+  footer,
+}) => {
   const classes = useStyles();
   return (
-    <Layout>
+    <Layout HeaderComponent={header} FooterComponent={footer}>
       <ReflexContainer
         orientation='vertical'
         className={classes.reflexContainer}
@@ -129,7 +153,7 @@ const JsonFormsEditorUi = () => {
         <ReflexSplitter propagate />
         <ReflexElement minSize={200}>
           <div className={classes.centerPane}>
-            <EditorPanel />
+            <EditorPanel editorTabs={editorTabs} />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />

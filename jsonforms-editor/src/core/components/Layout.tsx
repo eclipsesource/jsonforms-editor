@@ -8,9 +8,6 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 
-import { Footer } from './Footer';
-import { Header } from './Header';
-
 const useStyles = makeStyles((theme) => ({
   main: {
     marginTop: theme.spacing(2),
@@ -32,16 +29,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Layout: React.FC = ({ children }) => {
+interface LayoutProps {
+  HeaderComponent?: React.ComponentType;
+  FooterComponent?: React.ComponentType;
+}
+
+export const Layout: React.FC<LayoutProps> = ({
+  HeaderComponent,
+  FooterComponent,
+  children,
+}) => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <header>
-        <Header />
-      </header>
+      <header>{HeaderComponent ? <HeaderComponent /> : null}</header>
       <main className={classes.main}>{children}</main>
-      <footer className={classes.footer}>
-        <Footer />
+      <footer className={FooterComponent ? classes.footer : undefined}>
+        {FooterComponent ? <FooterComponent /> : null}
       </footer>
     </div>
   );
