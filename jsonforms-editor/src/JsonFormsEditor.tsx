@@ -57,13 +57,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface JsonFormsEditorProps {
+  schemaService?: SchemaService;
   schemaProviders: PropertySchemasProvider[];
   schemaDecorators: PropertySchemasDecorator[];
   editorTabs?: EditorTab[] | null;
+  paletteService?: PaletteService;
   header?: ComponentType | null;
   footer?: ComponentType | null;
 }
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
+  schemaService: schemaServiceProp = new ExampleSchemaService(),
+  paletteService: paletteServiceProp = new ExamplePaletteService(),
   schemaProviders,
   schemaDecorators,
   editorTabs: editorTabsProp = defaultEditorTabs,
@@ -72,10 +76,8 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
 }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
-  const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
-  const [paletteService] = useState<PaletteService>(
-    new ExamplePaletteService()
-  );
+  const [schemaService] = useState<SchemaService>(schemaServiceProp);
+  const [paletteService] = useState<PaletteService>(paletteServiceProp);
   const [propertiesService] = useState<PropertiesService>(
     new PropertiesServiceImpl(schemaProviders, schemaDecorators)
   );
