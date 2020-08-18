@@ -86,8 +86,6 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   const footerComponent = footer ?? undefined;
 
   useEffect(() => {
-    console.log('in effect', schemaService);
-
     schemaService
       .getSchema()
       .then((schema) => dispatch(Actions.setSchema(schema)));

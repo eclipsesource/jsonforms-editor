@@ -12,6 +12,6 @@ export interface SchemaService {
 }
 
 export class EmptySchemaService implements SchemaService {
-  getSchema = async () => {};
+  getSchema = async () => undefined;
   getUiSchema = async () => undefined;
 }
