@@ -50,6 +50,6 @@ const paletteElements: PaletteElement[] = [
   },
 ];
 
-export class ExamplePaletteService implements PaletteService {
+export class DefaultPaletteService implements PaletteService {
   getPaletteElements = () => paletteElements;
 }
