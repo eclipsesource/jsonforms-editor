@@ -15,10 +15,10 @@ import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import {
-  ExamplePaletteService,
+  DefaultPaletteService,
   PaletteService,
 } from './core/api/paletteService';
-import { ExampleSchemaService, SchemaService } from './core/api/schemaService';
+import { EmptySchemaService, SchemaService } from './core/api/schemaService';
 import { Footer, Header, Layout } from './core/components';
 import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
@@ -57,13 +57,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface JsonFormsEditorProps {
+  schemaService?: SchemaService;
   schemaProviders: PropertySchemasProvider[];
   schemaDecorators: PropertySchemasDecorator[];
   editorTabs?: EditorTab[] | null;
+  paletteService?: PaletteService;
   header?: ComponentType | null;
   footer?: ComponentType | null;
 }
+const defaultSchemaService = new EmptySchemaService();
+const defaultPaletteService = new DefaultPaletteService();
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
+  schemaService = defaultSchemaService,
+  paletteService = defaultPaletteService,
   schemaProviders,
   schemaDecorators,
   editorTabs: editorTabsProp = defaultEditorTabs,
@@ -72,10 +78,6 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
 }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
-  const [schemaService] = useState<SchemaService>(new ExampleSchemaService());
-  const [paletteService] = useState<PaletteService>(
-    new ExamplePaletteService()
-  );
   const [propertiesService] = useState<PropertiesService>(
     new PropertiesServiceImpl(schemaProviders, schemaDecorators)
   );
