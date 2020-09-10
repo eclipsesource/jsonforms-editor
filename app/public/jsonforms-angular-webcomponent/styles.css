@@ -12,98 +12,78 @@
     font-size: 24px
 }
 
-.mat-h1,
-.mat-headline,
-.mat-typography h1 {
+.mat-h1, .mat-headline, .mat-typography h1 {
     font: 400 24px/32px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0 0 16px
 }
 
-.mat-h2,
-.mat-title,
-.mat-typography h2 {
+.mat-h2, .mat-title, .mat-typography h2 {
     font: 500 20px/32px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0 0 16px
 }
 
-.mat-h3,
-.mat-subheading-2,
-.mat-typography h3 {
+.mat-h3, .mat-subheading-2, .mat-typography h3 {
     font: 400 16px/28px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0 0 16px
 }
 
-.mat-h4,
-.mat-subheading-1,
-.mat-typography h4 {
+.mat-h4, .mat-subheading-1, .mat-typography h4 {
     font: 400 15px/24px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0 0 16px
 }
 
-.mat-h5,
-.mat-typography h5 {
+.mat-h5, .mat-typography h5 {
     font: 400 11.62px/20px Roboto, Helvetica Neue, sans-serif;
     margin: 0 0 12px
 }
 
-.mat-h6,
-.mat-typography h6 {
+.mat-h6, .mat-typography h6 {
     font: 400 9.38px/20px Roboto, Helvetica Neue, sans-serif;
     margin: 0 0 12px
 }
 
-.mat-body-2,
-.mat-body-strong {
+.mat-body-2, .mat-body-strong {
     font: 500 14px/24px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal
 }
 
-.mat-body,
-.mat-body-1,
-.mat-typography {
+.mat-body, .mat-body-1, .mat-typography {
     font: 400 14px/20px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal
 }
 
-.mat-body-1 p,
-.mat-body p,
-.mat-typography p {
+.mat-body-1 p, .mat-body p, .mat-typography p {
     margin: 0 0 12px
 }
 
-.mat-caption,
-.mat-small {
+.mat-caption, .mat-small {
     font: 400 12px/20px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal
 }
 
-.mat-display-4,
-.mat-typography .mat-display-4 {
+.mat-display-4, .mat-typography .mat-display-4 {
     font: 300 112px/112px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: -.05em;
     margin: 0 0 56px
 }
 
-.mat-display-3,
-.mat-typography .mat-display-3 {
+.mat-display-3, .mat-typography .mat-display-3 {
     font: 400 56px/56px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: -.02em;
     margin: 0 0 64px
 }
 
-.mat-display-2,
-.mat-typography .mat-display-2 {
+.mat-display-2, .mat-typography .mat-display-2 {
     font: 400 45px/48px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: -.005em;
     margin: 0 0 64px
 }
 
-.mat-display-1,
-.mat-typography .mat-display-1 {
+.mat-display-1, .mat-typography .mat-display-1 {
     font: 400 34px/40px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0 0 64px
@@ -114,20 +94,13 @@
     letter-spacing: normal
 }
 
-.mat-button,
-.mat-fab,
-.mat-flat-button,
-.mat-icon-button,
-.mat-mini-fab,
-.mat-raised-button,
-.mat-stroked-button {
+.mat-button, .mat-fab, .mat-flat-button, .mat-icon-button, .mat-mini-fab, .mat-raised-button, .mat-stroked-button {
     font-family: Roboto, Helvetica Neue, sans-serif;
     font-size: 14px;
     font-weight: 500
 }
 
-.mat-button-toggle,
-.mat-card {
+.mat-button-toggle, .mat-card {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
@@ -140,8 +113,7 @@
     font-size: 20px
 }
 
-.mat-card-content,
-.mat-card-subtitle {
+.mat-card-content, .mat-card-subtitle {
     font-size: 14px
 }
 
@@ -158,8 +130,7 @@
     font-weight: 500
 }
 
-.mat-chip .mat-chip-remove.mat-icon,
-.mat-chip .mat-chip-trailing-icon.mat-icon {
+.mat-chip .mat-chip-remove.mat-icon, .mat-chip .mat-chip-trailing-icon.mat-icon {
     font-size: 18px
 }
 
@@ -172,8 +143,7 @@
     font-weight: 500
 }
 
-.mat-cell,
-.mat-footer-cell {
+.mat-cell, .mat-footer-cell {
     font-size: 14px
 }
 
@@ -185,8 +155,7 @@
     font-size: 13px
 }
 
-.mat-calendar-body-label,
-.mat-calendar-period-button {
+.mat-calendar-body-label, .mat-calendar-period-button {
     font-size: 14px;
     font-weight: 500
 }
@@ -224,20 +193,17 @@
     padding-bottom: 1.34375em
 }
 
-.mat-form-field-prefix .mat-icon,
-.mat-form-field-suffix .mat-icon {
+.mat-form-field-prefix .mat-icon, .mat-form-field-suffix .mat-icon {
     font-size: 150%;
     line-height: 1.125
 }
 
-.mat-form-field-prefix .mat-icon-button,
-.mat-form-field-suffix .mat-icon-button {
+.mat-form-field-prefix .mat-icon-button, .mat-form-field-suffix .mat-icon-button {
     height: 1.5em;
     width: 1.5em
 }
 
-.mat-form-field-prefix .mat-icon-button .mat-icon,
-.mat-form-field-suffix .mat-icon-button .mat-icon {
+.mat-form-field-prefix .mat-icon-button .mat-icon, .mat-form-field-suffix .mat-icon-button .mat-icon {
     height: 1.125em;
     line-height: 1.125
 }
@@ -247,8 +213,7 @@
     border-top: .84375em solid transparent
 }
 
-.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
-.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
     transform: translateY(-1.34375em) scale(.75);
     width: 133.3333333333%
 }
@@ -285,8 +250,7 @@
     padding: .4375em 0
 }
 
-.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
-.mat-form-field-appearance-legacy.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+.mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-legacy.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
     transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
     -ms-transform: translateY(-1.28125em) scale(.75);
     width: 133.3333333333%
@@ -318,16 +282,12 @@
 }
 
 @media print {
-
-    .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
-    .mat-form-field-appearance-legacy.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+    .mat-form-field-appearance-legacy.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-legacy.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
         transform: translateY(-1.28122em) scale(.75)
     }
-
     .mat-form-field-appearance-legacy.mat-form-field-can-float .mat-form-field-autofill-control:-webkit-autofill+.mat-form-field-label-wrapper .mat-form-field-label {
         transform: translateY(-1.28121em) scale(.75)
     }
-
     .mat-form-field-appearance-legacy.mat-form-field-can-float .mat-input-server[label]:not(:label-shown)+.mat-form-field-label-wrapper .mat-form-field-label {
         transform: translateY(-1.2812em) scale(.75)
     }
@@ -342,8 +302,7 @@
     margin-top: -.5em
 }
 
-.mat-form-field-appearance-fill.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
-.mat-form-field-appearance-fill.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+.mat-form-field-appearance-fill.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-fill.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
     transform: translateY(-.59375em) scale(.75);
     width: 133.3333333333%
 }
@@ -362,8 +321,7 @@
     margin-top: -.25em
 }
 
-.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label,
-.mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
+.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label {
     transform: translateY(-1.59375em) scale(.75);
     width: 133.3333333333%
 }
@@ -373,13 +331,11 @@
     width: 133.3333433333%
 }
 
-.mat-grid-tile-footer,
-.mat-grid-tile-header {
+.mat-grid-tile-footer, .mat-grid-tile-header {
     font-size: 14px
 }
 
-.mat-grid-tile-footer .mat-line,
-.mat-grid-tile-header .mat-line {
+.mat-grid-tile-footer .mat-line, .mat-grid-tile-header .mat-line {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -387,8 +343,7 @@
     box-sizing: border-box
 }
 
-.mat-grid-tile-footer .mat-line:nth-child(n+2),
-.mat-grid-tile-header .mat-line:nth-child(n+2) {
+.mat-grid-tile-footer .mat-line:nth-child(n+2), .mat-grid-tile-header .mat-line:nth-child(n+2) {
     font-size: 12px
 }
 
@@ -402,14 +357,12 @@ input.mat-input-element {
     font-weight: 400
 }
 
-.mat-paginator,
-.mat-paginator-page-size .mat-select-trigger {
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger {
     font-family: Roboto, Helvetica Neue, sans-serif;
     font-size: 12px
 }
 
-.mat-radio-button,
-.mat-select {
+.mat-radio-button, .mat-select {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
@@ -417,8 +370,7 @@ input.mat-input-element {
     height: 1.125em
 }
 
-.mat-slide-toggle-content,
-.mat-slider-thumb-label-text {
+.mat-slide-toggle-content, .mat-slider-thumb-label-text {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
@@ -427,8 +379,7 @@ input.mat-input-element {
     font-weight: 500
 }
 
-.mat-stepper-horizontal,
-.mat-stepper-vertical {
+.mat-stepper-horizontal, .mat-stepper-vertical {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
@@ -450,25 +401,16 @@ input.mat-input-element {
     font-weight: 500
 }
 
-.mat-tab-group,
-.mat-tab-label,
-.mat-tab-link {
+.mat-tab-group, .mat-tab-label, .mat-tab-link {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
-.mat-tab-label,
-.mat-tab-link {
+.mat-tab-label, .mat-tab-link {
     font-size: 14px;
     font-weight: 500
 }
 
-.mat-toolbar,
-.mat-toolbar h1,
-.mat-toolbar h2,
-.mat-toolbar h3,
-.mat-toolbar h4,
-.mat-toolbar h5,
-.mat-toolbar h6 {
+.mat-toolbar, .mat-toolbar h1, .mat-toolbar h2, .mat-toolbar h3, .mat-toolbar h4, .mat-toolbar h5, .mat-toolbar h6 {
     font: 500 20px/32px Roboto, Helvetica Neue, sans-serif;
     letter-spacing: normal;
     margin: 0
@@ -487,8 +429,7 @@ input.mat-input-element {
     padding-bottom: 8px
 }
 
-.mat-list-item,
-.mat-list-option {
+.mat-list-item, .mat-list-option {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
@@ -542,8 +483,7 @@ input.mat-input-element {
     box-sizing: border-box
 }
 
-.mat-list-base[dense] .mat-list-item .mat-line:nth-child(n+2),
-.mat-list-base[dense] .mat-list-option {
+.mat-list-base[dense] .mat-list-item .mat-line:nth-child(n+2), .mat-list-base[dense] .mat-list-option {
     font-size: 12px
 }
 
@@ -591,8 +531,7 @@ input.mat-input-element {
     font-family: Roboto, Helvetica Neue, sans-serif
 }
 
-.mat-nested-tree-node,
-.mat-tree-node {
+.mat-nested-tree-node, .mat-tree-node {
     font-weight: 400;
     font-size: 14px
 }
@@ -636,8 +575,7 @@ input.mat-input-element {
     -moz-appearance: none
 }
 
-.cdk-global-overlay-wrapper,
-.cdk-overlay-container {
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
     pointer-events: none;
     top: 0;
     left: 0;
@@ -654,8 +592,7 @@ input.mat-input-element {
     display: none
 }
 
-.cdk-global-overlay-wrapper,
-.cdk-overlay-pane {
+.cdk-global-overlay-wrapper, .cdk-overlay-pane {
     display: flex;
     position: absolute;
     z-index: 1000
@@ -695,8 +632,7 @@ input.mat-input-element {
     background: rgba(0, 0, 0, .32)
 }
 
-.cdk-overlay-transparent-backdrop,
-.cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
+.cdk-overlay-transparent-backdrop, .cdk-overlay-transparent-backdrop.cdk-overlay-backdrop-showing {
     opacity: 0
 }
 
@@ -746,10 +682,10 @@ textarea.cdk-textarea-autosize {
 }
 
 textarea.cdk-textarea-autosize-measuring {
-    height: auto !important;
-    overflow: hidden !important;
-    padding: 2px 0 !important;
-    box-sizing: content-box !important
+    height: auto!important;
+    overflow: hidden!important;
+    padding: 2px 0!important;
+    box-sizing: content-box!important
 }
 
 .mat-ripple-element {
@@ -760,10 +696,7 @@ textarea.cdk-textarea-autosize-measuring {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-option.mat-active,
-.mat-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled),
-.mat-option:focus:not(.mat-option-disabled),
-.mat-option:hover:not(.mat-option-disabled) {
+.mat-option.mat-active, .mat-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled), .mat-option:focus:not(.mat-option-disabled), .mat-option:hover:not(.mat-option-disabled) {
     background: rgba(0, 0, 0, .04)
 }
 
@@ -807,25 +740,19 @@ textarea.cdk-textarea-autosize-measuring {
     color: #b0b0b0
 }
 
-.mat-primary .mat-pseudo-checkbox-checked,
-.mat-primary .mat-pseudo-checkbox-indeterminate {
+.mat-primary .mat-pseudo-checkbox-checked, .mat-primary .mat-pseudo-checkbox-indeterminate {
     background: #3f51b5
 }
 
-.mat-accent .mat-pseudo-checkbox-checked,
-.mat-accent .mat-pseudo-checkbox-indeterminate,
-.mat-pseudo-checkbox-checked,
-.mat-pseudo-checkbox-indeterminate {
+.mat-accent .mat-pseudo-checkbox-checked, .mat-accent .mat-pseudo-checkbox-indeterminate, .mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-indeterminate {
     background: #ff4081
 }
 
-.mat-warn .mat-pseudo-checkbox-checked,
-.mat-warn .mat-pseudo-checkbox-indeterminate {
+.mat-warn .mat-pseudo-checkbox-checked, .mat-warn .mat-pseudo-checkbox-indeterminate {
     background: #f44336
 }
 
-.mat-pseudo-checkbox-checked.mat-pseudo-checkbox-disabled,
-.mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-disabled {
+.mat-pseudo-checkbox-checked.mat-pseudo-checkbox-disabled, .mat-pseudo-checkbox-indeterminate.mat-pseudo-checkbox-disabled {
     background: #b0b0b0
 }
 
@@ -1001,8 +928,7 @@ textarea.cdk-textarea-autosize-measuring {
     pointer-events: none
 }
 
-.mat-badge-content._mat-animation-noopable,
-.ng-animate-disabled .mat-badge-content {
+.mat-badge-content._mat-animation-noopable, .ng-animate-disabled .mat-badge-content {
     transition: none
 }
 
@@ -1166,73 +1092,44 @@ textarea.cdk-textarea-autosize-measuring {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-button,
-.mat-icon-button,
-.mat-stroked-button {
+.mat-button, .mat-icon-button, .mat-stroked-button {
     color: inherit;
     background: transparent
 }
 
-.mat-button.mat-primary,
-.mat-icon-button.mat-primary,
-.mat-stroked-button.mat-primary {
+.mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary {
     color: #3f51b5
 }
 
-.mat-button.mat-accent,
-.mat-icon-button.mat-accent,
-.mat-stroked-button.mat-accent {
+.mat-button.mat-accent, .mat-icon-button.mat-accent, .mat-stroked-button.mat-accent {
     color: #ff4081
 }
 
-.mat-button.mat-warn,
-.mat-icon-button.mat-warn,
-.mat-stroked-button.mat-warn {
+.mat-button.mat-warn, .mat-icon-button.mat-warn, .mat-stroked-button.mat-warn {
     color: #f44336
 }
 
-.mat-button.mat-accent[disabled],
-.mat-button.mat-primary[disabled],
-.mat-button.mat-warn[disabled],
-.mat-button[disabled][disabled],
-.mat-icon-button.mat-accent[disabled],
-.mat-icon-button.mat-primary[disabled],
-.mat-icon-button.mat-warn[disabled],
-.mat-icon-button[disabled][disabled],
-.mat-stroked-button.mat-accent[disabled],
-.mat-stroked-button.mat-primary[disabled],
-.mat-stroked-button.mat-warn[disabled],
-.mat-stroked-button[disabled][disabled] {
+.mat-button.mat-accent[disabled], .mat-button.mat-primary[disabled], .mat-button.mat-warn[disabled], .mat-button[disabled][disabled], .mat-icon-button.mat-accent[disabled], .mat-icon-button.mat-primary[disabled], .mat-icon-button.mat-warn[disabled], .mat-icon-button[disabled][disabled], .mat-stroked-button.mat-accent[disabled], .mat-stroked-button.mat-primary[disabled], .mat-stroked-button.mat-warn[disabled], .mat-stroked-button[disabled][disabled] {
     color: rgba(0, 0, 0, .26)
 }
 
-.mat-button.mat-primary .mat-button-focus-overlay,
-.mat-icon-button.mat-primary .mat-button-focus-overlay,
-.mat-stroked-button.mat-primary .mat-button-focus-overlay {
+.mat-button.mat-primary .mat-button-focus-overlay, .mat-icon-button.mat-primary .mat-button-focus-overlay, .mat-stroked-button.mat-primary .mat-button-focus-overlay {
     background-color: #3f51b5
 }
 
-.mat-button.mat-accent .mat-button-focus-overlay,
-.mat-icon-button.mat-accent .mat-button-focus-overlay,
-.mat-stroked-button.mat-accent .mat-button-focus-overlay {
+.mat-button.mat-accent .mat-button-focus-overlay, .mat-icon-button.mat-accent .mat-button-focus-overlay, .mat-stroked-button.mat-accent .mat-button-focus-overlay {
     background-color: #ff4081
 }
 
-.mat-button.mat-warn .mat-button-focus-overlay,
-.mat-icon-button.mat-warn .mat-button-focus-overlay,
-.mat-stroked-button.mat-warn .mat-button-focus-overlay {
+.mat-button.mat-warn .mat-button-focus-overlay, .mat-icon-button.mat-warn .mat-button-focus-overlay, .mat-stroked-button.mat-warn .mat-button-focus-overlay {
     background-color: #f44336
 }
 
-.mat-button[disabled] .mat-button-focus-overlay,
-.mat-icon-button[disabled] .mat-button-focus-overlay,
-.mat-stroked-button[disabled] .mat-button-focus-overlay {
+.mat-button[disabled] .mat-button-focus-overlay, .mat-icon-button[disabled] .mat-button-focus-overlay, .mat-stroked-button[disabled] .mat-button-focus-overlay {
     background-color: transparent
 }
 
-.mat-button .mat-ripple-element,
-.mat-icon-button .mat-ripple-element,
-.mat-stroked-button .mat-ripple-element {
+.mat-button .mat-ripple-element, .mat-icon-button .mat-ripple-element, .mat-stroked-button .mat-ripple-element {
     opacity: .1;
     background-color: currentColor
 }
@@ -1245,105 +1142,40 @@ textarea.cdk-textarea-autosize-measuring {
     border-color: rgba(0, 0, 0, .12)
 }
 
-.mat-fab,
-.mat-flat-button,
-.mat-mini-fab,
-.mat-raised-button {
+.mat-fab, .mat-flat-button, .mat-mini-fab, .mat-raised-button {
     color: rgba(0, 0, 0, .87);
     background-color: #fff
 }
 
-.mat-fab.mat-accent,
-.mat-fab.mat-primary,
-.mat-fab.mat-warn,
-.mat-flat-button.mat-accent,
-.mat-flat-button.mat-primary,
-.mat-flat-button.mat-warn,
-.mat-mini-fab.mat-accent,
-.mat-mini-fab.mat-primary,
-.mat-mini-fab.mat-warn,
-.mat-raised-button.mat-accent,
-.mat-raised-button.mat-primary,
-.mat-raised-button.mat-warn {
+.mat-fab.mat-accent, .mat-fab.mat-primary, .mat-fab.mat-warn, .mat-flat-button.mat-accent, .mat-flat-button.mat-primary, .mat-flat-button.mat-warn, .mat-mini-fab.mat-accent, .mat-mini-fab.mat-primary, .mat-mini-fab.mat-warn, .mat-raised-button.mat-accent, .mat-raised-button.mat-primary, .mat-raised-button.mat-warn {
     color: #fff
 }
 
-.mat-fab.mat-accent[disabled],
-.mat-fab.mat-primary[disabled],
-.mat-fab.mat-warn[disabled],
-.mat-fab[disabled][disabled],
-.mat-flat-button.mat-accent[disabled],
-.mat-flat-button.mat-primary[disabled],
-.mat-flat-button.mat-warn[disabled],
-.mat-flat-button[disabled][disabled],
-.mat-mini-fab.mat-accent[disabled],
-.mat-mini-fab.mat-primary[disabled],
-.mat-mini-fab.mat-warn[disabled],
-.mat-mini-fab[disabled][disabled],
-.mat-raised-button.mat-accent[disabled],
-.mat-raised-button.mat-primary[disabled],
-.mat-raised-button.mat-warn[disabled],
-.mat-raised-button[disabled][disabled] {
+.mat-fab.mat-accent[disabled], .mat-fab.mat-primary[disabled], .mat-fab.mat-warn[disabled], .mat-fab[disabled][disabled], .mat-flat-button.mat-accent[disabled], .mat-flat-button.mat-primary[disabled], .mat-flat-button.mat-warn[disabled], .mat-flat-button[disabled][disabled], .mat-mini-fab.mat-accent[disabled], .mat-mini-fab.mat-primary[disabled], .mat-mini-fab.mat-warn[disabled], .mat-mini-fab[disabled][disabled], .mat-raised-button.mat-accent[disabled], .mat-raised-button.mat-primary[disabled], .mat-raised-button.mat-warn[disabled], .mat-raised-button[disabled][disabled] {
     color: rgba(0, 0, 0, .26)
 }
 
-.mat-fab.mat-primary,
-.mat-flat-button.mat-primary,
-.mat-mini-fab.mat-primary,
-.mat-raised-button.mat-primary {
+.mat-fab.mat-primary, .mat-flat-button.mat-primary, .mat-mini-fab.mat-primary, .mat-raised-button.mat-primary {
     background-color: #3f51b5
 }
 
-.mat-fab.mat-accent,
-.mat-flat-button.mat-accent,
-.mat-mini-fab.mat-accent,
-.mat-raised-button.mat-accent {
+.mat-fab.mat-accent, .mat-flat-button.mat-accent, .mat-mini-fab.mat-accent, .mat-raised-button.mat-accent {
     background-color: #ff4081
 }
 
-.mat-fab.mat-warn,
-.mat-flat-button.mat-warn,
-.mat-mini-fab.mat-warn,
-.mat-raised-button.mat-warn {
+.mat-fab.mat-warn, .mat-flat-button.mat-warn, .mat-mini-fab.mat-warn, .mat-raised-button.mat-warn {
     background-color: #f44336
 }
 
-.mat-fab.mat-accent[disabled],
-.mat-fab.mat-primary[disabled],
-.mat-fab.mat-warn[disabled],
-.mat-fab[disabled][disabled],
-.mat-flat-button.mat-accent[disabled],
-.mat-flat-button.mat-primary[disabled],
-.mat-flat-button.mat-warn[disabled],
-.mat-flat-button[disabled][disabled],
-.mat-mini-fab.mat-accent[disabled],
-.mat-mini-fab.mat-primary[disabled],
-.mat-mini-fab.mat-warn[disabled],
-.mat-mini-fab[disabled][disabled],
-.mat-raised-button.mat-accent[disabled],
-.mat-raised-button.mat-primary[disabled],
-.mat-raised-button.mat-warn[disabled],
-.mat-raised-button[disabled][disabled] {
+.mat-fab.mat-accent[disabled], .mat-fab.mat-primary[disabled], .mat-fab.mat-warn[disabled], .mat-fab[disabled][disabled], .mat-flat-button.mat-accent[disabled], .mat-flat-button.mat-primary[disabled], .mat-flat-button.mat-warn[disabled], .mat-flat-button[disabled][disabled], .mat-mini-fab.mat-accent[disabled], .mat-mini-fab.mat-primary[disabled], .mat-mini-fab.mat-warn[disabled], .mat-mini-fab[disabled][disabled], .mat-raised-button.mat-accent[disabled], .mat-raised-button.mat-primary[disabled], .mat-raised-button.mat-warn[disabled], .mat-raised-button[disabled][disabled] {
     background-color: rgba(0, 0, 0, .12)
 }
 
-.mat-fab.mat-accent .mat-ripple-element,
-.mat-fab.mat-primary .mat-ripple-element,
-.mat-fab.mat-warn .mat-ripple-element,
-.mat-flat-button.mat-accent .mat-ripple-element,
-.mat-flat-button.mat-primary .mat-ripple-element,
-.mat-flat-button.mat-warn .mat-ripple-element,
-.mat-mini-fab.mat-accent .mat-ripple-element,
-.mat-mini-fab.mat-primary .mat-ripple-element,
-.mat-mini-fab.mat-warn .mat-ripple-element,
-.mat-raised-button.mat-accent .mat-ripple-element,
-.mat-raised-button.mat-primary .mat-ripple-element,
-.mat-raised-button.mat-warn .mat-ripple-element {
+.mat-fab.mat-accent .mat-ripple-element, .mat-fab.mat-primary .mat-ripple-element, .mat-fab.mat-warn .mat-ripple-element, .mat-flat-button.mat-accent .mat-ripple-element, .mat-flat-button.mat-primary .mat-ripple-element, .mat-flat-button.mat-warn .mat-ripple-element, .mat-mini-fab.mat-accent .mat-ripple-element, .mat-mini-fab.mat-primary .mat-ripple-element, .mat-mini-fab.mat-warn .mat-ripple-element, .mat-raised-button.mat-accent .mat-ripple-element, .mat-raised-button.mat-primary .mat-ripple-element, .mat-raised-button.mat-warn .mat-ripple-element {
     background-color: hsla(0, 0%, 100%, .1)
 }
 
-.mat-flat-button:not([class*=mat-elevation-z]),
-.mat-stroked-button:not([class*=mat-elevation-z]) {
+.mat-flat-button:not([class*=mat-elevation-z]), .mat-stroked-button:not([class*=mat-elevation-z]) {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, .2), 0 0 0 0 rgba(0, 0, 0, .14), 0 0 0 0 rgba(0, 0, 0, .12)
 }
 
@@ -1359,28 +1191,23 @@ textarea.cdk-textarea-autosize-measuring {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, .2), 0 0 0 0 rgba(0, 0, 0, .14), 0 0 0 0 rgba(0, 0, 0, .12)
 }
 
-.mat-fab:not([class*=mat-elevation-z]),
-.mat-mini-fab:not([class*=mat-elevation-z]) {
+.mat-fab:not([class*=mat-elevation-z]), .mat-mini-fab:not([class*=mat-elevation-z]) {
     box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12)
 }
 
-.mat-fab:not([disabled]):active:not([class*=mat-elevation-z]),
-.mat-mini-fab:not([disabled]):active:not([class*=mat-elevation-z]) {
+.mat-fab:not([disabled]):active:not([class*=mat-elevation-z]), .mat-mini-fab:not([disabled]):active:not([class*=mat-elevation-z]) {
     box-shadow: 0 7px 8px -4px rgba(0, 0, 0, .2), 0 12px 17px 2px rgba(0, 0, 0, .14), 0 5px 22px 4px rgba(0, 0, 0, .12)
 }
 
-.mat-fab[disabled]:not([class*=mat-elevation-z]),
-.mat-mini-fab[disabled]:not([class*=mat-elevation-z]) {
+.mat-fab[disabled]:not([class*=mat-elevation-z]), .mat-mini-fab[disabled]:not([class*=mat-elevation-z]) {
     box-shadow: 0 0 0 0 rgba(0, 0, 0, .2), 0 0 0 0 rgba(0, 0, 0, .14), 0 0 0 0 rgba(0, 0, 0, .12)
 }
 
-.mat-button-toggle-group,
-.mat-button-toggle-standalone {
+.mat-button-toggle-group, .mat-button-toggle-standalone {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12)
 }
 
-.mat-button-toggle-group-appearance-standard,
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
+.mat-button-toggle-group-appearance-standard, .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
     box-shadow: none
 }
 
@@ -1438,8 +1265,7 @@ textarea.cdk-textarea-autosize-measuring {
     background-color: #bdbdbd
 }
 
-.mat-button-toggle-group-appearance-standard,
-.mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
+.mat-button-toggle-group-appearance-standard, .mat-button-toggle-standalone.mat-button-toggle-appearance-standard {
     border: 1px solid rgba(0, 0, 0, .12)
 }
 
@@ -1469,30 +1295,26 @@ textarea.cdk-textarea-autosize-measuring {
 }
 
 .mat-checkbox-checkmark-path {
-    stroke: #fafafa !important
+    stroke: #fafafa!important
 }
 
 .mat-checkbox-mixedmark {
     background-color: #fafafa
 }
 
-.mat-checkbox-checked.mat-primary .mat-checkbox-background,
-.mat-checkbox-indeterminate.mat-primary .mat-checkbox-background {
+.mat-checkbox-checked.mat-primary .mat-checkbox-background, .mat-checkbox-indeterminate.mat-primary .mat-checkbox-background {
     background-color: #3f51b5
 }
 
-.mat-checkbox-checked.mat-accent .mat-checkbox-background,
-.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
     background-color: #ff4081
 }
 
-.mat-checkbox-checked.mat-warn .mat-checkbox-background,
-.mat-checkbox-indeterminate.mat-warn .mat-checkbox-background {
+.mat-checkbox-checked.mat-warn .mat-checkbox-background, .mat-checkbox-indeterminate.mat-warn .mat-checkbox-background {
     background-color: #f44336
 }
 
-.mat-checkbox-disabled.mat-checkbox-checked .mat-checkbox-background,
-.mat-checkbox-disabled.mat-checkbox-indeterminate .mat-checkbox-background {
+.mat-checkbox-disabled.mat-checkbox-checked .mat-checkbox-background, .mat-checkbox-disabled.mat-checkbox-indeterminate .mat-checkbox-background {
     background-color: #b0b0b0
 }
 
@@ -1508,18 +1330,15 @@ textarea.cdk-textarea-autosize-measuring {
     background-color: #000
 }
 
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-primary .mat-ripple-element,
-.mat-checkbox:active:not(.mat-checkbox-disabled).mat-primary .mat-ripple-element {
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-primary .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-primary .mat-ripple-element {
     background: #3f51b5
 }
 
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element,
-.mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-accent .mat-ripple-element {
     background: #ff4081
 }
 
-.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-warn .mat-ripple-element,
-.mat-checkbox:active:not(.mat-checkbox-disabled).mat-warn .mat-ripple-element {
+.mat-checkbox-checked:not(.mat-checkbox-disabled).mat-warn .mat-ripple-element, .mat-checkbox:active:not(.mat-checkbox-disabled).mat-warn .mat-ripple-element {
     background: #f44336
 }
 
@@ -1595,25 +1414,11 @@ textarea.cdk-textarea-autosize-measuring {
     background: #fff
 }
 
-.mat-table-sticky,
-.mat-table tbody,
-.mat-table tfoot,
-.mat-table thead,
-[mat-footer-row],
-[mat-header-row],
-[mat-row],
-mat-footer-row,
-mat-header-row,
-mat-row {
+.mat-table-sticky, .mat-table tbody, .mat-table tfoot, .mat-table thead, [mat-footer-row], [mat-header-row], [mat-row], mat-footer-row, mat-header-row, mat-row {
     background: inherit
 }
 
-mat-footer-row,
-mat-header-row,
-mat-row,
-td.mat-cell,
-td.mat-footer-cell,
-th.mat-header-cell {
+mat-footer-row, mat-header-row, mat-row, td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
     border-bottom-color: rgba(0, 0, 0, .12)
 }
 
@@ -1621,8 +1426,7 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .54)
 }
 
-.mat-cell,
-.mat-footer-cell {
+.mat-cell, .mat-footer-cell {
     color: rgba(0, 0, 0, .87)
 }
 
@@ -1630,9 +1434,7 @@ th.mat-header-cell {
     border-top-color: rgba(0, 0, 0, .54)
 }
 
-.mat-datepicker-content .mat-calendar-next-button,
-.mat-datepicker-content .mat-calendar-previous-button,
-.mat-datepicker-toggle {
+.mat-datepicker-content .mat-calendar-next-button, .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-toggle {
     color: rgba(0, 0, 0, .54)
 }
 
@@ -1657,9 +1459,7 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .38)
 }
 
-.cdk-keyboard-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
-.cdk-program-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected),
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+.cdk-keyboard-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected), .cdk-program-focused .mat-calendar-body-active>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected), .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
     background-color: rgba(0, 0, 0, .04)
 }
 
@@ -1759,9 +1559,7 @@ th.mat-header-cell {
     border-top-color: rgba(0, 0, 0, .12)
 }
 
-.mat-expansion-panel .mat-expansion-panel-header.cdk-keyboard-focused:not([aria-disabled=true]),
-.mat-expansion-panel .mat-expansion-panel-header.cdk-program-focused:not([aria-disabled=true]),
-.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {
+.mat-expansion-panel .mat-expansion-panel-header.cdk-keyboard-focused:not([aria-disabled=true]), .mat-expansion-panel .mat-expansion-panel-header.cdk-program-focused:not([aria-disabled=true]), .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]) {
     background: rgba(0, 0, 0, .04)
 }
 
@@ -1775,8 +1573,7 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-expansion-indicator:after,
-.mat-expansion-panel-header-description {
+.mat-expansion-indicator:after, .mat-expansion-panel-header-description {
     color: rgba(0, 0, 0, .54)
 }
 
@@ -1784,13 +1581,11 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .26)
 }
 
-.mat-expansion-panel-header[aria-disabled=true] .mat-expansion-panel-header-description,
-.mat-expansion-panel-header[aria-disabled=true] .mat-expansion-panel-header-title {
+.mat-expansion-panel-header[aria-disabled=true] .mat-expansion-panel-header-description, .mat-expansion-panel-header[aria-disabled=true] .mat-expansion-panel-header-title {
     color: inherit
 }
 
-.mat-form-field-label,
-.mat-hint {
+.mat-form-field-label, .mat-hint {
     color: rgba(0, 0, 0, .6)
 }
 
@@ -1834,15 +1629,11 @@ th.mat-header-cell {
     color: #ff4081
 }
 
-.mat-form-field-type-mat-native-select.mat-focused:not(.mat-form-field-invalid).mat-warn .mat-form-field-infix:after,
-.mat-form-field.mat-form-field-invalid .mat-form-field-label,
-.mat-form-field.mat-form-field-invalid .mat-form-field-label.mat-accent,
-.mat-form-field.mat-form-field-invalid .mat-form-field-label .mat-form-field-required-marker {
+.mat-form-field-type-mat-native-select.mat-focused:not(.mat-form-field-invalid).mat-warn .mat-form-field-infix:after, .mat-form-field.mat-form-field-invalid .mat-form-field-label, .mat-form-field.mat-form-field-invalid .mat-form-field-label.mat-accent, .mat-form-field.mat-form-field-invalid .mat-form-field-label .mat-form-field-required-marker {
     color: #f44336
 }
 
-.mat-form-field.mat-form-field-invalid .mat-form-field-ripple,
-.mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple, .mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
     background-color: #f44336
 }
 
@@ -1850,8 +1641,7 @@ th.mat-header-cell {
     color: #f44336
 }
 
-.mat-form-field-appearance-legacy .mat-form-field-label,
-.mat-form-field-appearance-legacy .mat-hint {
+.mat-form-field-appearance-legacy .mat-form-field-label, .mat-form-field-appearance-legacy .mat-hint {
     color: rgba(0, 0, 0, .54)
 }
 
@@ -1911,8 +1701,7 @@ th.mat-header-cell {
     color: #ff4081
 }
 
-.mat-form-field-appearance-outline.mat-focused.mat-warn .mat-form-field-outline-thick,
-.mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
+.mat-form-field-appearance-outline.mat-focused.mat-warn .mat-form-field-outline-thick, .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
     color: #f44336
 }
 
@@ -1940,8 +1729,7 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .54)
 }
 
-.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix:after,
-.mat-input-element:disabled {
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix:after, .mat-input-element:disabled {
     color: rgba(0, 0, 0, .38)
 }
 
@@ -1973,8 +1761,7 @@ th.mat-header-cell {
     caret-color: #ff4081
 }
 
-.mat-form-field-invalid .mat-input-element,
-.mat-warn .mat-input-element {
+.mat-form-field-invalid .mat-input-element, .mat-warn .mat-input-element {
     caret-color: #f44336
 }
 
@@ -1982,8 +1769,7 @@ th.mat-header-cell {
     color: #f44336
 }
 
-.mat-list-base .mat-list-item,
-.mat-list-base .mat-list-option {
+.mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
     color: rgba(0, 0, 0, .87)
 }
 
@@ -1995,18 +1781,11 @@ th.mat-header-cell {
     background-color: #eee
 }
 
-.mat-action-list .mat-list-item:focus,
-.mat-action-list .mat-list-item:hover,
-.mat-list-option:focus,
-.mat-list-option:hover,
-.mat-nav-list .mat-list-item:focus,
-.mat-nav-list .mat-list-item:hover {
+.mat-action-list .mat-list-item:focus, .mat-action-list .mat-list-item:hover, .mat-list-option:focus, .mat-list-option:hover, .mat-nav-list .mat-list-item:focus, .mat-nav-list .mat-list-item:hover {
     background: rgba(0, 0, 0, .04)
 }
 
-.mat-list-single-selected-option,
-.mat-list-single-selected-option:focus,
-.mat-list-single-selected-option:hover {
+.mat-list-single-selected-option, .mat-list-single-selected-option:focus, .mat-list-single-selected-option:hover {
     background: rgba(0, 0, 0, .12)
 }
 
@@ -2023,20 +1802,15 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-menu-item[disabled],
-.mat-menu-item[disabled]:after {
+.mat-menu-item[disabled], .mat-menu-item[disabled]:after {
     color: rgba(0, 0, 0, .38)
 }
 
-.mat-menu-item-submenu-trigger:after,
-.mat-menu-item .mat-icon-no-color {
+.mat-menu-item-submenu-trigger:after, .mat-menu-item .mat-icon-no-color {
     color: rgba(0, 0, 0, .54)
 }
 
-.mat-menu-item-highlighted:not([disabled]),
-.mat-menu-item.cdk-keyboard-focused:not([disabled]),
-.mat-menu-item.cdk-program-focused:not([disabled]),
-.mat-menu-item:hover:not([disabled]) {
+.mat-menu-item-highlighted:not([disabled]), .mat-menu-item.cdk-keyboard-focused:not([disabled]), .mat-menu-item.cdk-program-focused:not([disabled]), .mat-menu-item:hover:not([disabled]) {
     background: rgba(0, 0, 0, .04)
 }
 
@@ -2044,26 +1818,20 @@ th.mat-header-cell {
     background: #fff
 }
 
-.mat-paginator,
-.mat-paginator-page-size .mat-select-trigger {
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger {
     color: rgba(0, 0, 0, .54)
 }
 
-.mat-paginator-decrement,
-.mat-paginator-increment {
+.mat-paginator-decrement, .mat-paginator-increment {
     border-top: 2px solid rgba(0, 0, 0, .54);
     border-right: 2px solid rgba(0, 0, 0, .54)
 }
 
-.mat-paginator-first,
-.mat-paginator-last {
+.mat-paginator-first, .mat-paginator-last {
     border-top: 2px solid rgba(0, 0, 0, .54)
 }
 
-.mat-icon-button[disabled] .mat-paginator-decrement,
-.mat-icon-button[disabled] .mat-paginator-first,
-.mat-icon-button[disabled] .mat-paginator-increment,
-.mat-icon-button[disabled] .mat-paginator-last {
+.mat-icon-button[disabled] .mat-paginator-decrement, .mat-icon-button[disabled] .mat-paginator-first, .mat-icon-button[disabled] .mat-paginator-increment, .mat-icon-button[disabled] .mat-paginator-last {
     border-color: rgba(0, 0, 0, .38)
 }
 
@@ -2103,18 +1871,15 @@ th.mat-header-cell {
     background-color: #f44336
 }
 
-.mat-progress-spinner circle,
-.mat-spinner circle {
+.mat-progress-spinner circle, .mat-spinner circle {
     stroke: #3f51b5
 }
 
-.mat-progress-spinner.mat-accent circle,
-.mat-spinner.mat-accent circle {
+.mat-progress-spinner.mat-accent circle, .mat-spinner.mat-accent circle {
     stroke: #ff4081
 }
 
-.mat-progress-spinner.mat-warn circle,
-.mat-spinner.mat-warn circle {
+.mat-progress-spinner.mat-warn circle, .mat-spinner.mat-warn circle {
     stroke: #f44336
 }
 
@@ -2126,10 +1891,7 @@ th.mat-header-cell {
     border-color: #3f51b5
 }
 
-.mat-radio-button.mat-primary.mat-radio-checked .mat-radio-persistent-ripple,
-.mat-radio-button.mat-primary .mat-radio-inner-circle,
-.mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
-.mat-radio-button.mat-primary:active .mat-radio-persistent-ripple {
+.mat-radio-button.mat-primary.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-primary .mat-radio-inner-circle, .mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-primary:active .mat-radio-persistent-ripple {
     background-color: #3f51b5
 }
 
@@ -2137,10 +1899,7 @@ th.mat-header-cell {
     border-color: #ff4081
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
-.mat-radio-button.mat-accent .mat-radio-inner-circle,
-.mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
-.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
     background-color: #ff4081
 }
 
@@ -2148,20 +1907,15 @@ th.mat-header-cell {
     border-color: #f44336
 }
 
-.mat-radio-button.mat-warn.mat-radio-checked .mat-radio-persistent-ripple,
-.mat-radio-button.mat-warn .mat-radio-inner-circle,
-.mat-radio-button.mat-warn .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple),
-.mat-radio-button.mat-warn:active .mat-radio-persistent-ripple {
+.mat-radio-button.mat-warn.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-warn .mat-radio-inner-circle, .mat-radio-button.mat-warn .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-warn:active .mat-radio-persistent-ripple {
     background-color: #f44336
 }
 
-.mat-radio-button.mat-radio-disabled.mat-radio-checked .mat-radio-outer-circle,
-.mat-radio-button.mat-radio-disabled .mat-radio-outer-circle {
+.mat-radio-button.mat-radio-disabled.mat-radio-checked .mat-radio-outer-circle, .mat-radio-button.mat-radio-disabled .mat-radio-outer-circle {
     border-color: rgba(0, 0, 0, .38)
 }
 
-.mat-radio-button.mat-radio-disabled .mat-radio-inner-circle,
-.mat-radio-button.mat-radio-disabled .mat-radio-ripple .mat-ripple-element {
+.mat-radio-button.mat-radio-disabled .mat-radio-inner-circle, .mat-radio-button.mat-radio-disabled .mat-radio-ripple .mat-ripple-element {
     background-color: rgba(0, 0, 0, .38)
 }
 
@@ -2209,8 +1963,7 @@ th.mat-header-cell {
     color: #ff4081
 }
 
-.mat-form-field.mat-focused.mat-warn .mat-select-arrow,
-.mat-form-field .mat-select.mat-select-invalid .mat-select-arrow {
+.mat-form-field.mat-focused.mat-warn .mat-select-arrow, .mat-form-field .mat-select.mat-select-invalid .mat-select-arrow {
     color: #f44336
 }
 
@@ -2227,8 +1980,7 @@ th.mat-header-cell {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-drawer,
-.mat-drawer.mat-drawer-push {
+.mat-drawer, .mat-drawer.mat-drawer-push {
     background-color: #fff
 }
 
@@ -2240,8 +1992,7 @@ th.mat-header-cell {
     border-right: 1px solid rgba(0, 0, 0, .12)
 }
 
-.mat-drawer-side.mat-drawer-end,
-[dir=rtl] .mat-drawer-side {
+.mat-drawer-side.mat-drawer-end, [dir=rtl] .mat-drawer-side {
     border-left: 1px solid rgba(0, 0, 0, .12);
     border-right: none
 }
@@ -2308,9 +2059,7 @@ th.mat-header-cell {
     background-color: rgba(0, 0, 0, .26)
 }
 
-.mat-primary .mat-slider-thumb,
-.mat-primary .mat-slider-thumb-label,
-.mat-primary .mat-slider-track-fill {
+.mat-primary .mat-slider-thumb, .mat-primary .mat-slider-thumb-label, .mat-primary .mat-slider-track-fill {
     background-color: #3f51b5
 }
 
@@ -2318,9 +2067,7 @@ th.mat-header-cell {
     color: #fff
 }
 
-.mat-accent .mat-slider-thumb,
-.mat-accent .mat-slider-thumb-label,
-.mat-accent .mat-slider-track-fill {
+.mat-accent .mat-slider-thumb, .mat-accent .mat-slider-thumb-label, .mat-accent .mat-slider-track-fill {
     background-color: #ff4081
 }
 
@@ -2328,9 +2075,7 @@ th.mat-header-cell {
     color: #fff
 }
 
-.mat-warn .mat-slider-thumb,
-.mat-warn .mat-slider-thumb-label,
-.mat-warn .mat-slider-track-fill {
+.mat-warn .mat-slider-thumb, .mat-warn .mat-slider-thumb-label, .mat-warn .mat-slider-track-fill {
     background-color: #f44336
 }
 
@@ -2342,15 +2087,11 @@ th.mat-header-cell {
     background-color: rgba(255, 64, 129, .2)
 }
 
-.cdk-focused .mat-slider-track-background,
-.mat-slider:hover .mat-slider-track-background {
+.cdk-focused .mat-slider-track-background, .mat-slider:hover .mat-slider-track-background {
     background-color: rgba(0, 0, 0, .38)
 }
 
-.mat-slider-disabled .mat-slider-thumb,
-.mat-slider-disabled .mat-slider-track-background,
-.mat-slider-disabled .mat-slider-track-fill,
-.mat-slider-disabled:hover .mat-slider-track-background {
+.mat-slider-disabled .mat-slider-thumb, .mat-slider-disabled .mat-slider-track-background, .mat-slider-disabled .mat-slider-track-fill, .mat-slider-disabled:hover .mat-slider-track-background {
     background-color: rgba(0, 0, 0, .26)
 }
 
@@ -2358,13 +2099,11 @@ th.mat-header-cell {
     background-color: rgba(0, 0, 0, .12)
 }
 
-.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb,
-.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label {
+.mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb-label {
     background-color: rgba(0, 0, 0, .87)
 }
 
-.mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb,
-.mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb-label {
+.mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb, .mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb-label {
     background-color: rgba(0, 0, 0, .26)
 }
 
@@ -2373,13 +2112,11 @@ th.mat-header-cell {
     background-color: transparent
 }
 
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing).cdk-focused .mat-slider-thumb,
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing):hover .mat-slider-thumb {
+.mat-slider-min-value:not(.mat-slider-thumb-label-showing).cdk-focused .mat-slider-thumb, .mat-slider-min-value:not(.mat-slider-thumb-label-showing):hover .mat-slider-thumb {
     border-color: rgba(0, 0, 0, .38)
 }
 
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing).cdk-focused.mat-slider-disabled .mat-slider-thumb,
-.mat-slider-min-value:not(.mat-slider-thumb-label-showing):hover.mat-slider-disabled .mat-slider-thumb {
+.mat-slider-min-value:not(.mat-slider-thumb-label-showing).cdk-focused.mat-slider-disabled .mat-slider-thumb, .mat-slider-min-value:not(.mat-slider-thumb-label-showing):hover.mat-slider-disabled .mat-slider-thumb {
     border-color: rgba(0, 0, 0, .26)
 }
 
@@ -2396,9 +2133,7 @@ th.mat-header-cell {
     background-image: repeating-linear-gradient(180deg, rgba(0, 0, 0, .7), rgba(0, 0, 0, .7) 2px, transparent 0, transparent)
 }
 
-.mat-step-header.cdk-keyboard-focused,
-.mat-step-header.cdk-program-focused,
-.mat-step-header:hover {
+.mat-step-header.cdk-keyboard-focused, .mat-step-header.cdk-program-focused, .mat-step-header:hover {
     background-color: rgba(0, 0, 0, .04)
 }
 
@@ -2408,8 +2143,7 @@ th.mat-header-cell {
     }
 }
 
-.mat-step-header .mat-step-label,
-.mat-step-header .mat-step-optional {
+.mat-step-header .mat-step-label, .mat-step-header .mat-step-optional {
     color: rgba(0, 0, 0, .54)
 }
 
@@ -2418,9 +2152,7 @@ th.mat-header-cell {
     color: #fff
 }
 
-.mat-step-header .mat-step-icon-selected,
-.mat-step-header .mat-step-icon-state-done,
-.mat-step-header .mat-step-icon-state-edit {
+.mat-step-header .mat-step-icon-selected, .mat-step-header .mat-step-icon-state-done, .mat-step-header .mat-step-icon-state-edit {
     background-color: #3f51b5;
     color: #fff
 }
@@ -2438,8 +2170,7 @@ th.mat-header-cell {
     color: #f44336
 }
 
-.mat-stepper-horizontal,
-.mat-stepper-vertical {
+.mat-stepper-horizontal, .mat-stepper-vertical {
     background-color: #fff
 }
 
@@ -2447,9 +2178,7 @@ th.mat-header-cell {
     border-left-color: rgba(0, 0, 0, .12)
 }
 
-.mat-horizontal-stepper-header:after,
-.mat-horizontal-stepper-header:before,
-.mat-stepper-horizontal-line {
+.mat-horizontal-stepper-header:after, .mat-horizontal-stepper-header:before, .mat-stepper-horizontal-line {
     border-top-color: rgba(0, 0, 0, .12)
 }
 
@@ -2457,24 +2186,20 @@ th.mat-header-cell {
     color: #757575
 }
 
-.mat-tab-header,
-.mat-tab-nav-bar {
+.mat-tab-header, .mat-tab-nav-bar {
     border-bottom: 1px solid rgba(0, 0, 0, .12)
 }
 
-.mat-tab-group-inverted-header .mat-tab-header,
-.mat-tab-group-inverted-header .mat-tab-nav-bar {
+.mat-tab-group-inverted-header .mat-tab-header, .mat-tab-group-inverted-header .mat-tab-nav-bar {
     border-top: 1px solid rgba(0, 0, 0, .12);
     border-bottom: none
 }
 
-.mat-tab-label,
-.mat-tab-link {
+.mat-tab-label, .mat-tab-link {
     color: rgba(0, 0, 0, .87)
 }
 
-.mat-tab-label.mat-tab-disabled,
-.mat-tab-link.mat-tab-disabled {
+.mat-tab-label.mat-tab-disabled, .mat-tab-link.mat-tab-disabled {
     color: rgba(0, 0, 0, .38)
 }
 
@@ -2486,219 +2211,128 @@ th.mat-header-cell {
     border-color: rgba(0, 0, 0, .38)
 }
 
-.mat-tab-group[class*=mat-background-] .mat-tab-header,
-.mat-tab-nav-bar[class*=mat-background-] {
+.mat-tab-group[class*=mat-background-] .mat-tab-header, .mat-tab-nav-bar[class*=mat-background-] {
     border-bottom: none;
     border-top: none
 }
 
-.mat-tab-group.mat-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(197, 202, 233, .3)
 }
 
-.mat-tab-group.mat-primary .mat-ink-bar,
-.mat-tab-nav-bar.mat-primary .mat-ink-bar {
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
     background-color: #3f51b5
 }
 
-.mat-tab-group.mat-primary.mat-background-primary .mat-ink-bar,
-.mat-tab-nav-bar.mat-primary.mat-background-primary .mat-ink-bar {
+.mat-tab-group.mat-primary.mat-background-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary.mat-background-primary .mat-ink-bar {
     background-color: #fff
 }
 
-.mat-tab-group.mat-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(255, 128, 171, .3)
 }
 
-.mat-tab-group.mat-accent .mat-ink-bar,
-.mat-tab-nav-bar.mat-accent .mat-ink-bar {
+.mat-tab-group.mat-accent .mat-ink-bar, .mat-tab-nav-bar.mat-accent .mat-ink-bar {
     background-color: #ff4081
 }
 
-.mat-tab-group.mat-accent.mat-background-accent .mat-ink-bar,
-.mat-tab-nav-bar.mat-accent.mat-background-accent .mat-ink-bar {
+.mat-tab-group.mat-accent.mat-background-accent .mat-ink-bar, .mat-tab-nav-bar.mat-accent.mat-background-accent .mat-ink-bar {
     background-color: #fff
 }
 
-.mat-tab-group.mat-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(255, 205, 210, .3)
 }
 
-.mat-tab-group.mat-warn .mat-ink-bar,
-.mat-tab-nav-bar.mat-warn .mat-ink-bar {
+.mat-tab-group.mat-warn .mat-ink-bar, .mat-tab-nav-bar.mat-warn .mat-ink-bar {
     background-color: #f44336
 }
 
-.mat-tab-group.mat-warn.mat-background-warn .mat-ink-bar,
-.mat-tab-nav-bar.mat-warn.mat-background-warn .mat-ink-bar {
+.mat-tab-group.mat-warn.mat-background-warn .mat-ink-bar, .mat-tab-nav-bar.mat-warn.mat-background-warn .mat-ink-bar {
     background-color: #fff
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-background-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-primary .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-primary .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-primary .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-primary .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(197, 202, 233, .3)
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-header,
-.mat-tab-group.mat-background-primary .mat-tab-header-pagination,
-.mat-tab-group.mat-background-primary .mat-tab-links,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-header,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-links {
+.mat-tab-group.mat-background-primary .mat-tab-header, .mat-tab-group.mat-background-primary .mat-tab-header-pagination, .mat-tab-group.mat-background-primary .mat-tab-links, .mat-tab-nav-bar.mat-background-primary .mat-tab-header, .mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination, .mat-tab-nav-bar.mat-background-primary .mat-tab-links {
     background-color: #3f51b5
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-label,
-.mat-tab-group.mat-background-primary .mat-tab-link,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-label,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-link {
+.mat-tab-group.mat-background-primary .mat-tab-label, .mat-tab-group.mat-background-primary .mat-tab-link, .mat-tab-nav-bar.mat-background-primary .mat-tab-label, .mat-tab-nav-bar.mat-background-primary .mat-tab-link {
     color: #fff
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-label.mat-tab-disabled,
-.mat-tab-group.mat-background-primary .mat-tab-link.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-label.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-link.mat-tab-disabled {
+.mat-tab-group.mat-background-primary .mat-tab-label.mat-tab-disabled, .mat-tab-group.mat-background-primary .mat-tab-link.mat-tab-disabled, .mat-tab-nav-bar.mat-background-primary .mat-tab-label.mat-tab-disabled, .mat-tab-nav-bar.mat-background-primary .mat-tab-link.mat-tab-disabled {
     color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-primary .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination-chevron {
     border-color: #fff
 }
 
-.mat-tab-group.mat-background-primary .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-primary .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-primary .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
     border-color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-primary .mat-ripple-element,
-.mat-tab-nav-bar.mat-background-primary .mat-ripple-element {
+.mat-tab-group.mat-background-primary .mat-ripple-element, .mat-tab-nav-bar.mat-background-primary .mat-ripple-element {
     background-color: hsla(0, 0%, 100%, .12)
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-background-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-accent .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-accent .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-accent .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-accent .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(255, 128, 171, .3)
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-header,
-.mat-tab-group.mat-background-accent .mat-tab-header-pagination,
-.mat-tab-group.mat-background-accent .mat-tab-links,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-header,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-links {
+.mat-tab-group.mat-background-accent .mat-tab-header, .mat-tab-group.mat-background-accent .mat-tab-header-pagination, .mat-tab-group.mat-background-accent .mat-tab-links, .mat-tab-nav-bar.mat-background-accent .mat-tab-header, .mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination, .mat-tab-nav-bar.mat-background-accent .mat-tab-links {
     background-color: #ff4081
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-label,
-.mat-tab-group.mat-background-accent .mat-tab-link,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-label,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-link {
+.mat-tab-group.mat-background-accent .mat-tab-label, .mat-tab-group.mat-background-accent .mat-tab-link, .mat-tab-nav-bar.mat-background-accent .mat-tab-label, .mat-tab-nav-bar.mat-background-accent .mat-tab-link {
     color: #fff
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-label.mat-tab-disabled,
-.mat-tab-group.mat-background-accent .mat-tab-link.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-label.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-link.mat-tab-disabled {
+.mat-tab-group.mat-background-accent .mat-tab-label.mat-tab-disabled, .mat-tab-group.mat-background-accent .mat-tab-link.mat-tab-disabled, .mat-tab-nav-bar.mat-background-accent .mat-tab-label.mat-tab-disabled, .mat-tab-nav-bar.mat-background-accent .mat-tab-link.mat-tab-disabled {
     color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-accent .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination-chevron {
     border-color: #fff
 }
 
-.mat-tab-group.mat-background-accent .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-accent .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-accent .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
     border-color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-accent .mat-ripple-element,
-.mat-tab-nav-bar.mat-background-accent .mat-ripple-element {
+.mat-tab-group.mat-background-accent .mat-ripple-element, .mat-tab-nav-bar.mat-background-accent .mat-ripple-element {
     background-color: hsla(0, 0%, 100%, .12)
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-group.mat-background-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled),
-.mat-tab-nav-bar.mat-background-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
+.mat-tab-group.mat-background-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-group.mat-background-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-warn .mat-tab-label.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-warn .mat-tab-label.cdk-program-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-warn .mat-tab-link.cdk-keyboard-focused:not(.mat-tab-disabled), .mat-tab-nav-bar.mat-background-warn .mat-tab-link.cdk-program-focused:not(.mat-tab-disabled) {
     background-color: rgba(255, 205, 210, .3)
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-header,
-.mat-tab-group.mat-background-warn .mat-tab-header-pagination,
-.mat-tab-group.mat-background-warn .mat-tab-links,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-header,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-links {
+.mat-tab-group.mat-background-warn .mat-tab-header, .mat-tab-group.mat-background-warn .mat-tab-header-pagination, .mat-tab-group.mat-background-warn .mat-tab-links, .mat-tab-nav-bar.mat-background-warn .mat-tab-header, .mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination, .mat-tab-nav-bar.mat-background-warn .mat-tab-links {
     background-color: #f44336
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-label,
-.mat-tab-group.mat-background-warn .mat-tab-link,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-label,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-link {
+.mat-tab-group.mat-background-warn .mat-tab-label, .mat-tab-group.mat-background-warn .mat-tab-link, .mat-tab-nav-bar.mat-background-warn .mat-tab-label, .mat-tab-nav-bar.mat-background-warn .mat-tab-link {
     color: #fff
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-label.mat-tab-disabled,
-.mat-tab-group.mat-background-warn .mat-tab-link.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-label.mat-tab-disabled,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-link.mat-tab-disabled {
+.mat-tab-group.mat-background-warn .mat-tab-label.mat-tab-disabled, .mat-tab-group.mat-background-warn .mat-tab-link.mat-tab-disabled, .mat-tab-nav-bar.mat-background-warn .mat-tab-label.mat-tab-disabled, .mat-tab-nav-bar.mat-background-warn .mat-tab-link.mat-tab-disabled {
     color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-warn .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination-chevron {
     border-color: #fff
 }
 
-.mat-tab-group.mat-background-warn .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron,
-.mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
+.mat-tab-group.mat-background-warn .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron, .mat-tab-nav-bar.mat-background-warn .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
     border-color: hsla(0, 0%, 100%, .4)
 }
 
-.mat-tab-group.mat-background-warn .mat-ripple-element,
-.mat-tab-nav-bar.mat-background-warn .mat-ripple-element {
+.mat-tab-group.mat-background-warn .mat-ripple-element, .mat-tab-nav-bar.mat-background-warn .mat-ripple-element {
     background-color: hsla(0, 0%, 100%, .12)
 }
 
@@ -2722,17 +2356,11 @@ th.mat-header-cell {
     color: #fff
 }
 
-.mat-toolbar .mat-focused .mat-form-field-ripple,
-.mat-toolbar .mat-form-field-ripple,
-.mat-toolbar .mat-form-field-underline {
+.mat-toolbar .mat-focused .mat-form-field-ripple, .mat-toolbar .mat-form-field-ripple, .mat-toolbar .mat-form-field-underline {
     background-color: currentColor
 }
 
-.mat-toolbar .mat-focused .mat-form-field-label,
-.mat-toolbar .mat-form-field-label,
-.mat-toolbar .mat-form-field.mat-focused .mat-select-arrow,
-.mat-toolbar .mat-select-arrow,
-.mat-toolbar .mat-select-value {
+.mat-toolbar .mat-focused .mat-form-field-label, .mat-toolbar .mat-form-field-label, .mat-toolbar .mat-form-field.mat-focused .mat-select-arrow, .mat-toolbar .mat-select-arrow, .mat-toolbar .mat-select-value {
     color: inherit
 }
 
@@ -2748,8 +2376,7 @@ th.mat-header-cell {
     background: #fff
 }
 
-.mat-nested-tree-node,
-.mat-tree-node {
+.mat-nested-tree-node, .mat-tree-node {
     color: rgba(0, 0, 0, .87)
 }
 
