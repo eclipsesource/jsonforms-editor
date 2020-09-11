@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
   uiElementsTree: {
     marginBottom: theme.spacing(1),
   },
+  palettePanel: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 export const PalettePanel = () => {
@@ -85,7 +90,7 @@ export const PalettePanel = () => {
   const classes = useStyles();
 
   return (
-    <>
+    <div className={classes.palettePanel}>
       <Tabs value={selectedTab} onChange={handleTabChange}>
         <Tab label='Palette' data-cy='palette-tab' />
         <Tab label='JSON Schema' data-cy='schema-tab' />
@@ -124,6 +129,6 @@ export const PalettePanel = () => {
           updateSchema={handleUiSchemaUpdate}
         />
       </TabContent>
-    </>
+    </div>
   );
 };

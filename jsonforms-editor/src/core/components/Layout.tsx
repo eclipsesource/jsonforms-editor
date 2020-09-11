@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
   main: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    minHeight: 0,
   },
   container: {
     display: 'grid',

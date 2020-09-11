@@ -36,20 +36,16 @@ import {
 } from './properties/propertiesService';
 
 const useStyles = makeStyles((theme) => ({
-  leftPane: {
-    minHeight: '200px',
-    margin: theme.spacing(0, 1, 0, 1),
-  },
-  centerPane: {
+  pane: {
     minHeight: '200px',
     margin: theme.spacing(0, 1, 0, 1),
     height: '100%',
+  },
+  leftPane: {},
+  centerPane: {
     alignItems: 'stretch',
   },
-  rightPane: {
-    minHeight: '200px',
-    margin: theme.spacing(0, 1, 0, 1),
-  },
+  rightPane: {},
   reflexContainer: {
     flex: '1',
     alignItems: 'stretch',
@@ -148,19 +144,19 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
         className={classes.reflexContainer}
       >
         <ReflexElement minSize={200}>
-          <div className={classes.leftPane}>
+          <div className={`${classes.pane} ${classes.leftPane}`}>
             <PalettePanel />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
         <ReflexElement minSize={200}>
-          <div className={classes.centerPane}>
+          <div className={`${classes.pane} ${classes.centerPane}`}>
             <EditorPanel editorTabs={editorTabs} />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
         <ReflexElement minSize={200}>
-          <div className={classes.rightPane}>
+          <div className={`${classes.pane} ${classes.rightPane}`}>
             <PropertiesPanel />
           </div>
         </ReflexElement>

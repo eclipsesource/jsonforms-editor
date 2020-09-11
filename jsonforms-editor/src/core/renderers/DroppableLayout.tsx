@@ -51,7 +51,6 @@ const useLayoutStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 'auto',
     width: '100%',
   },
 }));
