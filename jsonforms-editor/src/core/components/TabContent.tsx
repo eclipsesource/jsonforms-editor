@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   tabContent: {
     padding: theme.spacing(1, 1, 0, 1),
     height: '100%',
+    overflow: 'auto',
   },
 }));
 

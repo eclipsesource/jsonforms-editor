@@ -36,6 +36,7 @@ const useEditorElementStyles = makeStyles((theme) => ({
     backgroundColor: '#fafafa',
     width: '100%',
     alignSelf: 'baseline',
+    minWidth: 'fit-content',
   },
   elementDragging: {
     opacity: 0.5,
