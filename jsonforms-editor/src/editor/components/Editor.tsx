@@ -10,7 +10,7 @@ import {
   materialRenderers,
 } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { Grid } from '@material-ui/core';
+import { createMuiTheme, Grid, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 
 import { useUiSchema } from '../../core/context';
@@ -23,6 +23,16 @@ import {
 } from '../../core/renderers/DroppableLayout';
 import { useExportSchema } from '../../core/util/hooks';
 import { EmptyEditor } from './EmptyEditor';
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiFormControl: {
+      root: {
+        overflow: 'hidden',
+      },
+    },
+  },
+});
 
 const renderers = [
   ...materialRenderers,
@@ -38,13 +48,15 @@ export const Editor: React.FC = () => {
   const uiSchema = useUiSchema();
   return uiSchema ? (
     <Grid container>
-      <JsonForms
-        data={{}}
-        schema={schema}
-        uischema={uiSchema}
-        renderers={renderers}
-        cells={materialCells}
-      />
+      <ThemeProvider theme={theme}>
+        <JsonForms
+          data={{}}
+          schema={schema}
+          uischema={uiSchema}
+          renderers={renderers}
+          cells={materialCells}
+        />
+      </ThemeProvider>
     </Grid>
   ) : (
     <EmptyEditor />
