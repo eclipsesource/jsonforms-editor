@@ -143,19 +143,19 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
         orientation='vertical'
         className={classes.reflexContainer}
       >
-        <ReflexElement minSize={200}>
+        <ReflexElement minSize={200} flex={1}>
           <div className={`${classes.pane} ${classes.leftPane}`}>
             <PalettePanel />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
-        <ReflexElement minSize={200}>
+        <ReflexElement minSize={200} flex={2}>
           <div className={`${classes.pane} ${classes.centerPane}`}>
             <EditorPanel editorTabs={editorTabs} />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
-        <ReflexElement minSize={200}>
+        <ReflexElement minSize={200} flex={1}>
           <div className={`${classes.pane} ${classes.rightPane}`}>
             <PropertiesPanel />
           </div>
