@@ -39,14 +39,7 @@ import {
 import { isPathError } from '../util/schemasUtil';
 import { DroppableElementRegistration } from './DroppableElement';
 
-const useLayoutStyles = makeStyles((theme) => ({
-  dropPointGridItem: {
-    padding: theme.spacing(1),
-    width: '3em',
-    maxWidth: '3em',
-    minWidth: '3em',
-    margin: 'auto',
-  },
+const useLayoutStyles = makeStyles(() => ({
   jsonformsGridItem: {
     display: 'flex',
     alignItems: 'center',
@@ -80,14 +73,7 @@ export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
       spacing={direction === 'row' ? 2 : 0}
       wrap='nowrap'
     >
-      <Grid
-        item
-        key={`${path}-${0}-drop`}
-        className={classes.dropPointGridItem}
-        xs
-      >
-        <DropPoint index={0} layout={layout} />
-      </Grid>
+      <DropPoint index={0} layout={layout} key={`${path}-${0}-drop`} />
       {layout.elements.map((child, index) => (
         <React.Fragment key={`${path}-${index}-fragment`}>
           <Grid
@@ -106,14 +92,11 @@ export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
               cells={cells}
             />
           </Grid>
-          <Grid
-            item
-            className={classes.dropPointGridItem}
+          <DropPoint
+            index={index + 1}
+            layout={layout}
             key={`${path}-${index + 1}-drop`}
-            xs
-          >
-            <DropPoint index={index + 1} layout={layout} />
-          </Grid>
+          />
         </React.Fragment>
       ))}
     </Grid>
@@ -125,12 +108,19 @@ interface DropPointProps {
   index: number;
 }
 
-const useDropPointStyles = makeStyles({
-  dropPoint: (props: { isOver: boolean }) => ({
-    textAlign: 'center',
-    fontSize: props.isOver ? '2em' : '1em',
+const useDropPointStyles = makeStyles((theme) => ({
+  dropPointGridItem: (props: { isOver: boolean; fillWidth: boolean }) => ({
+    padding: theme.spacing(1),
+    backgroundImage: props.isOver
+      ? 'radial-gradient(#333333 1px, transparent 1px)'
+      : 'radial-gradient(#c8c8c8 1px, transparent 1px)',
+    backgroundSize: 'calc(10 * 1px) calc(10 * 1px)',
+    backgroundClip: 'content-box',
+    minWidth: '3em',
+    minHeight: '3em',
+    maxWidth: props.fillWidth ? 'inherit' : '3em',
   }),
-});
+}));
 
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
@@ -194,15 +184,19 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
     },
   });
 
-  const classes = useDropPointStyles({ isOver });
+  const fillWidth =
+    layout.type !== 'HorizontalLayout' || layout.elements.length === 0;
+
+  const classes = useDropPointStyles({ isOver, fillWidth });
   return (
-    <div
+    <Grid
+      item
+      container
       ref={drop}
-      className={classes.dropPoint}
+      className={classes.dropPointGridItem}
       data-cy={`${getDataPath(layout)}-drop-${index}`}
-    >
-      [ ]
-    </div>
+      xs
+    ></Grid>
   );
 };
 
