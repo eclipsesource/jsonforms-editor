@@ -45,7 +45,6 @@ const useLayoutStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    margin: 'auto',
   },
 }));
 
@@ -107,24 +106,23 @@ export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
 interface DropPointProps {
   layout: EditorLayout;
   index: number;
-  key: string;
 }
 
 const useDropPointStyles = makeStyles((theme) => ({
-  dropPointGridItem: {
+  dropPointGridItem: (props: { isOver: boolean; fillWidth: boolean }) => ({
     padding: theme.spacing(1),
-  },
-  dropPoint: (props: { isOver: boolean }) => ({
-    width: '3em',
-    maxWidth: '3em',
+    backgroundImage: props.isOver
+      ? 'radial-gradient(#333333 1px, transparent 1px)'
+      : 'radial-gradient(#c8c8c8 1px, transparent 1px)',
+    backgroundSize: 'calc(10 * 1px) calc(10 * 1px)',
+    backgroundClip: 'content-box',
     minWidth: '3em',
-    margin: 'auto',
-    textAlign: 'center',
-    fontSize: props.isOver ? '2em' : '1em',
+    minHeight: '3em',
+    maxWidth: props.fillWidth ? 'inherit' : '3em',
   }),
 }));
 
-const DropPoint: React.FC<DropPointProps> = ({ layout, index, key }) => {
+const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
   const rootSchema = useSchema();
   const [{ isOver, uiSchemaElement, schemaUUID }, drop] = useDrop({
@@ -186,23 +184,19 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index, key }) => {
     },
   });
 
-  const classes = useDropPointStyles({ isOver });
+  const fillWidth =
+    layout.type !== 'HorizontalLayout' || layout.elements.length === 0;
+
+  const classes = useDropPointStyles({ isOver, fillWidth });
   return (
     <Grid
       item
       container
-      key={key}
       ref={drop}
       className={classes.dropPointGridItem}
+      data-cy={`${getDataPath(layout)}-drop-${index}`}
       xs
-    >
-      <div
-        className={classes.dropPoint}
-        data-cy={`${getDataPath(layout)}-drop-${index}`}
-      >
-        [ ]
-      </div>
-    </Grid>
+    ></Grid>
   );
 };
 
