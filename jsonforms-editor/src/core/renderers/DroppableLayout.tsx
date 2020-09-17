@@ -112,13 +112,13 @@ const useDropPointStyles = makeStyles((theme) => ({
   dropPointGridItem: (props: { isOver: boolean; fillWidth: boolean }) => ({
     padding: theme.spacing(1),
     backgroundImage: props.isOver
-      ? 'radial-gradient(#333333 1px, transparent 1px)'
-      : 'radial-gradient(#c8c8c8 1px, transparent 1px)',
+      ? 'radial-gradient(#c8c8c8 1px, transparent 1px)'
+      : 'none',
     backgroundSize: 'calc(10 * 1px) calc(10 * 1px)',
     backgroundClip: 'content-box',
-    minWidth: '3em',
-    minHeight: '3em',
-    maxWidth: props.fillWidth ? 'inherit' : '3em',
+    minWidth: '2em',
+    minHeight: props.isOver ? '8em' : '2em',
+    maxWidth: props.fillWidth || props.isOver ? 'inherit' : '2em',
   }),
 }));
 
