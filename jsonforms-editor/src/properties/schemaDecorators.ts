@@ -5,7 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { ControlElement, Layout } from '@jsonforms/core';
+import { ControlElement, JsonSchema, Layout } from '@jsonforms/core';
 import { assign } from 'lodash';
 
 import { SchemaElement } from '../core/model';
@@ -22,21 +22,11 @@ export const multilineStringOptionDecorator: PropertySchemasDecorator = (
     !schemaElement?.schema.format &&
     uiElement.type === 'Control'
   ) {
-    if (!schemas.schema.properties) {
-      schemas.schema.properties = {};
-    }
-    if (!schemas.schema.properties.options) {
-      schemas.schema.properties.options = {};
-    }
-    assign(schemas.schema.properties.options, {
-      type: 'object',
-      properties: {
-        multi: { type: 'boolean' },
-      },
+    addSchemaOptionsProperty(schemas.schema, {
+      multi: { type: 'boolean' },
     });
-
     (schemas.uiSchema as Layout).elements.push(
-      createControl('#/properties/options/properties/multi')
+      createPropertyControl('#/properties/options/properties/multi')
     );
   }
   return schemas;
@@ -50,7 +40,7 @@ export const labelUIElementDecorator: PropertySchemasDecorator = (
     assign(schemas.schema.properties, { text: { type: 'string' } });
 
     (schemas.uiSchema as Layout).elements.push(
-      createControl('#/properties/text')
+      createPropertyControl('#/properties/text')
     );
   }
   return schemas;
@@ -65,7 +55,7 @@ export const ruleDecorator: PropertySchemasDecorator = (
     },
   });
   (schemas.uiSchema as Layout).elements.push(
-    createControl('#/properties/rule')
+    createPropertyControl('#/properties/rule')
   );
   return schemas;
 };
@@ -83,13 +73,33 @@ export const labelDecorator: PropertySchemasDecorator = (
     assign(schemas.schema.properties, { label: { type: 'string' } });
 
     (schemas.uiSchema as Layout).elements.push(
-      createControl('#/properties/label')
+      createPropertyControl('#/properties/label')
     );
   }
   return schemas;
 };
 
-const createControl = (controlScope: string): ControlElement => ({
+export const addSchemaOptionsProperty = (
+  schema: JsonSchema,
+  newOption: {
+    [property: string]: JsonSchema;
+  }
+) => {
+  if (!schema.properties) {
+    schema.properties = {};
+  }
+  if (!schema.properties.options) {
+    schema.properties.options = {
+      type: 'object',
+      properties: {},
+    };
+  }
+  assign(schema.properties.options.properties, newOption);
+};
+
+export const createPropertyControl = (
+  controlScope: string
+): ControlElement => ({
   type: 'Control',
   scope: controlScope,
 });

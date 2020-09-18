@@ -7,11 +7,7 @@
  */
 import { JsonFormsEditor } from './JsonFormsEditor';
 
-export {
-  propertySchemaProvider,
-  defaultSchemaProviders,
-} from './properties/schemaProviders';
-export { defaultSchemaDecorators } from './properties/schemaDecorators';
+export * from './properties';
 export * from './core/api';
 export * from './core/components';
 export * from './core/context';
