@@ -10,6 +10,7 @@ import { assign } from 'lodash';
 import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
   findByUUID,
+  getPathString,
   getRoot,
   isUUIDError,
   linkElements,
@@ -18,6 +19,7 @@ import {
 } from '../util/schemasUtil';
 import {
   ADD_DETAIL,
+  ADD_SCHEMA_ELEMENT_TO_LAYOUT,
   ADD_SCOPED_ELEMENT_TO_LAYOUT,
   ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
   CombinedAction,
@@ -30,7 +32,13 @@ import {
   UiSchemaAction,
   UPDATE_UISCHEMA_ELEMENT,
 } from './actions';
-import { buildSchemaTree, cleanLinkedElements, SchemaElement } from './schema';
+import {
+  buildJsonSchema,
+  buildSchemaTree,
+  cleanLinkedElements,
+  isObjectElement,
+  SchemaElement,
+} from './schema';
 import {
   buildEditorUiSchemaTree,
   cleanUiSchemaLinks,
@@ -117,6 +125,51 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       return linkSchemas(
         buildSchemaTree(action.schema),
         buildEditorUiSchemaTree(action.uiSchema)
+      );
+    case ADD_SCHEMA_ELEMENT_TO_LAYOUT:
+      return withCloneTree(
+        state.uiSchema,
+        action.layoutUUID,
+        state,
+        (newUiSchema) => {
+          const newUIElement = action.uiSchemaElement;
+          newUIElement.parent = newUiSchema;
+          (newUiSchema as EditorLayout).elements.splice(
+            action.index,
+            0,
+            newUIElement
+          );
+          const currentJsonSchema = buildJsonSchema(state.schema!);
+          const maxPropNumber =
+            Object.keys(currentJsonSchema.properties!)
+              .filter((propName) => propName.startsWith('prop_'))
+              .map((propName) => Number.parseInt(propName.substr(5)))
+              .reduce(
+                (maxValue, propNumber) => Math.max(maxValue, propNumber),
+                0
+              ) + 1;
+          const propName = `prop_${maxPropNumber}`;
+          currentJsonSchema.properties![propName] = action.schema;
+          const newSchema = buildSchemaTree(currentJsonSchema);
+          if (!isObjectElement(newSchema)) {
+            return state;
+          }
+
+          if (
+            !linkElements(newUIElement, newSchema.properties.get(propName)!)
+          ) {
+            console.error('Could not add new UI element', newUIElement);
+            return state;
+          }
+          (newUIElement as any).scope = `#/${getPathString(
+            newSchema.properties.get(propName)
+          )}`;
+
+          return {
+            schema: getRoot(newSchema as SchemaElement),
+            uiSchema: getRoot(newUiSchema),
+          };
+        }
       );
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
@@ -364,6 +417,7 @@ export const editorReducer = (state: EditorState, action: EditorAction) => {
     case SET_SCHEMA:
     case SET_UISCHEMA:
     case SET_SCHEMAS:
+    case ADD_SCHEMA_ELEMENT_TO_LAYOUT:
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
     case MOVE_UISCHEMA_ELEMENT:
     case REMOVE_UISCHEMA_ELEMENT:

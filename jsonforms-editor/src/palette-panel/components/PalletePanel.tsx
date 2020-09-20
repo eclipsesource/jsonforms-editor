@@ -19,6 +19,7 @@ import { Actions, SchemaElement, toPrintableObject } from '../../core/model';
 import { buildDebugUISchema } from '../../core/model/uischema';
 import { useExportSchema, useExportUiSchema } from '../../core/util/hooks';
 import { env } from '../../env';
+import { CreateSchemaTree } from './CreateSchemaTree';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 import { SchemaTreeView } from './SchemaTree';
 import { UIElementsTree } from './UIElementsTree';
@@ -101,6 +102,7 @@ export const PalettePanel = () => {
           className={classes.uiElementsTree}
           elements={paletteService.getPaletteElements()}
         />
+        <CreateSchemaTree></CreateSchemaTree>
         <SchemaTreeView schema={schema} />
       </TabContent>
       <TabContent index={1} currentIndex={selectedTab}>
