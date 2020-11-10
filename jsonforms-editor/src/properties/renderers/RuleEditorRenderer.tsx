@@ -9,13 +9,15 @@
 import { ControlProps, rankWith, scopeEndsWith } from '@jsonforms/core';
 import { withJsonFormsControlProps } from '@jsonforms/react';
 import { Button, FormHelperText, Grid, Typography } from '@material-ui/core';
-import React, { useCallback, useRef, useState } from 'react';
+import { Uri } from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import React, { useCallback, useMemo, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
-import { useEffectWithUpdate } from '../../core/util/hooks';
 import {
   configureRuleSchemaValidation,
   EditorApi,
+  getMonacoModelForUri,
 } from '../../text-editor/jsonSchemaValidation';
 
 const invalidJsonMessage = 'Not a valid rule JSON.';
@@ -26,25 +28,34 @@ const isValidRule = (rule: any) => {
 
 const RuleEditor: React.FC<ControlProps> = (props) => {
   const { data, path, handleChange, errors } = props;
-  const contentRef = useRef<string>('');
   const [invalidJson, setInvalidJson] = useState(false);
+  const modelUri = Uri.parse('json://core/specification/rules.json');
 
-  const configureEditor = useCallback((editor: EditorApi) => {
-    configureRuleSchemaValidation(editor);
-  }, []);
+  const configureEditor = useCallback(
+    (editor: EditorApi) => {
+      configureRuleSchemaValidation(editor, modelUri);
+    },
+    [modelUri]
+  );
 
-  useEffectWithUpdate(
-    useCallback(() => {
-      contentRef.current = JSON.stringify(data, null, 2) ?? '';
-      setInvalidJson(false);
-    }, [data])
+  const model = useMemo(
+    () => getMonacoModelForUri(modelUri, JSON.stringify(data, null, 2)),
+    [data, modelUri]
+  );
+
+  const setModel = useCallback(
+    (editor: monaco.editor.IStandaloneCodeEditor) => {
+      if (!model.isDisposed()) {
+        editor.setModel(model);
+      }
+    },
+    [model]
   );
 
   const onSubmitRule = useCallback(() => {
     try {
-      const rule = contentRef.current
-        ? JSON.parse(contentRef.current)
-        : undefined;
+      const value = model.getValue();
+      const rule = value ? JSON.parse(value) : undefined;
       if (isValidRule(rule)) {
         setInvalidJson(false);
         handleChange(path, rule);
@@ -54,7 +65,7 @@ const RuleEditor: React.FC<ControlProps> = (props) => {
     } catch (error) {
       setInvalidJson(true);
     }
-  }, [handleChange, path]);
+  }, [handleChange, model, path]);
 
   const isValid = errors.length === 0 && !invalidJson;
   return (
@@ -63,10 +74,7 @@ const RuleEditor: React.FC<ControlProps> = (props) => {
       <MonacoEditor
         language='json'
         editorWillMount={configureEditor}
-        value={contentRef.current}
-        onChange={(newContent) => {
-          contentRef.current = newContent;
-        }}
+        editorDidMount={setModel}
         height={200}
         options={{
           formatOnPaste: true,

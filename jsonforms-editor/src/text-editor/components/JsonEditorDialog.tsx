@@ -14,12 +14,15 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import { TransitionProps } from '@material-ui/core/transitions';
 import CloseIcon from '@material-ui/icons/Close';
-import React, { useCallback, useState } from 'react';
+import { Uri } from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import React, { useCallback, useMemo } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
 import {
   configureJsonSchemaValidation,
   EditorApi,
+  getMonacoModelForUri,
   TextType,
 } from '../jsonSchemaValidation';
 
@@ -74,15 +77,30 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
   onCancel,
 }) => {
   const classes = useStyles();
-  const [content, setContent] = useState(initialContent);
+
+  const modelUri = Uri.parse('json://core/specification/schema.json');
 
   const configureEditor = useCallback(
     (editor: EditorApi) => {
       if (type === 'JSON Schema') {
-        configureJsonSchemaValidation(editor);
+        configureJsonSchemaValidation(editor, modelUri);
       }
     },
-    [type]
+    [type, modelUri]
+  );
+
+  const model = useMemo(() => getMonacoModelForUri(modelUri, initialContent), [
+    initialContent,
+    modelUri,
+  ]);
+
+  const setModel = useCallback(
+    (editor: monaco.editor.IStandaloneCodeEditor) => {
+      if (!model.isDisposed()) {
+        editor.setModel(model);
+      }
+    },
+    [model]
   );
 
   return (
@@ -110,7 +128,7 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
           </Typography>
           <Button
             variant='contained'
-            onClick={() => onApply(content)}
+            onClick={() => onApply(model.getValue())}
             data-cy='apply'
           >
             Apply
@@ -120,9 +138,10 @@ export const JsonEditorDialog: React.FC<JsonEditorDialogProps> = ({
       <DialogContent className={classes.dialogContent}>
         <MonacoEditor
           language='json'
-          value={content}
-          onChange={(newContent) => setContent(newContent)}
-          editorDidMount={(editor) => editor.focus()}
+          editorDidMount={(editor) => {
+            setModel(editor);
+            editor.focus();
+          }}
           editorWillMount={configureEditor}
         />
       </DialogContent>
