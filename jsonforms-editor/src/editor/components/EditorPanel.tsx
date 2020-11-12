@@ -5,6 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { makeStyles, Tab, Tabs } from '@material-ui/core';
 import React, { useState } from 'react';
 
@@ -27,8 +28,12 @@ export interface EditorTab {
 
 interface EditorPanelProps {
   editorTabs?: EditorTab[];
+  editorRenderers: JsonFormsRendererRegistryEntry[];
 }
-export const EditorPanel: React.FC<EditorPanelProps> = ({ editorTabs }) => {
+export const EditorPanel: React.FC<EditorPanelProps> = ({
+  editorTabs,
+  editorRenderers,
+}) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSelectedTab(newValue);
@@ -45,7 +50,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ editorTabs }) => {
           : null}
       </Tabs>
       <TabContent index={0} currentIndex={selectedTab}>
-        <Editor />
+        <Editor editorRenderers={editorRenderers} />
       </TabContent>
       {editorTabs
         ? editorTabs.map((tab, index) => (

@@ -5,10 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import {
-  materialCells,
-  materialRenderers,
-} from '@jsonforms/material-renderers';
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
+import { materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
 import { isEqual, omit } from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -24,10 +22,13 @@ import { Actions } from '../../core/model';
 import { EditorUISchemaElement } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/schemasUtil';
 import { PropertySchemas } from '../propertiesService';
-import { RuleEditorRendererRegistration } from '../renderers/RuleEditorRenderer';
 
-const renderers = [...materialRenderers, RuleEditorRendererRegistration];
-export const Properties = () => {
+export interface PropertiesProps {
+  propertyRenderers: JsonFormsRendererRegistryEntry[];
+}
+export const Properties: React.FC<PropertiesProps> = ({
+  propertyRenderers,
+}) => {
   const [selection] = useSelection();
   const uiSchema = useUiSchema();
   const schema = useSchema();
@@ -82,7 +83,7 @@ export const Properties = () => {
       schema={properties.schema}
       uischema={properties.uiSchema}
       onChange={updateProperties}
-      renderers={renderers}
+      renderers={propertyRenderers}
       cells={materialCells}
     />
   ) : (

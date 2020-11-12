@@ -23,11 +23,6 @@ import {
 } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/schemasUtil';
 
-export interface EditorElementProps {
-  wrappedElement: EditorUISchemaElement;
-  onHoverCallback?: (isHover: boolean) => void;
-}
-
 const useEditorElementStyles = makeStyles((theme) => ({
   editorElement: {
     border: '1px solid #d3d3d3',
@@ -62,8 +57,14 @@ const useEditorElementStyles = makeStyles((theme) => ({
   ruleEffect: { fontStyle: 'italic', color: theme.palette.text.secondary },
 }));
 
+export interface EditorElementProps {
+  wrappedElement: EditorUISchemaElement;
+  elementIcon?: React.ReactNode;
+}
+
 export const EditorElement: React.FC<EditorElementProps> = ({
   wrappedElement,
+  elementIcon,
   children,
 }) => {
   const schema = useSchema();
@@ -87,6 +88,14 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const uiPath = getUISchemaPath(wrappedElement);
   const isSelected = selection?.uuid === wrappedElement.uuid;
   const ruleEffect = wrappedElement.rule?.effect.toLocaleUpperCase();
+
+  const icon =
+    elementIcon ??
+    (elementSchema ? (
+      <SchemaIcon type={elementSchema.type} />
+    ) : (
+      <UISchemaIcon type={wrappedElement.type} />
+    ));
   return (
     <Grid
       item
@@ -110,11 +119,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
         data-cy={`editorElement-${uiPath}-header`}
       >
         <Grid item container alignItems='center' xs>
-          {elementSchema ? (
-            <SchemaIcon type={elementSchema.type} />
-          ) : (
-            <UISchemaIcon type={wrappedElement.type} />
-          )}
+          {icon}
           {ruleEffect ? (
             <Grid
               item

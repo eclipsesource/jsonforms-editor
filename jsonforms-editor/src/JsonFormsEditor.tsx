@@ -8,6 +8,7 @@
 import './JsonFormsEditor.css';
 import 'react-reflex/styles.css';
 
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { makeStyles } from '@material-ui/core';
 import React, { ComponentType, useEffect, useReducer, useState } from 'react';
 import { DndProvider } from 'react-dnd';
@@ -24,10 +25,14 @@ import { EditorContextInstance } from './core/context';
 import { Actions, editorReducer } from './core/model';
 import { SelectedElement } from './core/selection';
 import { tryFindByUUID } from './core/util/schemasUtil';
-import { defaultEditorTabs, EditorPanel } from './editor';
+import {
+  defaultEditorRenderers,
+  defaultEditorTabs,
+  EditorPanel,
+} from './editor';
 import { EditorTab } from './editor/components/EditorPanel';
 import { PalettePanel } from './palette-panel';
-import { PropertiesPanel } from './properties';
+import { defaultPropertyRenderers, PropertiesPanel } from './properties';
 import {
   PropertiesService,
   PropertiesServiceImpl,
@@ -58,24 +63,39 @@ interface JsonFormsEditorProps {
   schemaDecorators: PropertySchemasDecorator[];
   editorTabs?: EditorTab[] | null;
   paletteService?: PaletteService;
+  editorRenderers?: JsonFormsRendererRegistryEntry[];
+  propertyRenderers?: JsonFormsRendererRegistryEntry[];
+
+  propertiesServiceProvider?: (
+    schemaProviders: PropertySchemasProvider[],
+    schemaDecorators: PropertySchemasDecorator[]
+  ) => PropertiesService;
   header?: ComponentType | null;
   footer?: ComponentType | null;
 }
 const defaultSchemaService = new EmptySchemaService();
 const defaultPaletteService = new DefaultPaletteService();
+const defaultPropertiesService = (
+  schemaProviders: PropertySchemasProvider[],
+  schemaDecorators: PropertySchemasDecorator[]
+) => new PropertiesServiceImpl(schemaProviders, schemaDecorators);
+
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   schemaService = defaultSchemaService,
   paletteService = defaultPaletteService,
+  propertiesServiceProvider = defaultPropertiesService,
   schemaProviders,
   schemaDecorators,
+  editorRenderers = defaultEditorRenderers,
   editorTabs: editorTabsProp = defaultEditorTabs,
+  propertyRenderers = defaultPropertyRenderers,
   header = Header,
   footer = Footer,
 }) => {
   const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
   const [selection, setSelection] = useState<SelectedElement>(undefined);
   const [propertiesService] = useState<PropertiesService>(
-    new PropertiesServiceImpl(schemaProviders, schemaDecorators)
+    propertiesServiceProvider(schemaProviders, schemaDecorators)
   );
   const editorTabs = editorTabsProp ?? undefined;
   const headerComponent = header ?? undefined;
@@ -117,7 +137,9 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
     >
       <DndProvider backend={Backend}>
         <JsonFormsEditorUi
+          editorRenderers={editorRenderers}
           editorTabs={editorTabs}
+          propertyRenderers={propertyRenderers}
           header={headerComponent}
           footer={footerComponent}
         />
@@ -128,11 +150,15 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
 
 interface JsonFormsEditorUiProps {
   editorTabs?: EditorTab[];
+  editorRenderers: JsonFormsRendererRegistryEntry[];
+  propertyRenderers: JsonFormsRendererRegistryEntry[];
   header?: ComponentType;
   footer?: ComponentType;
 }
 const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
   editorTabs,
+  editorRenderers,
+  propertyRenderers,
   header,
   footer,
 }) => {
@@ -151,13 +177,16 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
         <ReflexSplitter propagate />
         <ReflexElement minSize={200} flex={2}>
           <div className={`${classes.pane} ${classes.centerPane}`}>
-            <EditorPanel editorTabs={editorTabs} />
+            <EditorPanel
+              editorTabs={editorTabs}
+              editorRenderers={editorRenderers}
+            />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
         <ReflexElement minSize={200} flex={1}>
           <div className={`${classes.pane} ${classes.rightPane}`}>
-            <PropertiesPanel />
+            <PropertiesPanel propertyRenderers={propertyRenderers} />
           </div>
         </ReflexElement>
       </ReflexContainer>
