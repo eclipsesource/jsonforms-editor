@@ -6,8 +6,14 @@ const {
 } = require('@rescripts/utilities');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-const includesAppSrc = (inQuestion) =>
-  inQuestion && inQuestion.include && inQuestion.include.includes('app/src');
+const includesAppSrc = (inQuestion) => {
+  return (
+    inQuestion &&
+    inQuestion.include &&
+    typeof inQuestion.include.includes === 'function' &&
+    inQuestion.include.includes('app/src')
+  );
+};
 
 const addLibrarySrc = (loader) => {
   loader.include = [

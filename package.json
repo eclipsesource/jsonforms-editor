@@ -11,6 +11,7 @@
     "cypress:ci": "cd app && npm run cypress:ci"
   },
   "devDependencies": {
+    "jest-environment-jsdom-fourteen": "^1.0.1",
     "lerna": "^3.22.1"
   }
 }
