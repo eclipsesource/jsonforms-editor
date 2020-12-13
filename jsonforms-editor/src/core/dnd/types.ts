@@ -5,6 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonSchema } from '@jsonforms/core';
+
 import { getArrayContainer, SchemaElement } from '../model';
 import {
   containsControls,
@@ -18,8 +20,27 @@ import { getHierarchy } from '../util/tree';
 export const NEW_UI_SCHEMA_ELEMENT: 'newUiSchemaElement' = 'newUiSchemaElement';
 export const MOVE_UI_SCHEMA_ELEMENT: 'moveUiSchemaElement' =
   'moveUiSchemaElement';
+export const NEW_SCHEMA_ELEMENT: 'newSchemaElement' = 'newSchemaElement';
 
-export type DndType = NewUISchemaElement | MoveUISchemaElement;
+export type DndType =
+  | NewUISchemaElement
+  | MoveUISchemaElement
+  | NewSchemaElement;
+
+export interface NewSchemaElement {
+  type: 'newSchemaElement';
+  uiSchemaElement: EditorUISchemaElement;
+  schema: JsonSchema;
+}
+
+const newSchemaElement = (
+  uiSchemaElement: EditorUISchemaElement,
+  schema: JsonSchema
+) => ({
+  type: NEW_SCHEMA_ELEMENT,
+  uiSchemaElement,
+  schema,
+});
 
 export interface NewUISchemaElement {
   type: 'newUiSchemaElement';
@@ -51,7 +72,11 @@ const moveUISchemaElement = (
   schema,
 });
 
-export const DndItems = { newUISchemaElement, moveUISchemaElement };
+export const DndItems = {
+  newUISchemaElement,
+  moveUISchemaElement,
+  newSchemaElement,
+};
 
 export const canDropIntoLayout = (
   item: NewUISchemaElement,

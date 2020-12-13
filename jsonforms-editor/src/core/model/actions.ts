@@ -5,6 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonSchema } from '@jsonforms/core';
+
 import { EditorUISchemaElement } from './uischema';
 
 export type UiSchemaAction = AddUnscopedElementToLayout | UpdateUiSchemaElement;
@@ -14,6 +16,7 @@ export type CombinedAction =
   | SetSchemaAction
   | SetSchemasAction
   | AddScopedElementToLayout
+  | AddSchemaElementToLayout
   | MoveUiSchemaElement
   | RemoveUiSchemaElement
   | AddDetail;
@@ -26,6 +29,8 @@ export const SET_UISCHEMA: 'jsonforms-editor/SET_UISCHEMA' =
   'jsonforms-editor/SET_UISCHEMA';
 export const SET_SCHEMAS: 'jsonforms-editor/SET_SCHEMAS' =
   'jsonforms-editor/SET_SCHEMAS';
+export const ADD_SCHEMA_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT' =
+  'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT';
 export const ADD_SCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT' =
   'jsonforms-editor/ADD_SCOPED_ELEMENT_TO_LAYOUT';
 export const ADD_UNSCOPED_ELEMENT_TO_LAYOUT: 'jsonforms-editor/ADD_UNSCOPED_ELEMENT_TO_LAYOUT' =
@@ -53,6 +58,14 @@ export interface SetSchemasAction {
   type: 'jsonforms-editor/SET_SCHEMAS';
   schema: any;
   uiSchema: any;
+}
+
+export interface AddSchemaElementToLayout {
+  type: 'jsonforms-editor/ADD_SCHEMA_ELEMENT_TO_LAYOUT';
+  uiSchemaElement: EditorUISchemaElement;
+  layoutUUID: string;
+  schema: JsonSchema;
+  index: number;
 }
 
 export interface AddScopedElementToLayout {
@@ -109,6 +122,19 @@ const setSchemas = (schema: any, uiSchema: any) => ({
   type: SET_SCHEMAS,
   schema,
   uiSchema,
+});
+
+const addSchemaElementToLayout = (
+  uiSchemaElement: EditorUISchemaElement,
+  layoutUUID: string,
+  index: number,
+  schema: JsonSchema
+) => ({
+  type: ADD_SCHEMA_ELEMENT_TO_LAYOUT,
+  uiSchemaElement,
+  layoutUUID,
+  index,
+  schema,
 });
 
 const addScopedElementToLayout = (
@@ -177,4 +203,5 @@ export const Actions = {
   removeUiSchemaElement,
   updateUISchemaElement,
   addDetail,
+  addSchemaElementToLayout,
 };

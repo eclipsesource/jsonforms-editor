@@ -27,6 +27,7 @@ import {
   canMoveSchemaElementTo,
   MOVE_UI_SCHEMA_ELEMENT,
   MoveUISchemaElement,
+  NEW_SCHEMA_ELEMENT,
   NEW_UI_SCHEMA_ELEMENT,
   NewUISchemaElement,
 } from '../dnd';
@@ -125,10 +126,11 @@ const useDropPointStyles = makeStyles((theme) => ({
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
   const dispatch = useDispatch();
   const rootSchema = useSchema();
-  const [{ isOver, uiSchemaElement, schemaUUID }, drop] = useDrop({
-    accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT],
+  const [{ isOver, uiSchemaElement, schemaUUID, schema }, drop] = useDrop({
+    accept: [NEW_UI_SCHEMA_ELEMENT, MOVE_UI_SCHEMA_ELEMENT, NEW_SCHEMA_ELEMENT],
     canDrop: (item, monitor) => {
       switch (item.type) {
+        case NEW_SCHEMA_ELEMENT:
         case NEW_UI_SCHEMA_ELEMENT:
           return canDropIntoLayout(
             item as NewUISchemaElement,
@@ -149,6 +151,7 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
       isOver: !!mon.isOver() && mon.canDrop(),
       uiSchemaElement: mon.getItem()?.uiSchemaElement,
       schemaUUID: mon.getItem()?.schemaUUID,
+      schema: mon.getItem()?.schema,
     }),
     drop: (item) => {
       switch (item.type) {
@@ -180,6 +183,15 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
             )
           );
           break;
+        case NEW_SCHEMA_ELEMENT:
+          dispatch(
+            Actions.addSchemaElementToLayout(
+              uiSchemaElement,
+              layout.uuid,
+              index,
+              schema
+            )
+          );
       }
     },
   });
