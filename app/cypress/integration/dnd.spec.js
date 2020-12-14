@@ -95,8 +95,8 @@ describe('Dnd Move Tests on Example model', () => {
       '#/properties/name' + 'Name'
     );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
-      have.text',
-    '#/properties/personalData/properties/height' + 'Height*'
+      'have.text',
+      '#/properties/personalData/properties/height' + 'Height*'
     );
   });
 
@@ -112,8 +112,8 @@ describe('Dnd Move Tests on Example model', () => {
       '#/properties/name' + 'Name'
     );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
-      have.text',
-    '#/properties/personalData/properties/height' + 'Height*'
+      'have.text',
+      '#/properties/personalData/properties/height' + 'Height*'
     );
   });
 
