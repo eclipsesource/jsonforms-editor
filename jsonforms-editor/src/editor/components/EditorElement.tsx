@@ -20,6 +20,7 @@ import {
   EditorUISchemaElement,
   getUISchemaPath,
   hasChildren,
+  isEditorControl,
 } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/schemasUtil';
 
@@ -89,6 +90,11 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const isSelected = selection?.uuid === wrappedElement.uuid;
   const ruleEffect = wrappedElement.rule?.effect.toLocaleUpperCase();
 
+  let scope;
+  if (isEditorControl(wrappedElement)) {
+    scope = wrappedElement.scope;
+  }
+
   const icon =
     elementIcon ??
     (elementSchema ? (
@@ -136,6 +142,20 @@ export const EditorElement: React.FC<EditorElementProps> = ({
                 variant='caption'
                 className={classes.ruleEffect}
               >{`(${ruleEffect})`}</Typography>
+            </Grid>
+          ) : null}
+          {scope ? (
+            <Grid
+              item
+              container
+              direction='row'
+              alignItems='center'
+              wrap='nowrap'
+              xs
+            >
+              <Typography variant='caption' className={classes.ruleEffect}>
+                {scope}
+              </Typography>
             </Grid>
           ) : null}
         </Grid>
