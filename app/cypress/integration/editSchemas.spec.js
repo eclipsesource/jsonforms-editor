@@ -21,6 +21,8 @@ describe('Edit schemas', () => {
 
   const cyReplaceTextInFocus = (jsonObject) => {
     cy.focused()
+      .type('{cmd}a')
+      .type('{del}')
       .type('{ctrl}a')
       .type('{del}')
       .type(JSON.stringify(jsonObject), {

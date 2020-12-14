@@ -65,7 +65,7 @@ describe('Remove controls', () => {
     );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
       'have.text',
-      'Occupation'
+      '#/properties/occupation' + 'Occupation'
     );
   });
 
@@ -94,7 +94,7 @@ describe('Remove controls', () => {
     );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
       'have.text',
-      'Occupation'
+      '#/properties/occupation' + 'Occupation'
     );
   });
 });
