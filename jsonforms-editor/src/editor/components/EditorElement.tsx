@@ -90,11 +90,6 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const isSelected = selection?.uuid === wrappedElement.uuid;
   const ruleEffect = wrappedElement.rule?.effect.toLocaleUpperCase();
 
-  let scope;
-  if (isEditorControl(wrappedElement)) {
-    scope = wrappedElement.scope;
-  }
-
   const icon =
     elementIcon ??
     (elementSchema ? (
@@ -144,7 +139,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
               >{`(${ruleEffect})`}</Typography>
             </Grid>
           ) : null}
-          {scope ? (
+          {isEditorControl(wrappedElement) && (
             <Grid
               item
               container
@@ -154,10 +149,10 @@ export const EditorElement: React.FC<EditorElementProps> = ({
               xs
             >
               <Typography variant='caption' className={classes.ruleEffect}>
-                {scope}
+                {wrappedElement.scope}
               </Typography>
             </Grid>
-          ) : null}
+          )}
         </Grid>
         <Grid
           item
