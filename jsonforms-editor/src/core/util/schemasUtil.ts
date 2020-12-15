@@ -98,6 +98,9 @@ const doFindByUUID = (root: any, uuid: string): any | UUIDError => {
   if (root && root.uuid === uuid) {
     return root;
   }
+  if (!root) {
+    return undefined;
+  }
   const entries = root instanceof Map ? root.entries() : Object.entries(root);
   for (const [key, value] of Array.from(entries)) {
     if (value && value.uuid === uuid) {

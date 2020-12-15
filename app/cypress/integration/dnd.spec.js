@@ -75,9 +75,12 @@ describe('Dnd Move Tests on Example model', () => {
     //check that order is: height, name
     cy.get('[data-cy="editorElement-/elements/0"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
-    cy.get('[data-cy="editorElement-/elements/1"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/1"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
   });
 
   it('Move element in the same parent, to the right', () => {
@@ -87,10 +90,13 @@ describe('Dnd Move Tests on Example model', () => {
     );
 
     //check that order changed to: name, height
-    cy.get('[data-cy="editorElement-/elements/0"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/0"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
   });
 
@@ -101,10 +107,13 @@ describe('Dnd Move Tests on Example model', () => {
     );
 
     //check that order changed to: name, height
-    cy.get('[data-cy="editorElement-/elements/0"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/0"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
     cy.get('[data-cy="editorElement-/elements/1"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
   });
 
@@ -115,10 +124,13 @@ describe('Dnd Move Tests on Example model', () => {
     );
 
     //check that order changed to: name, vertical-layout/height
-    cy.get('[data-cy="editorElement-/elements/0"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/0"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
     cy.get('[data-cy="editorElement-/elements/1/elements/0"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
   });
 
@@ -131,9 +143,12 @@ describe('Dnd Move Tests on Example model', () => {
     //check that order didn't change
     cy.get('[data-cy="editorElement-/elements/0"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
-    cy.get('[data-cy="editorElement-/elements/1"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/1"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
   });
 
   it('No layout change when droping element in the drop point to its right', () => {
@@ -145,9 +160,12 @@ describe('Dnd Move Tests on Example model', () => {
     //check that order didn't change
     cy.get('[data-cy="editorElement-/elements/0"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
-    cy.get('[data-cy="editorElement-/elements/1"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/1"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
   });
 
   it('Layout elements are moved with their children', () => {
@@ -163,8 +181,11 @@ describe('Dnd Move Tests on Example model', () => {
     //check height is contained in first element
     cy.get('[data-cy="editorElement-/elements/0/elements/0"]').should(
       'have.text',
-      'Height*'
+      '#/properties/personalData/properties/height' + 'Height*'
     );
-    cy.get('[data-cy="editorElement-/elements/1"]').should('have.text', 'Name');
+    cy.get('[data-cy="editorElement-/elements/1"]').should(
+      'have.text',
+      '#/properties/name' + 'Name'
+    );
   });
 });

@@ -20,6 +20,7 @@ import {
   EditorUISchemaElement,
   getUISchemaPath,
   hasChildren,
+  isEditorControl,
 } from '../../core/model/uischema';
 import { tryFindByUUID } from '../../core/util/schemasUtil';
 
@@ -138,6 +139,20 @@ export const EditorElement: React.FC<EditorElementProps> = ({
               >{`(${ruleEffect})`}</Typography>
             </Grid>
           ) : null}
+          {isEditorControl(wrappedElement) && (
+            <Grid
+              item
+              container
+              direction='row'
+              alignItems='center'
+              wrap='nowrap'
+              xs
+            >
+              <Typography variant='caption' className={classes.ruleEffect}>
+                {wrappedElement.scope}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
         <Grid
           item
