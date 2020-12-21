@@ -35,6 +35,16 @@ export const EditorContextInstance = React.createContext<EditorContext>(
 
 export const useEditorContext = (): EditorContext =>
   useContext(EditorContextInstance);
+export interface DrawerContext {
+  open: boolean;
+  openDrawer: () => void;
+}
+export const DrawerContextInstance = React.createContext<DrawerContext>(
+  defaultContext
+);
+
+export const useDrawerContext = (): DrawerContext =>
+  useContext(DrawerContextInstance);
 
 export const useGitLabService = (): SchemaService => {
   const { schemaService } = useEditorContext();

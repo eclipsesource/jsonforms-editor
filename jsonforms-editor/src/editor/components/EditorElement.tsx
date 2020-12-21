@@ -79,7 +79,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
     wrappedElement.linkedSchemaElement
   );
   const [{ isDragging }, drag] = useDrag({
-    item: DndItems.moveUISchemaElement(wrappedElement, elementSchema),
+    item: DndItems.moveUISchemaElement(wrappedElement),
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),

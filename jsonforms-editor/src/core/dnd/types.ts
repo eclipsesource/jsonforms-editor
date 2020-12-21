@@ -39,7 +39,7 @@ const newUISchemaElement = (
 export interface MoveUISchemaElement {
   type: 'moveUiSchemaElement';
   uiSchemaElement: EditorUISchemaElement;
-  schema?: SchemaElement;
+  // schema?: SchemaElement;
 }
 
 const moveUISchemaElement = (
