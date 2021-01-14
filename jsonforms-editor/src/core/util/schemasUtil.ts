@@ -259,3 +259,5 @@ const getSchemaElementFromScope = (
   const validPathSegments = scope.split('/').filter(validSegment);
   return getFromPath(schemaRoot, validPathSegments);
 };
+
+export const jsonToText = (object: any) => JSON.stringify(object, null, 2);

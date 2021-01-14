@@ -5,4 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export { PalettePanel } from './components/PalletePanel';
+
+export type { PaletteTab } from './components/PalletePanel';
+export * from './components/PalletePanel';
+export { JsonSchemaPanel } from './components/JsonSchemaPanel';
+export * from './components/UISchemaPanel';

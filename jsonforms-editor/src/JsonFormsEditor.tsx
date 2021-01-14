@@ -31,7 +31,11 @@ import {
   EditorPanel,
 } from './editor';
 import { EditorTab } from './editor/components/EditorPanel';
-import { PalettePanel } from './palette-panel';
+import {
+  defaultPalettePanelTabs,
+  PalettePanel,
+  PaletteTab,
+} from './palette-panel';
 import { defaultPropertyRenderers, PropertiesPanel } from './properties';
 import {
   PropertiesService,
@@ -63,6 +67,7 @@ interface JsonFormsEditorProps {
   schemaDecorators: PropertySchemasDecorator[];
   editorTabs?: EditorTab[] | null;
   paletteService?: PaletteService;
+  paletteTabs?: PaletteTab[] | null;
   editorRenderers?: JsonFormsRendererRegistryEntry[];
   propertyRenderers?: JsonFormsRendererRegistryEntry[];
 
@@ -88,6 +93,7 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   schemaDecorators,
   editorRenderers = defaultEditorRenderers,
   editorTabs: editorTabsProp = defaultEditorTabs,
+  paletteTabs = defaultPalettePanelTabs,
   propertyRenderers = defaultPropertyRenderers,
   header = Header,
   footer = Footer,
@@ -142,6 +148,7 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
           propertyRenderers={propertyRenderers}
           header={headerComponent}
           footer={footerComponent}
+          paletteTabs={paletteTabs ?? undefined}
         />
       </DndProvider>
     </EditorContextInstance.Provider>
@@ -154,6 +161,7 @@ interface JsonFormsEditorUiProps {
   propertyRenderers: JsonFormsRendererRegistryEntry[];
   header?: ComponentType;
   footer?: ComponentType;
+  paletteTabs?: PaletteTab[];
 }
 const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
   editorTabs,
@@ -161,6 +169,7 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
   propertyRenderers,
   header,
   footer,
+  paletteTabs,
 }) => {
   const classes = useStyles();
   return (
@@ -171,7 +180,7 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
       >
         <ReflexElement minSize={200} flex={1}>
           <div className={`${classes.pane} ${classes.leftPane}`}>
-            <PalettePanel />
+            <PalettePanel paletteTabs={paletteTabs} />
           </div>
         </ReflexElement>
         <ReflexSplitter propagate />
