@@ -78,19 +78,19 @@ describe('Edit schemas', () => {
   };
 
   it('Edit JSON Schema', function () {
-    editSchema(this.simpleSchema, 'schema-tab');
+    editSchema(this.simpleSchema, 'tab-JSON Schema');
   });
 
   it('Cancel Edit JSON Schema', function () {
-    cancelEditSchema(this.simpleSchema, 'schema-tab');
+    cancelEditSchema(this.simpleSchema, 'tab-JSON Schema');
   });
 
   it('Escape Edit JSON Schema', function () {
-    escapeEditSchema(this.simpleSchema, 'schema-tab');
+    escapeEditSchema(this.simpleSchema, 'tab-JSON Schema');
   });
 
   it('Validate invalid JSON Schema', function () {
-    cy.get(`[data-cy="schema-tab"]`).click();
+    cy.get(`[data-cy="tab-JSON Schema"]`).click();
 
     cy.get('[data-cy="schema-text"]')
       .invoke('text')
@@ -102,7 +102,7 @@ describe('Edit schemas', () => {
   });
 
   it('Validate valid JSON Schema', function () {
-    cy.get(`[data-cy="schema-tab"]`).click();
+    cy.get(`[data-cy="tab-JSON Schema"]`).click();
 
     cy.get('[data-cy="schema-text"]')
       .invoke('text')
@@ -114,14 +114,14 @@ describe('Edit schemas', () => {
   });
 
   it('Edit UI Schema', function () {
-    editSchema(this.simpleUiSchema, 'uischema-tab');
+    editSchema(this.simpleUiSchema, 'tab-UI Schema');
   });
 
   it('Cancel Edit UI Schema', function () {
-    cancelEditSchema(this.simpleUiSchema, 'uischema-tab');
+    cancelEditSchema(this.simpleUiSchema, 'tab-UI Schema');
   });
 
   it('Escape Edit UI Schema', function () {
-    escapeEditSchema(this.simpleUiSchema, 'uischema-tab');
+    escapeEditSchema(this.simpleUiSchema, 'tab-UI Schema');
   });
 });
