@@ -5,12 +5,11 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { makeStyles } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Tooltip from '@material-ui/core/Tooltip';
 import BallotIcon from '@material-ui/icons/Ballot';
 import ChatIcon from '@material-ui/icons/Chat';
 import CodeIcon from '@material-ui/icons/Code';
@@ -18,21 +17,17 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import React, { useState } from 'react';
 
 import {
-  useDispatch,
-  useDrawerContext,
   usePaletteService,
+  usePropertyRenderers,
   useSchema,
-  useUiSchema,
 } from '../../core/context';
-import { usePaletteService, useSchema } from '../../core/context';
 import { SchemaElement } from '../../core/model';
-import { JsonSchemaPanel } from './JsonSchemaPanel';
+import { PaletteTab } from '../../editor';
 import { Properties } from '../../properties/components/Properties';
+import { JsonSchemaPanel } from './JsonSchemaPanel';
 import { SchemaTreeView } from './SchemaTree';
 import { UIElementsTree } from './UIElementsTree';
 import { UISchemaPanel } from './UISchemaPanel';
-
-const toText = (object: any) => JSON.stringify(object, null, 2);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     height: 224,
-  },
-  uiElementsTree: {
-    marginBottom: theme.spacing(1),
   },
   palettePanel: {
     height: '100%',
@@ -59,116 +51,101 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-export interface PaletteTab {
-  name: string;
-  Component: React.ReactElement;
-}
+const usePaletteStyles = makeStyles((theme) => ({
+  uiElementsTree: {
+    marginBottom: theme.spacing(1),
+  },
+}));
 interface PalettePanelProps {
-  propertyRenderers: JsonFormsRendererRegistryEntry[];
   paletteTabs?: PaletteTab[];
+  open: boolean;
+  openDrawer: () => void;
+  onSelected: (tabName: string) => void;
 }
 export const defaultPalettePanelTabs: PaletteTab[] = [
   {
-    name: 'JSON Schema',
-    Component: <JsonSchemaPanel />,
+    name: 'Palette',
+    Component: () => {
+      const classes = usePaletteStyles();
+      const schema: SchemaElement | undefined = useSchema();
+      const paletteService = usePaletteService();
+      return (
+        <>
+          <UIElementsTree
+            className={classes.uiElementsTree}
+            elements={paletteService.getPaletteElements()}
+          />
+          <SchemaTreeView schema={schema} />{' '}
+        </>
+      );
+    },
+    icon: <BallotIcon data-cy='palette-tab' />,
   },
-  { name: 'UI Schema', Component: <UISchemaPanel /> },
+  {
+    name: 'Properties',
+    Component: () => {
+      const propertyRenderers = usePropertyRenderers();
+      return <Properties propertyRenderers={propertyRenderers} />;
+    },
+    icon: <SettingsIcon data-cy='properties-tab' />,
+  },
+  {
+    name: 'JSON Schema',
+    Component: () => <JsonSchemaPanel />,
+    icon: <CodeIcon data-cy='schema-tab' />,
+  },
+  {
+    name: 'UI Schema',
+    Component: () => <UISchemaPanel />,
+    icon: <ChatIcon data-cy='uischema-tab' />,
+  },
 ];
-export const PalettePanel = ({ propertyRenderers }: PalettePanelProps) => {
+export const PalettePanel = ({
+  paletteTabs,
+  open,
+  openDrawer,
+  onSelected,
+}: PalettePanelProps) => {
   const classes = useStyles();
-  const { open, openDrawer } = useDrawerContext();
   const [selectedTab, setSelectedTab] = useState(0);
-  const handleTabChange = (newValue: number) => {
+  const handleTabChange = (newValue: number, name: string) => {
     setSelectedTab(newValue);
     if (!open) {
       openDrawer();
     }
+    onSelected(name);
   };
-  const schema: SchemaElement | undefined = useSchema();
-  const paletteService = usePaletteService();
+
   return (
     <Grid container direction={'row'} wrap={'nowrap'}>
       <Grid item className={classes.menu}>
         <List>
-          <ListItem
-            button
-            onClick={() => handleTabChange(0)}
-            selected={selectedTab === 0}
-          >
-            <ListItemIcon data-cy='palette-tab'>
-              <BallotIcon />
-            </ListItemIcon>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleTabChange(1)}
-            selected={selectedTab === 1}
-          >
-            <ListItemIcon data-cy='properties-tab'>
-              <SettingsIcon />
-            </ListItemIcon>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleTabChange(2)}
-            selected={selectedTab === 2}
-          >
-            <ListItemIcon data-cy='schema-tab'>
-              <CodeIcon />
-            </ListItemIcon>
-          </ListItem>
-          <ListItem
-            button
-            onClick={() => handleTabChange(3)}
-            selected={selectedTab === 3}
-          >
-            <ListItemIcon data-cy='uischema-tab'>
-              <ChatIcon />
-            </ListItemIcon>
-          </ListItem>
+          {paletteTabs?.map((pt, i) => {
+            return (
+              <ListItem
+                button
+                onClick={() => handleTabChange(i, pt.name)}
+                selected={selectedTab === i}
+                key={`${pt.name.toLowerCase()}_tab`}
+              >
+                <Tooltip title={pt.name} aria-label={pt.name.toLowerCase()}>
+                  {pt.icon}
+                </Tooltip>
+              </ListItem>
+            );
+          })}
         </List>
       </Grid>
 
       {open && (
         <Grid item xs>
-          {selectedTab === 0 && (
-            <>
-              <UIElementsTree
-                className={classes.uiElementsTree}
-                elements={paletteService.getPaletteElements()}
-              />
-              <SchemaTreeView schema={schema} />{' '}
-            </>
-          )}
-          {selectedTab === 1 && (
-            <Properties propertyRenderers={propertyRenderers} />
-          )}
-          {selectedTab === 2 && (
-            <SchemaJson
-              title='JSON Schema'
-              schema={toText(exportSchema)}
-              debugSchema={
-                schema && showDebugSchema
-                  ? toText(toPrintableObject(schema))
-                  : undefined
-              }
-              type='JSON Schema'
-              updateSchema={handleSchemaUpdate}
-            />
-          )}
-          {selectedTab === 3 && (
-            <SchemaJson
-              title='UI Schema'
-              schema={toText(exportUiSchema)}
-              debugSchema={
-                uiSchema && showDebugSchema
-                  ? toText(buildDebugUISchema(uiSchema))
-                  : undefined
-              }
-              type='UI Schema'
-              updateSchema={handleUiSchemaUpdate}
-            />
-          )}
+          {paletteTabs?.map((pt, i) => {
+            if (selectedTab === i)
+              return (
+                <pt.Component key={`${pt.name.toLowerCase()}_component`} />
+              );
+            return undefined;
+          })}
         </Grid>
       )}
     </Grid>

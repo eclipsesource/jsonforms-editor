@@ -5,6 +5,7 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import React, { useContext } from 'react';
 
 import { PropertiesService } from '../../properties/propertiesService';
@@ -24,6 +25,7 @@ export interface EditorContext {
   dispatch: (action: EditorAction) => void;
   selection: SelectedElement;
   setSelection: (selection: SelectedElement) => void;
+  propertyRenderers: JsonFormsRendererRegistryEntry[];
 }
 
 /**We always use a provider so default can be undefined*/
@@ -35,16 +37,6 @@ export const EditorContextInstance = React.createContext<EditorContext>(
 
 export const useEditorContext = (): EditorContext =>
   useContext(EditorContextInstance);
-export interface DrawerContext {
-  open: boolean;
-  openDrawer: () => void;
-}
-export const DrawerContextInstance = React.createContext<DrawerContext>(
-  defaultContext
-);
-
-export const useDrawerContext = (): DrawerContext =>
-  useContext(DrawerContextInstance);
 
 export const useGitLabService = (): SchemaService => {
   const { schemaService } = useEditorContext();
@@ -82,4 +74,9 @@ export const usePaletteService = (): PaletteService => {
 export const usePropertiesService = (): PropertiesService => {
   const { propertiesService } = useEditorContext();
   return propertiesService;
+};
+
+export const usePropertyRenderers = (): JsonFormsRendererRegistryEntry[] => {
+  const { propertyRenderers } = useEditorContext();
+  return propertyRenderers;
 };

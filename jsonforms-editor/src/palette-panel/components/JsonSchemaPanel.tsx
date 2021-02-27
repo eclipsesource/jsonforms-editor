@@ -28,7 +28,7 @@ export const JsonSchemaPanel: React.FC<JsonSchemaPanelProps> = ({
   const dispatch = useDispatch();
   const exportSchema = useExportSchema();
   const schema: SchemaElement | undefined = useSchema();
-  const showDebugSchema = env().DEBUG === 'true';
+  const showDebugSchema = env().IS_DEBUG;
   const handleSchemaUpdate = (newSchema: string): UpdateResult => {
     try {
       const newSchemaObject = JSON.parse(newSchema);

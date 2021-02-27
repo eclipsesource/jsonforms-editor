@@ -5,17 +5,20 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import React from 'react';
+import React, { useCallback } from 'react';
 
-import { DrawerContextInstance } from '../context';
+import { PaletteTab } from '../../editor';
+import { PalettePanel } from '../../palette-panel';
 
 const footerHeight = '40px';
 const drawerWidth = '400px';
@@ -33,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     height: '100vh',
     display: 'flex',
+    overflow: 'hidden',
   },
   footer: {
     zIndex: theme.zIndex.drawer + 1,
@@ -74,29 +78,41 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(9) + 1,
     },
   },
+  drawerContainer: {
+    overflow: 'auto',
+  },
+  drawerTitle: (props: { isOpen: boolean }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: props.isOpen ? 'flex-start' : 'center',
+  }),
 }));
 
 interface LayoutProps {
   HeaderComponent?: React.ComponentType;
   FooterComponent?: React.ComponentType;
-  drawerContent?: React.ReactNode;
+  paletteTabs?: PaletteTab[];
 }
 
 export const Layout: React.FC<LayoutProps> = ({
   HeaderComponent,
   FooterComponent,
-  drawerContent,
+  paletteTabs,
   children,
 }) => {
   const [open, setOpen] = React.useState(true);
-
-  // const toggleDrawerClose = () => {
-  //   setOpen(!open);
-  // };
+  const [selectedTabName, setSelectedTabName] = React.useState<string>(
+    paletteTabs ? paletteTabs[0].name : ''
+  );
+  const toggleDrawerClose = () => {
+    setOpen(!open);
+  };
   const openDrawer = () => {
     setOpen(true);
   };
-  const classes = useStyles();
+  const onSelected = useCallback((tabName) => setSelectedTabName(tabName), []);
+  const classes = useStyles({ isOpen: open });
   const classNameOpen = open ? classes.drawerOpen : classes.drawerClose;
 
   return (
@@ -111,15 +127,25 @@ export const Layout: React.FC<LayoutProps> = ({
           paper: classNameOpen,
         }}
       >
-        <DrawerContextInstance.Provider value={{ open, openDrawer }}>
-          <Toolbar />
-          {/* <IconButton onClick={toggleDrawerClose}>
-            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-          <Divider /> */}
-          {drawerContent}
-          <div className={classes.fakeFooter} />
-        </DrawerContextInstance.Provider>
+        <Toolbar />
+        <div className={classes.drawerContainer}>
+          <div className={classes.drawerTitle}>
+            <IconButton onClick={toggleDrawerClose}>
+              {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+            {open ? (
+              <Typography variant='h5'>{selectedTabName}</Typography>
+            ) : null}
+          </div>
+          <Divider />
+          <PalettePanel
+            paletteTabs={paletteTabs}
+            open={open}
+            openDrawer={openDrawer}
+            onSelected={onSelected}
+          />
+        </div>
+        <div className={classes.fakeFooter} />
       </Drawer>
       <main className={classes.main}>
         <Toolbar />

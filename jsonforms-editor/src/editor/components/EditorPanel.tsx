@@ -11,11 +11,6 @@ import React from 'react';
 
 import { Editor } from './Editor';
 
-export interface PreviewTab {
-  name: string;
-  Component: React.ComponentType;
-}
-
 interface EditorPanelProps {
   editorRenderers: JsonFormsRendererRegistryEntry[];
 }

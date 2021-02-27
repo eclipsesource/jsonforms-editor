@@ -29,13 +29,10 @@ import {
   defaultEditorRenderers,
   defaultPreviewTabs,
   EditorPanel,
-} from './editor';
-import { PreviewTab } from './editor/components/EditorPanel';
-import {
-  defaultPalettePanelTabs,
-  PalettePanel,
   PaletteTab,
-} from './palette-panel';
+} from './editor';
+import { PreviewTab } from './editor';
+import { defaultPalettePanelTabs, PalettePanel } from './palette-panel';
 import { defaultPropertyRenderers, PropertiesPanel } from './properties';
 import {
   PropertiesService,
@@ -140,13 +137,13 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
         schemaService,
         paletteService,
         propertiesService,
+        propertyRenderers,
       }}
     >
       <DndProvider backend={Backend}>
         <JsonFormsEditorUi
           editorRenderers={editorRenderers}
           previewTabs={previewTabs}
-          propertyRenderers={propertyRenderers}
           header={headerComponent}
           footer={footerComponent}
           paletteTabs={paletteTabs ?? undefined}
@@ -159,7 +156,6 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
 interface JsonFormsEditorUiProps {
   previewTabs?: PreviewTab[];
   editorRenderers: JsonFormsRendererRegistryEntry[];
-  propertyRenderers: JsonFormsRendererRegistryEntry[];
   header?: ComponentType;
   footer?: ComponentType;
   paletteTabs?: PaletteTab[];
@@ -167,7 +163,6 @@ interface JsonFormsEditorUiProps {
 const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
   previewTabs,
   editorRenderers,
-  propertyRenderers,
   header,
   footer,
   paletteTabs,
@@ -177,7 +172,7 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
     <Layout
       HeaderComponent={header}
       FooterComponent={footer}
-      drawerContent={<PalettePanel propertyRenderers={propertyRenderers} />}
+      paletteTabs={paletteTabs}
     >
       <ReflexContainer
         orientation='vertical'
@@ -191,7 +186,7 @@ const JsonFormsEditorUi: React.FC<JsonFormsEditorUiProps> = ({
         <ReflexSplitter propagate />
         <ReflexElement minSize={200} flex={1}>
           <div className={`${classes.pane} ${classes.rightPane}`}>
-            <PropertiesPanel previewTabs={previewTabs} paletteTabs={paletteTabs} />
+            <PropertiesPanel previewTabs={previewTabs} />
           </div>
         </ReflexElement>
       </ReflexContainer>

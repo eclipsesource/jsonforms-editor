@@ -15,13 +15,13 @@ import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
 } from '../core/renderers/DroppableLayout';
-import { PreviewTab } from './components/EditorPanel';
 import { ReactMaterialPreview } from './components/preview';
+import { PreviewTab } from './interface';
 
 export * from './components/EditorPanel';
 export { EditorElement } from './components/EditorElement';
 
-export type { PreviewTab } from './components/EditorPanel';
+export * from './interface';
 export const defaultPreviewTabs: PreviewTab[] = [
   { name: 'Preview', Component: ReactMaterialPreview },
 ];

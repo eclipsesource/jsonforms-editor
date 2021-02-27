@@ -19,7 +19,6 @@ import { useExportSchema, useExportUiSchema } from '../../../core/util/hooks';
 import { previewOptions } from './options';
 
 export const ReactMaterialPreview: React.FC = () => {
-  console.log('IM RENDERER');
   const schema = useExportSchema();
   const uischema = useExportUiSchema();
   const editorSchema = useSchema();
