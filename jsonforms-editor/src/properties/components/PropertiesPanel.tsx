@@ -5,24 +5,52 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
-import { Typography } from '@material-ui/core';
-import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import React, { useState } from 'react';
 
-import { Properties } from './Properties';
+import { TabContent } from '../../core/components';
+import { PreviewTab } from '../../editor';
 
+const useStyles = makeStyles((theme) => ({
+  palettePanel: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+}));
 export interface PropertiesPanelProps {
-  propertyRenderers: JsonFormsRendererRegistryEntry[];
+  previewTabs?: PreviewTab[];
 }
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
-  propertyRenderers,
+  previewTabs,
 }) => {
+  const [selectedTab, setSelectedTab] = useState(0);
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+  const classes = useStyles();
   return (
-    <>
-      <Typography variant='h6' color='inherit' noWrap>
-        Properties
-      </Typography>
-      <Properties propertyRenderers={propertyRenderers} />
-    </>
+    <div className={classes.palettePanel}>
+      <Tabs value={selectedTab} onChange={handleTabChange}>
+        {previewTabs
+          ? previewTabs.map((tab) => (
+              <Tab key={`tab-${tab.name}`} label={tab.name} />
+            ))
+          : null}
+      </Tabs>
+      {previewTabs
+        ? previewTabs.map((tab, index) => (
+            <TabContent
+              key={`content-${index}`}
+              index={index}
+              currentIndex={selectedTab}
+            >
+              <tab.Component />
+            </TabContent>
+          ))
+        : null}
+    </div>
   );
 };

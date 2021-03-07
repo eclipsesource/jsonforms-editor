@@ -27,7 +27,7 @@ export const UISchemaPanel: React.FC<UISchemaPanelProps> = ({
   const dispatch = useDispatch();
   const exportUiSchema = useExportUiSchema();
   const uiSchema = useUiSchema();
-  const showDebugSchema = env().DEBUG === 'true';
+  const showDebugSchema = env().IS_DEBUG;
   const handleUiSchemaUpdate = (newUiSchema: string): UpdateResult => {
     try {
       const newUiSchemaObject = JSON.parse(newUiSchema);

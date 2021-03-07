@@ -44,3 +44,12 @@ export const createLabel = (
     uuid: uuid(),
   } as LabelElement & EditorUISchemaElement;
 };
+
+export const createEmptyControl = (): ControlElement &
+  EditorUISchemaElement => {
+  return {
+    type: 'Control',
+    scope: '',
+    uuid: uuid(),
+  } as ControlElement & EditorUISchemaElement;
+};

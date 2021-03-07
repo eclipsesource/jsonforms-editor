@@ -5,7 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-export const env = () => {
-  const { REACT_APP_DEBUG: DEBUG = 'false', NODE_ENV } = process.env;
-  return { NODE_ENV, DEBUG, IS_DEBUG: DEBUG === 'true' };
-};
+export interface PreviewTab {
+  name: string;
+  Component: React.ComponentType;
+}
+export interface PaletteTab {
+  name: string;
+  Component: React.ComponentType;
+  icon: React.ReactElement;
+}

@@ -9,19 +9,22 @@ import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { materialRenderers } from '@jsonforms/material-renderers';
 
 import { DroppableArrayControlRegistration } from '../core/renderers/DroppableArrayControl';
+import { DroppableControlRegistration } from '../core/renderers/DroppableControl';
 import { DroppableElementRegistration } from '../core/renderers/DroppableElement';
 import { DroppableGroupLayoutRegistration } from '../core/renderers/DroppableGroupLayout';
+import { DroppableLabelRegistration } from '../core/renderers/DroppableLabel';
 import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
 } from '../core/renderers/DroppableLayout';
-import { EditorTab } from './components/EditorPanel';
 import { ReactMaterialPreview } from './components/preview';
+import { PreviewTab } from './interface';
 
 export * from './components/EditorPanel';
 export { EditorElement } from './components/EditorElement';
 
-export const defaultEditorTabs: EditorTab[] = [
+export * from './interface';
+export const defaultPreviewTabs: PreviewTab[] = [
   { name: 'Preview', Component: ReactMaterialPreview },
 ];
 
@@ -32,4 +35,6 @@ export const defaultEditorRenderers: JsonFormsRendererRegistryEntry[] = [
   DroppableElementRegistration,
   DroppableGroupLayoutRegistration,
   DroppableArrayControlRegistration,
+  DroppableControlRegistration,
+  DroppableLabelRegistration,
 ];

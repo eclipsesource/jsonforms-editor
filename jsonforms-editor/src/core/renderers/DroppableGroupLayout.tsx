@@ -13,10 +13,13 @@ import {
   CardHeader,
   Grid,
   makeStyles,
+  TextField,
   Typography,
 } from '@material-ui/core';
 import React from 'react';
 
+import { useDispatch } from '../context';
+import { Actions } from '../model';
 import { EditorLayout } from '../model/uischema';
 import { DroppableLayout } from './DroppableLayout';
 
@@ -39,6 +42,14 @@ const Group: React.FC<LayoutProps> = (props) => {
   const { uischema } = props;
   const groupLayout = uischema as GroupLayout & EditorLayout;
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const handleLabelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(
+      Actions.updateUISchemaElement(groupLayout.uuid, {
+        label: event.target.value,
+      })
+    );
+  };
   return (
     <Card>
       <CardHeader
@@ -66,6 +77,13 @@ const Group: React.FC<LayoutProps> = (props) => {
         )}
       ></CardHeader>
       <CardContent>
+        <TextField
+          id='filled-name'
+          label='Label'
+          value={groupLayout.label ?? ''}
+          onChange={handleLabelChange}
+          fullWidth
+        />
         <DroppableLayout {...props} layout={groupLayout} direction={'column'} />
       </CardContent>
     </Card>

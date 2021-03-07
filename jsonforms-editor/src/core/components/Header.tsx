@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
   const openDownloadDialog = () => setOpen(true);
 
   return (
-    <AppBar position='static' elevation={0}>
+    <>
       <Toolbar>
         <Typography
           variant='h6'
@@ -59,6 +59,6 @@ export const Header: React.FC = () => {
           uiSchema={uiSchema}
         />
       )}
-    </AppBar>
+    </>
   );
 };

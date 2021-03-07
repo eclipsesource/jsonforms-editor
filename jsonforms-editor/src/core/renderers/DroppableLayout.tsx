@@ -18,10 +18,14 @@ import {
   withJsonFormsLayoutProps,
 } from '@jsonforms/react';
 import { Grid, makeStyles } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 
-import { useDispatch, useSchema } from '../context';
+import { useDispatch, usePaletteService, useSchema } from '../context';
 import {
   canDropIntoLayout,
   canMoveSchemaElementTo,
@@ -73,12 +77,12 @@ export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
       spacing={direction === 'row' ? 2 : 0}
       wrap='nowrap'
     >
-      <DropPoint index={0} layout={layout} key={`${path}-${0}-drop`} />
+      <DropPoint index={0} layout={layout} key={`${layout.uuid}-${0}-drop`} />
       {layout.elements.map((child, index) => (
-        <React.Fragment key={`${path}-${index}-fragment`}>
+        <React.Fragment key={`${layout.uuid}-${index}-fragment`}>
           <Grid
             item
-            key={`${path}-${index}`}
+            key={`${layout.uuid}-${index}`}
             className={classes.jsonformsGridItem}
             xs
           >
@@ -95,11 +99,67 @@ export const DroppableLayout: React.FC<DroppableLayoutProps> = ({
           <DropPoint
             index={index + 1}
             layout={layout}
-            key={`${path}-${index + 1}-drop`}
+            key={`${layout.uuid}-${index + 1}-drop`}
           />
         </React.Fragment>
       ))}
     </Grid>
+  );
+};
+
+const useActionBarStyles = makeStyles((theme) => ({
+  speedDial: {
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
+  },
+}));
+interface InlineActionBarProps {
+  layout: EditorLayout;
+  index: number;
+}
+const InlineActionBar = ({ layout, index }: InlineActionBarProps) => {
+  const classes = useActionBarStyles();
+  const paletteService = usePaletteService();
+  const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  return (
+    <SpeedDial
+      ariaLabel='SpeedDial openIcon example'
+      className={classes.speedDial}
+      icon={<SpeedDialIcon openIcon={<EditIcon />} />}
+      onClose={handleClose}
+      onOpen={handleOpen}
+      open={open}
+      direction={layout.type === 'HorizontalLayout' ? 'down' : 'right'}
+    >
+      {paletteService
+        .getPaletteElements()
+        .map(({ type, label, icon, uiSchemaElementProvider }) => (
+          <SpeedDialAction
+            key={type}
+            color='primary'
+            icon={icon as any}
+            tooltipTitle={label}
+            onClick={() => {
+              dispatch(
+                Actions.addUnscopedElementToLayout(
+                  uiSchemaElementProvider(),
+                  layout.uuid,
+                  index
+                )
+              );
+              handleClose();
+            }}
+          />
+        ))}
+    </SpeedDial>
   );
 };
 
@@ -116,10 +176,16 @@ const useDropPointStyles = makeStyles((theme) => ({
       : 'none',
     backgroundSize: 'calc(10 * 1px) calc(10 * 1px)',
     backgroundClip: 'content-box',
-    minWidth: '2em',
-    minHeight: props.isOver ? '8em' : '2em',
-    maxWidth: props.fillWidth || props.isOver ? 'inherit' : '2em',
+    minWidth: '3em',
+    minHeight: props.isOver ? '8em' : '3em',
+    maxWidth: props.fillWidth ? 'inherit' : '3em',
   }),
+  actions: {
+    opacity: 0,
+    '&:hover': {
+      opacity: 1,
+    },
+  },
 }));
 
 const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
@@ -195,8 +261,13 @@ const DropPoint: React.FC<DropPointProps> = ({ layout, index }) => {
       ref={drop}
       className={classes.dropPointGridItem}
       data-cy={`${getDataPath(layout)}-drop-${index}`}
+      alignItems='stretch'
       xs
-    ></Grid>
+    >
+      <Grid className={classes.actions} item xs>
+        <InlineActionBar layout={layout} index={index} />
+      </Grid>
+    </Grid>
   );
 };
 

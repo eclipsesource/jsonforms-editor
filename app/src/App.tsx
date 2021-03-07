@@ -22,7 +22,7 @@ export const App = () => (
     schemaService={schemaService}
     schemaProviders={defaultSchemaProviders}
     schemaDecorators={defaultSchemaDecorators}
-    editorTabs={[
+    previewTabs={[
       { name: 'Preview (React)', Component: ReactMaterialPreview },
       { name: 'Preview (Angular)', Component: AngularMaterialPreview },
     ]}
