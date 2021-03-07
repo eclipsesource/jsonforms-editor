@@ -20,6 +20,7 @@ import {
   ADD_DETAIL,
   ADD_SCOPED_ELEMENT_TO_LAYOUT,
   ADD_UNSCOPED_ELEMENT_TO_LAYOUT,
+  CHANGE_CONTROL_SCOPE,
   CombinedAction,
   EditorAction,
   MOVE_UISCHEMA_ELEMENT,
@@ -117,6 +118,24 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       return linkSchemas(
         buildSchemaTree(action.schema),
         buildEditorUiSchemaTree(action.uiSchema)
+      );
+    case CHANGE_CONTROL_SCOPE:
+      return withCloneTrees(
+        state.uiSchema,
+        action.elementUUID,
+        state.schema,
+        action.schemaUUID,
+        state,
+        (newUiSchema, newSchema) => {
+          if (!newSchema || !newUiSchema || !isEditorControl(newUiSchema))
+            return state;
+          linkElements(newUiSchema, newSchema);
+          newUiSchema.scope = action.scope;
+          return {
+            schema: getRoot(newSchema),
+            uiSchema: getRoot(newUiSchema as EditorUISchemaElement),
+          };
+        }
       );
     case ADD_SCOPED_ELEMENT_TO_LAYOUT:
       return withCloneTrees(
@@ -361,6 +380,7 @@ export const editorReducer = (state: EditorState, action: EditorAction) => {
         schema: state.schema,
         uiSchema: uiSchemaReducer(state.uiSchema, action),
       };
+    case CHANGE_CONTROL_SCOPE:
     case SET_SCHEMA:
     case SET_UISCHEMA:
     case SET_SCHEMAS:

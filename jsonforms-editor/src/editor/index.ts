@@ -9,8 +9,10 @@ import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { materialRenderers } from '@jsonforms/material-renderers';
 
 import { DroppableArrayControlRegistration } from '../core/renderers/DroppableArrayControl';
+import { DroppableControlRegistration } from '../core/renderers/DroppableControl';
 import { DroppableElementRegistration } from '../core/renderers/DroppableElement';
 import { DroppableGroupLayoutRegistration } from '../core/renderers/DroppableGroupLayout';
+import { DroppableLabelRegistration } from '../core/renderers/DroppableLabel';
 import {
   DroppableHorizontalLayoutRegistration,
   DroppableVerticalLayoutRegistration,
@@ -33,4 +35,6 @@ export const defaultEditorRenderers: JsonFormsRendererRegistryEntry[] = [
   DroppableElementRegistration,
   DroppableGroupLayoutRegistration,
   DroppableArrayControlRegistration,
+  DroppableControlRegistration,
+  DroppableLabelRegistration,
 ];

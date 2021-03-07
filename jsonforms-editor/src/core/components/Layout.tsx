@@ -101,7 +101,7 @@ export const Layout: React.FC<LayoutProps> = ({
   paletteTabs,
   children,
 }) => {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [selectedTabName, setSelectedTabName] = React.useState<string>(
     paletteTabs ? paletteTabs[0].name : ''
   );

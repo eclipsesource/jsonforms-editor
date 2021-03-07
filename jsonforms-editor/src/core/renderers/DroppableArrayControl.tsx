@@ -15,10 +15,11 @@ import {
   JsonFormsDispatch,
   withJsonFormsArrayControlProps,
 } from '@jsonforms/react';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import React, { useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 
+import { EditableControl } from '../components';
 import { useDispatch, useSchema } from '../context';
 import {
   canDropIntoScope,
@@ -96,22 +97,28 @@ const DroppableArrayControl: React.FC<DroppableArrayControlProps> = ({
     return renderers && [...renderers, DroppableElementRegistration];
   }, [renderers]);
 
-  if (!uischema.options?.detail) {
-    return (
-      <Typography ref={drop} className={classes.root}>
-        Default array layout. Drag and drop an item here to customize array
-        layout.
-      </Typography>
-    );
-  }
   return (
-    <JsonFormsDispatch
-      schema={schema}
-      uischema={uischema.options.detail}
-      path={path}
-      renderers={renderersToUse}
-      cells={cells}
-    />
+    <Grid container direction={'column'}>
+      <Grid item>
+        <EditableControl uischema={uischema} />
+      </Grid>
+      <Grid item>
+        {!uischema.options?.detail ? (
+          <Typography ref={drop} className={classes.root}>
+            Default array layout. Drag and drop an item here to customize array
+            layout.
+          </Typography>
+        ) : (
+          <JsonFormsDispatch
+            schema={schema}
+            uischema={uischema.options.detail}
+            path={path}
+            renderers={renderersToUse}
+            cells={cells}
+          />
+        )}
+      </Grid>
+    </Grid>
   );
 };
 
