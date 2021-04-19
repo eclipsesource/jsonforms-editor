@@ -6,6 +6,10 @@ Editor for JSON Schema and JSON Forms Ui Schema
 
 This is a monorepo consisting of the `@jsonforms/editor` library component and the published JSON Forms editor app.
 
+## Live Demo
+
+You can try a [live demo of the editor](https://jsonforms-editor.netlify.app/) on Netlify.
+
 ## Setup
 
 - `npm ci`
