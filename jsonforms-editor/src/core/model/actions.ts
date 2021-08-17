@@ -16,7 +16,8 @@ export type CombinedAction =
   | AddScopedElementToLayout
   | MoveUiSchemaElement
   | RemoveUiSchemaElement
-  | AddDetail;
+  | AddDetail
+  | ChangeControlScope;
 
 export type EditorAction = UiSchemaAction | CombinedAction;
 
@@ -38,6 +39,8 @@ export const UPDATE_UISCHEMA_ELEMENT: 'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT'
   'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT';
 export const ADD_DETAIL: 'jsonforms-editor/ADD_DETAIL' =
   'jsonforms-editor/ADD_DETAIL';
+export const CHANGE_CONTROL_SCOPE: 'jsonforms-editor/CHANGE_CONTROL_SCOPE' =
+  'jsonforms-editor/CHANGE_CONTROL_SCOPE';
 
 export interface SetSchemaAction {
   type: 'jsonforms-editor/SET_SCHEMA';
@@ -87,6 +90,13 @@ export interface UpdateUiSchemaElement {
   type: 'jsonforms-editor/UPDATE_UISCHEMA_ELEMENT';
   elementUUID: string;
   changedProperties: { [key: string]: any };
+}
+
+export interface ChangeControlScope {
+  type: 'jsonforms-editor/CHANGE_CONTROL_SCOPE';
+  elementUUID: string;
+  scope: string;
+  schemaUUID: string;
 }
 
 export interface AddDetail {
@@ -167,6 +177,12 @@ const addDetail = (
   detail,
 });
 
+const changeControlScope = (
+  elementUUID: string,
+  scope: string,
+  schemaUUID: string
+) => ({ type: CHANGE_CONTROL_SCOPE, elementUUID, scope, schemaUUID });
+
 export const Actions = {
   setSchema,
   setUiSchema,
@@ -177,4 +193,5 @@ export const Actions = {
   removeUiSchemaElement,
   updateUISchemaElement,
   addDetail,
+  changeControlScope,
 };

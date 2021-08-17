@@ -8,9 +8,19 @@
 
 import React from 'react';
 
-import { GroupIcon, HorizontalIcon, LabelIcon, VerticalIcon } from '../icons';
+import {
+  ControlIcon,
+  GroupIcon,
+  HorizontalIcon,
+  LabelIcon,
+  VerticalIcon,
+} from '../icons';
 import { EditorUISchemaElement } from '../model/uischema';
-import { createLabel, createLayout } from '../util/generators/uiSchema';
+import {
+  createEmptyControl,
+  createLabel,
+  createLayout,
+} from '../util/generators/uiSchema';
 
 export interface PaletteService {
   getPaletteElements(): PaletteElement[];
@@ -47,6 +57,12 @@ const paletteElements: PaletteElement[] = [
     label: 'Label',
     icon: <LabelIcon />,
     uiSchemaElementProvider: () => createLabel(),
+  },
+  {
+    type: 'Control',
+    label: 'Control',
+    icon: <ControlIcon />,
+    uiSchemaElementProvider: () => createEmptyControl(),
   },
 ];
 
