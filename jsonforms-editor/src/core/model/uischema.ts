@@ -6,6 +6,8 @@
  * ---------------------------------------------------------------------
  */
 import {
+  Categorization,
+  Category,
   ControlElement,
   isControl,
   isLayout,
@@ -27,6 +29,19 @@ export interface EditorUISchemaElement
   extends UISchemaElement,
     TreeElement<EditorUISchemaElement> {
   linkedSchemaElement?: string;
+}
+
+export interface EditorCategoryElement
+  extends Category,
+    TreeElement<EditorUISchemaElement> {
+  linkedSchemaElement?: string;
+}
+
+export interface CategorizationLayout
+  extends Categorization,
+    EditorUISchemaElement {
+  type: 'Categorization';
+  elements: EditorCategoryElement[];
 }
 
 export interface EditorControl extends ControlElement, EditorUISchemaElement {

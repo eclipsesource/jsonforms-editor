@@ -13,6 +13,7 @@ import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import QueueOutlinedIcon from '@material-ui/icons/QueueOutlined';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import TabIcon from '@material-ui/icons/Tab';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 import React from 'react';
 
@@ -23,6 +24,8 @@ export const HorizontalIcon = styled(Height)({
   transform: 'rotate(90deg)',
 });
 export const GroupIcon = CropFreeIcon;
+export const CategorizationIcon = TabIcon;
+export const CategoryIcon = CropFreeIcon;
 
 export const LabelIcon = TextFieldsIcon;
 
@@ -53,6 +56,10 @@ export const getIconForUISchemaType = (type: string) => {
       return VerticalIcon;
     case 'Group':
       return GroupIcon;
+    case 'Category':
+      return CategoryIcon;
+    case 'Categorization':
+      return CategorizationIcon;
     case 'Control':
       return ControlIcon;
     case 'Label':
