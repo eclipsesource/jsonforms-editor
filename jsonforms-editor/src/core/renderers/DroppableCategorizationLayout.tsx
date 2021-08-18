@@ -18,14 +18,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  IconButton,
-  makeStyles,
   Tab,
   Tabs,
-  Toolbar,
   Tooltip,
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { PlusOne, Tab as TabIcon } from '@material-ui/icons';
 import React, { useMemo, useState } from 'react';
 
 import { CategorizationLayout } from '../model/uischema';
@@ -37,24 +34,22 @@ interface DroppableCategorizationLayoutProps extends StatePropsOfLayout {
   index?: number;
 }
 
-const useStyles = makeStyles((theme) => ({
-  menuButton: {},
-}));
-
 const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps> = (
   props
 ) => {
   const { uischema, schema, path, renderers, cells, index } = props;
 
   const [currIndex, setIndex] = useState(index);
+
   const categories = uischema.elements;
+
+  const indicatorColor: 'secondary' | 'primary' | undefined =
+    categories.length === 0 ? 'primary' : 'secondary';
 
   // fix the current index when categories are deleted
   if (currIndex && currIndex > categories.length - 1) {
     setIndex(categories.length === 0 ? undefined : categories.length - 1);
   }
-
-  const classes = useStyles();
 
   // DroppableControl removed itself before dispatching to us, we need
   // to re-add it for our children
@@ -81,20 +76,8 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
       <CardHeader
         component={() => (
           <AppBar position='static'>
-            <Toolbar>
-              <Tooltip title='Add Tab' arrow>
-                <IconButton
-                  edge='start'
-                  className={classes.menuButton}
-                  color='inherit'
-                  aria-label='Add Tab'
-                  onClick={addTab}
-                >
-                  <Add />
-                </IconButton>
-              </Tooltip>
-            </Toolbar>
             <Tabs
+              indicatorColor={indicatorColor}
               value={currIndex}
               onChange={handleChange}
               variant='scrollable'
@@ -102,6 +85,18 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
               {categories.map((e: Category, idx: number) => (
                 <Tab key={idx} label={e.label} />
               ))}
+              <Tooltip title='Add New Tab' arrow>
+                <Tab
+                  key={categories.length}
+                  icon={
+                    <span>
+                      <TabIcon fontSize='small' />
+                      <PlusOne color='secondary' />
+                    </span>
+                  }
+                  onClick={addTab}
+                />
+              </Tooltip>
             </Tabs>
           </AppBar>
         )}
@@ -116,7 +111,14 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
             cells={cells}
           />
         ) : (
-          <span>No Category. Use toolbar '+' button to add a new tab.</span>
+          <span>
+            No Category. Use{' '}
+            <span>
+              <TabIcon fontSize='small' />
+              <PlusOne color='secondary' />
+            </span>{' '}
+            to add a new tab.
+          </span>
         )}
       </CardContent>
     </Card>
