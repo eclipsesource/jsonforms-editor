@@ -5,17 +5,15 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import {
-  Categorization,
-  Category,
-  ControlElement,
-  LabelElement,
-  Layout,
-} from '@jsonforms/core';
+import { ControlElement, LabelElement, Layout } from '@jsonforms/core';
 import { v4 as uuid } from 'uuid';
 
 import { getScope, SchemaElement } from '../../model';
-import { EditorUISchemaElement } from '../../model/uischema';
+import {
+  CategorizationLayout,
+  EditorCategoryElement,
+  EditorUISchemaElement,
+} from '../../model/uischema';
 
 export const createControl = (
   schemaElement: SchemaElement
@@ -51,24 +49,20 @@ export const createLabel = (
   } as LabelElement & EditorUISchemaElement;
 };
 
-export const createCategory = (
-  label?: string
-): Category & EditorUISchemaElement => {
+export const createCategory = (label?: string): EditorCategoryElement => {
   return {
     type: 'Category',
     elements: [],
     label: label,
     uuid: uuid(),
-  } as Category & EditorUISchemaElement;
+  } as EditorCategoryElement;
 };
 
-export const createCategorization = (
-  label?: string
-): Categorization & EditorUISchemaElement => {
+export const createCategorization = (label?: string): CategorizationLayout => {
   return {
     type: 'Categorization',
     label: label,
     uuid: uuid(),
     elements: [],
-  } as Categorization & EditorUISchemaElement;
+  } as CategorizationLayout;
 };

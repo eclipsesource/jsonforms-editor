@@ -31,10 +31,8 @@ export interface EditorUISchemaElement
   linkedSchemaElement?: string;
 }
 
-export interface EditorCategoryElement
-  extends Category,
-    TreeElement<EditorUISchemaElement> {
-  linkedSchemaElement?: string;
+export interface EditorCategoryElement extends Category, EditorUISchemaElement {
+  type: 'Category';
 }
 
 export interface CategorizationLayout

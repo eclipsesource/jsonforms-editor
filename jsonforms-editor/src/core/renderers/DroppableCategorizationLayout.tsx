@@ -20,36 +20,53 @@ import {
   CardHeader,
   Tab,
   Tabs,
-  Tooltip,
 } from '@material-ui/core';
 import { PlusOne, Tab as TabIcon } from '@material-ui/icons';
+import { findIndex } from 'lodash';
 import React, { useMemo, useState } from 'react';
 
+import { useSelection } from '../../core/context';
 import { CategorizationLayout } from '../model/uischema';
 import { createCategory } from '../util/generators/uiSchema';
 import { DroppableElementRegistration } from './DroppableElement';
 
 interface DroppableCategorizationLayoutProps extends StatePropsOfLayout {
   uischema: CategorizationLayout;
-  index?: number;
+  // use the uuid instead of index so we can detect when to unselect in case the tab is deleted
+  selectedTabUuid?: string;
 }
 
 const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps> = (
   props
 ) => {
-  const { uischema, schema, path, renderers, cells, index } = props;
+  const {
+    uischema,
+    schema,
+    path,
+    renderers,
+    cells,
+    selectedTabUuid: uuid,
+  } = props;
 
-  const [currIndex, setIndex] = useState(index);
+  // ignoring the first selection from the tuple since it is not used
+  const [, setSelection] = useSelection();
+
+  const [selectedTabUuid, setSelectedTabUuid] = useState(uuid);
 
   const categories = uischema.elements;
 
   const indicatorColor: 'secondary' | 'primary' | undefined =
     categories.length === 0 ? 'primary' : 'secondary';
 
-  // fix the current index when categories are deleted
-  if (currIndex && currIndex > categories.length - 1) {
-    setIndex(categories.length === 0 ? undefined : categories.length - 1);
-  }
+  const setIndex = (value: number, event?: any) => {
+    event?.stopPropagation();
+    if (value < categories.length) {
+      const selectedUuid = categories[value].uuid;
+
+      setSelectedTabUuid(selectedUuid);
+      setSelection({ uuid: selectedUuid });
+    }
+  };
 
   // DroppableControl removed itself before dispatching to us, we need
   // to re-add it for our children
@@ -57,19 +74,24 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
     return renderers && [...renderers, DroppableElementRegistration];
   }, [renderers]);
 
-  const handleChange = (_event: any, value: any) => {
+  const handleChange = (event: any, value: any) => {
     if (typeof value === 'number') {
-      setIndex(value);
+      setIndex(value, event);
     }
   };
 
-  const addTab = (_event: any) => {
+  const addTab = (event: any) => {
     const tab = createCategory('New Tab ' + (categories.length + 1));
     tab.parent = uischema;
 
     categories.push(tab);
-    setIndex(categories.length - 1);
+    setIndex(categories.length - 1, event);
   };
+
+  const currIndex = findIndex(
+    categories,
+    (cat) => cat.uuid === selectedTabUuid
+  );
 
   return (
     <Card>
@@ -78,47 +100,45 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
           <AppBar position='static'>
             <Tabs
               indicatorColor={indicatorColor}
-              value={currIndex}
+              value={currIndex === -1 ? false : currIndex}
               onChange={handleChange}
               variant='scrollable'
             >
               {categories.map((e: Category, idx: number) => (
                 <Tab key={idx} label={e.label} />
               ))}
-              <Tooltip title='Add New Tab' arrow>
-                <Tab
-                  key={categories.length}
-                  icon={
-                    <span>
-                      <TabIcon fontSize='small' />
-                      <PlusOne color='secondary' />
-                    </span>
-                  }
-                  onClick={addTab}
-                />
-              </Tooltip>
+              <Tab
+                key={categories.length}
+                icon={
+                  <span>
+                    <TabIcon fontSize='small' />
+                    <PlusOne />
+                  </span>
+                }
+                onClick={addTab}
+              />
             </Tabs>
           </AppBar>
         )}
       ></CardHeader>
       <CardContent>
-        {categories.length > 0 ? (
+        {categories.length > 0 && currIndex >= 0 ? (
           <JsonFormsDispatch
             schema={schema}
-            uischema={categories[currIndex ?? 0]}
+            uischema={categories[currIndex]}
             path={path}
             renderers={renderersToUse}
             cells={cells}
           />
         ) : (
-          <span>
-            No Category. Use{' '}
+          categories.length === 0 && (
             <span>
+              {'No Category. Use '}
               <TabIcon fontSize='small' />
-              <PlusOne color='secondary' />
-            </span>{' '}
-            to add a new tab.
-          </span>
+              <PlusOne />
+              {' to add a new tab.'}
+            </span>
+          )
         )}
       </CardContent>
     </Card>
