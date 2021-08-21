@@ -23,35 +23,25 @@ import {
 } from '@material-ui/core';
 import { PlusOne, Tab as TabIcon } from '@material-ui/icons';
 import { findIndex } from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
-import { useSelection } from '../../core/context';
+import { useCategorizationService, useSelection } from '../../core/context';
 import { CategorizationLayout } from '../model/uischema';
 import { createCategory } from '../util/generators/uiSchema';
 import { DroppableElementRegistration } from './DroppableElement';
 
 interface DroppableCategorizationLayoutProps extends StatePropsOfLayout {
   uischema: CategorizationLayout;
-  // use the uuid instead of index so we can detect when to unselect in case the tab is deleted
-  selectedTabUuid?: string;
 }
 
 const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps> = (
   props
 ) => {
-  const {
-    uischema,
-    schema,
-    path,
-    renderers,
-    cells,
-    selectedTabUuid: uuid,
-  } = props;
+  const { uischema, schema, path, renderers, cells } = props;
 
   // ignoring the first selection from the tuple since it is not used
   const [, setSelection] = useSelection();
-
-  const [selectedTabUuid, setSelectedTabUuid] = useState(uuid);
+  const categorizationService = useCategorizationService();
 
   const categories = uischema.elements;
 
@@ -63,7 +53,9 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
     if (value < categories.length) {
       const selectedUuid = categories[value].uuid;
 
-      setSelectedTabUuid(selectedUuid);
+      categorizationService.setTabSelection(uischema, {
+        uuid: selectedUuid,
+      });
       setSelection({ uuid: selectedUuid });
     }
   };
@@ -90,7 +82,7 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
 
   const currIndex = findIndex(
     categories,
-    (cat) => cat.uuid === selectedTabUuid
+    (cat) => cat.uuid === categorizationService.getTabSelection(uischema)?.uuid
   );
 
   return (

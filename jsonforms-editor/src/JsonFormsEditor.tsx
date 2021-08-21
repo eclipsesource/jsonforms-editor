@@ -16,6 +16,10 @@ import Backend from 'react-dnd-html5-backend';
 import { ReflexContainer, ReflexElement, ReflexSplitter } from 'react-reflex';
 
 import {
+  CategorizationService,
+  CategorizationServiceImpl,
+} from './core/api/categorizationService';
+import {
   DefaultPaletteService,
   PaletteService,
 } from './core/api/paletteService';
@@ -75,6 +79,7 @@ interface JsonFormsEditorProps {
     schemaProviders: PropertySchemasProvider[],
     schemaDecorators: PropertySchemasDecorator[]
   ) => PropertiesService;
+  categorizationService?: CategorizationService;
   header?: ComponentType | null;
   footer?: ComponentType | null;
 }
@@ -84,10 +89,12 @@ const defaultPropertiesService = (
   schemaProviders: PropertySchemasProvider[],
   schemaDecorators: PropertySchemasDecorator[]
 ) => new PropertiesServiceImpl(schemaProviders, schemaDecorators);
+const defaultCategorizationService = new CategorizationServiceImpl();
 
 export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   schemaService = defaultSchemaService,
   paletteService = defaultPaletteService,
+  categorizationService = defaultCategorizationService,
   propertiesServiceProvider = defaultPropertiesService,
   schemaProviders,
   schemaDecorators,
@@ -98,8 +105,11 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
   header = Header,
   footer = Footer,
 }) => {
-  const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {});
+  const [{ schema, uiSchema }, dispatch] = useReducer(editorReducer, {
+    categorizationService: defaultCategorizationService,
+  });
   const [selection, setSelection] = useState<SelectedElement>(undefined);
+
   const [propertiesService] = useState<PropertiesService>(
     propertiesServiceProvider(schemaProviders, schemaDecorators)
   );
@@ -136,6 +146,7 @@ export const JsonFormsEditor: React.FC<JsonFormsEditorProps> = ({
         dispatch,
         selection,
         setSelection,
+        categorizationService,
         schemaService,
         paletteService,
         propertiesService,

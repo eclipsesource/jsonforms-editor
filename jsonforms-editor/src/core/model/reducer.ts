@@ -7,6 +7,7 @@
  */
 import { assign } from 'lodash';
 
+import { CategorizationService } from '../api/categorizationService';
 import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
   findByUUID,
@@ -44,6 +45,7 @@ import {
 export interface EditorState {
   schema?: SchemaElement;
   uiSchema?: EditorUISchemaElement;
+  categorizationService?: CategorizationService;
 }
 
 export const uiSchemaReducer = (
@@ -108,6 +110,7 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
       );
     case SET_UISCHEMA:
       return withCloneTree(state.schema, undefined, state, (clonedSchema) => {
+        state.categorizationService?.clearTabSelections();
         return linkSchemas(
           cleanLinkedElements(clonedSchema),
           buildEditorUiSchemaTree(action.uiSchema)
@@ -232,7 +235,11 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
             console.error('Could not remove ui element ', elementToRemove);
             return state;
           }
-          const removeResult = removeUiElement(elementToRemove, newSchema);
+          const removeResult = removeUiElement(
+            elementToRemove,
+            newSchema,
+            state.categorizationService
+          );
           if (isUUIDError(removeResult)) {
             console.error('Could not remove ui element ', removeResult);
             return state;
@@ -310,7 +317,8 @@ export const combinedReducer = (state: EditorState, action: CombinedAction) => {
  */
 const removeUiElement = (
   elementToRemove: EditorUISchemaElement,
-  schema?: SchemaElement
+  schema?: SchemaElement,
+  categorizationService?: CategorizationService
 ): true | UUIDError => {
   // remove links to UI element in the schema (if any)
   if (schema && elementToRemove.linkedSchemaElement) {
@@ -350,6 +358,15 @@ const removeUiElement = (
     // TODO other cases
   }
 
+  // - case: categorization/category element
+  if (
+    elementToRemove.type === 'Categorization' ||
+    elementToRemove.type === 'Category'
+  ) {
+    // release the map entry memory
+    categorizationService?.removeElement(elementToRemove);
+  }
+
   return true;
 };
 
@@ -360,6 +377,7 @@ export const editorReducer = (state: EditorState, action: EditorAction) => {
       return {
         schema: state.schema,
         uiSchema: uiSchemaReducer(state.uiSchema, action),
+        categorizationService: state.categorizationService,
       };
     case SET_SCHEMA:
     case SET_UISCHEMA:
@@ -368,7 +386,10 @@ export const editorReducer = (state: EditorState, action: EditorAction) => {
     case MOVE_UISCHEMA_ELEMENT:
     case REMOVE_UISCHEMA_ELEMENT:
     case ADD_DETAIL:
-      return combinedReducer(state, action);
+      const combinedReducerResult = combinedReducer(state, action);
+      // preserve the service
+      combinedReducerResult.categorizationService = state.categorizationService;
+      return combinedReducerResult;
   }
   // fallback - do nothing
   return state;
