@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 import { PlusOne, Tab as TabIcon } from '@material-ui/icons';
 import { findIndex } from 'lodash';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { useCategorizationService, useSelection } from '../../core/context';
 import { CategorizationLayout } from '../model/uischema';
@@ -45,6 +45,15 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
 
   const categories = uischema.elements;
 
+  const defaultIndex = findIndex(
+    categories,
+    (cat) => cat.uuid === categorizationService.getTabSelection(uischema)?.uuid
+  );
+
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>(
+    defaultIndex === -1 ? undefined : defaultIndex
+  );
+
   const indicatorColor: 'secondary' | 'primary' | undefined =
     categories.length === 0 ? 'primary' : 'secondary';
 
@@ -57,6 +66,7 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
         uuid: selectedUuid,
       });
       setSelection({ uuid: selectedUuid });
+      setCurrentIndex(value);
     }
   };
 
@@ -80,10 +90,20 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
     setIndex(categories.length - 1, event);
   };
 
-  const currIndex = findIndex(
-    categories,
-    (cat) => cat.uuid === categorizationService.getTabSelection(uischema)?.uuid
-  );
+  if (currentIndex !== undefined) {
+    // in case we have tab that was deleted then we will use the memorized index to determine the previous tab that we are going to select automatically
+
+    if (categories.length === 0) {
+      // reset the index since we do not have anything to select
+      setCurrentIndex(undefined);
+    } else if (currentIndex > categories.length - 1) {
+      // check if currentIndex is out of bound because of delete
+      setIndex(categories.length - 1);
+    } else if (currentIndex !== defaultIndex) {
+      // check if current index is out of sync with the service
+      setIndex(currentIndex);
+    }
+  }
 
   return (
     <Card>
@@ -92,7 +112,7 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
           <AppBar position='static'>
             <Tabs
               indicatorColor={indicatorColor}
-              value={currIndex === -1 ? false : currIndex}
+              value={currentIndex === undefined ? false : currentIndex}
               onChange={handleChange}
               variant='scrollable'
             >
@@ -114,10 +134,10 @@ const DroppableCategorizationLayout: React.FC<DroppableCategorizationLayoutProps
         )}
       ></CardHeader>
       <CardContent>
-        {categories.length > 0 && currIndex >= 0 ? (
+        {categories.length > 0 && currentIndex !== undefined ? (
           <JsonFormsDispatch
             schema={schema}
-            uischema={categories[currIndex]}
+            uischema={categories[currentIndex]}
             path={path}
             renderers={renderersToUse}
             cells={cells}
