@@ -9,7 +9,11 @@ import { ControlElement, LabelElement, Layout } from '@jsonforms/core';
 import { v4 as uuid } from 'uuid';
 
 import { getScope, SchemaElement } from '../../model';
-import { EditorUISchemaElement } from '../../model/uischema';
+import {
+  CategorizationLayout,
+  EditorCategoryElement,
+  EditorUISchemaElement,
+} from '../../model/uischema';
 
 export const createControl = (
   schemaElement: SchemaElement
@@ -43,4 +47,22 @@ export const createLabel = (
     text: text,
     uuid: uuid(),
   } as LabelElement & EditorUISchemaElement;
+};
+
+export const createCategory = (label?: string): EditorCategoryElement => {
+  return {
+    type: 'Category',
+    elements: [],
+    label: label,
+    uuid: uuid(),
+  } as EditorCategoryElement;
+};
+
+export const createCategorization = (label?: string): CategorizationLayout => {
+  return {
+    type: 'Categorization',
+    label: label,
+    uuid: uuid(),
+    elements: [],
+  } as CategorizationLayout;
 };
