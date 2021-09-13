@@ -8,6 +8,7 @@
 import React, { useContext } from 'react';
 
 import { PropertiesService } from '../../properties/propertiesService';
+import { CategorizationService } from '../api/categorizationService';
 import { PaletteService } from '../api/paletteService';
 import { SchemaService } from '../api/schemaService';
 import { SchemaElement } from '../model';
@@ -24,6 +25,7 @@ export interface EditorContext {
   dispatch: (action: EditorAction) => void;
   selection: SelectedElement;
   setSelection: (selection: SelectedElement) => void;
+  categorizationService: CategorizationService;
 }
 
 /**We always use a provider so default can be undefined*/
@@ -72,4 +74,9 @@ export const usePaletteService = (): PaletteService => {
 export const usePropertiesService = (): PropertiesService => {
   const { propertiesService } = useEditorContext();
   return propertiesService;
+};
+
+export const useCategorizationService = (): CategorizationService => {
+  const { categorizationService } = useEditorContext();
+  return categorizationService;
 };
