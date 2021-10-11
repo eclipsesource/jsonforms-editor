@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "files": [
+    "dist"
+  ],
   "typings": "src",
   "dependencies": {
     "@jsonforms/core": "^2.4.1-beta.0",
@@ -18,6 +22,7 @@
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.13.1",
     "react-monaco-editor": "^0.36.0",
+    "monaco-editor": "0.21.2",
     "react-redux": "^7.2.0",
     "react-reflex": "^3.0.22",
     "react-scripts": "^4.0.0",
@@ -26,7 +31,7 @@
     "uuid": "^8.1.0"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc --p tsconfig.build.json && cp src/JsonFormsEditor.css dist",
+    "build": "rm -rf dist && rollup --config rollup.config.ts",
     "jest": "jest",
     "test": "jest",
     "lint": "eslint --ext js,jsx,ts,tsx src"
@@ -44,13 +49,17 @@
     ]
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.5",
+    "@rollup/plugin-typescript": "^8.2.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^26.0.0",
-    "@types/node": "^12.0.0",
     "@types/json-schema-traverse": "^0.4.0",
     "@types/lodash": "^4.14.153",
+    "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "eslint": "^7.11.0",
@@ -60,6 +69,9 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "jest": "26.6.0",
     "prettier": "^2.0.5",
+    "rollup": "^2.57.0",
+    "rollup-plugin-import-css": "^3.0.2",
+    "rollup-plugin-visualizer": "^5.5.2",
     "typescript": "^3.9.6"
   },
   "babel": {
