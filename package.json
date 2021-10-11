@@ -12,6 +12,6 @@
   },
   "devDependencies": {
     "jest-environment-jsdom-fourteen": "^1.0.1",
-    "lerna": "^3.22.1"
+    "lerna": "^4.0.0"
   }
 }

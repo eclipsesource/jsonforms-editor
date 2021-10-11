@@ -5,11 +5,12 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import JsonFormsEditor, {
+import {
   defaultSchemaDecorators,
   defaultSchemaProviders,
+  JsonFormsEditor,
   ReactMaterialPreview,
-} from '@jsonforms/editor/src';
+} from '@jsonforms/editor';
 import React from 'react';
 
 import { AngularMaterialPreview } from './components/AngularMaterialPreview';

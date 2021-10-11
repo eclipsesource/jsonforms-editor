@@ -5,8 +5,8 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
-import { JsonFormsEditor } from './JsonFormsEditor';
 
+export { JsonFormsEditor } from './JsonFormsEditor';
 export * from './properties';
 export * from './core/api';
 export * from './core/components';
@@ -21,4 +21,3 @@ export * from './editor/components/preview';
 export * from './editor';
 export * from './text-editor';
 export * from './palette-panel';
-export default JsonFormsEditor;
