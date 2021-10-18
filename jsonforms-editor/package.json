@@ -31,7 +31,8 @@
     "uuid": "^8.1.0"
   },
   "scripts": {
-    "build": "rm -rf dist && rollup --config rollup.config.ts",
+    "build": "rimraf dist && rollup --config rollup.config.ts",
+    "watch": "rimraf dist && rollup -cw",
     "jest": "jest",
     "test": "jest",
     "lint": "eslint --ext js,jsx,ts,tsx src"
@@ -69,6 +70,7 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "jest": "26.6.0",
     "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
     "rollup": "^2.57.0",
     "rollup-plugin-import-css": "^3.0.2",
     "rollup-plugin-visualizer": "^5.5.2",

@@ -7,6 +7,7 @@
     "test": "lerna run test",
     "lint": "lerna run lint",
     "start": "cd app && npm run start",
+    "watch": "cd jsonforms-editor && npm run watch",
     "cypress:open": "cd app && npm run cypress:open",
     "cypress:ci": "cd app && npm run cypress:ci"
   },

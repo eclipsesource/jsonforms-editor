@@ -1,6 +1,6 @@
 /**
  * ---------------------------------------------------------------------
- * Copyright (c) 2020 EclipseSource Munich
+ * Copyright (c) 2021 EclipseSource Munich
  * Licensed under MIT
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
@@ -209,23 +209,20 @@ const getDataPath = (uischema: EditorUISchemaElement): string => {
   return path;
 };
 
-const createRendererInDirection = (direction: 'row' | 'column') => ({
-  uischema,
-  path,
-  renderers,
-  ...props
-}: LayoutProps) => {
-  const layout = uischema as EditorLayout;
-  return (
-    <DroppableLayout
-      {...props}
-      path={path}
-      layout={layout}
-      direction={direction}
-      renderers={renderers}
-    />
-  );
-};
+const createRendererInDirection =
+  (direction: 'row' | 'column') =>
+  ({ uischema, path, renderers, ...props }: LayoutProps) => {
+    const layout = uischema as EditorLayout;
+    return (
+      <DroppableLayout
+        {...props}
+        path={path}
+        layout={layout}
+        direction={direction}
+        renderers={renderers}
+      />
+    );
+  };
 
 export const DroppableHorizontalLayoutRegistration = {
   tester: rankWith(45, uiTypeIs('HorizontalLayout')),

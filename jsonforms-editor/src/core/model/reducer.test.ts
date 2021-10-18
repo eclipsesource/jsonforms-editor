@@ -1,6 +1,6 @@
 /**
  * ---------------------------------------------------------------------
- * Copyright (c) 2020 EclipseSource Munich
+ * Copyright (c) 2021 EclipseSource Munich
  * Licensed under MIT
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
@@ -63,9 +63,8 @@ describe('add detail action', () => {
     schema.properties.get('toys')!.linkedUISchemaElements = new Set(
       uiSchema.elements[0].uuid
     );
-    uiSchema.elements[0].linkedSchemaElement = schema.properties.get(
-      'toys'
-    )!.uuid;
+    uiSchema.elements[0].linkedSchemaElement =
+      schema.properties.get('toys')!.uuid;
     return { schema, uiSchema };
   };
 
@@ -88,9 +87,10 @@ describe('add detail action', () => {
   test('add scoped ui schema element as detail', () => {
     const { schema, uiSchema } = buildState();
     const newDetail = createControlWithScope('#/properties/height');
-    newDetail.linkedSchemaElement = (((schema as ObjectElement).properties.get(
-      'toys'
-    ) as ArrayElement).items as ObjectElement).properties.get('height')!.uuid;
+    newDetail.linkedSchemaElement = (
+      ((schema as ObjectElement).properties.get('toys') as ArrayElement)
+        .items as ObjectElement
+    ).properties.get('height')!.uuid;
     const addDetailAction = Actions.addDetail(
       (uiSchema as EditorLayout).elements[0].uuid,
       newDetail
@@ -103,8 +103,10 @@ describe('add detail action', () => {
       (newUiSchema as EditorLayout).elements[0].options!.detail
     ).toStrictEqual(newDetail);
     expect(
-      (((newSchema as ObjectElement).properties.get('toys') as ArrayElement)
-        .items as ObjectElement).properties
+      (
+        ((newSchema as ObjectElement).properties.get('toys') as ArrayElement)
+          .items as ObjectElement
+      ).properties
         .get('height')!
         .linkedUISchemaElements!.has(newDetail.uuid)
     ).toBeTruthy();
