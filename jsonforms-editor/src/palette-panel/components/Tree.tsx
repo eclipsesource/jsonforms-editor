@@ -1,6 +1,6 @@
 /**
  * ---------------------------------------------------------------------
- * Copyright (c) 2020 EclipseSource Munich
+ * Copyright (c) 2021 EclipseSource Munich
  * Licensed under MIT
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
@@ -63,8 +63,8 @@ interface StyledTreeItemProps extends WithStyles<typeof treeItemStyles> {
   isDragging: boolean;
 }
 
-export const StyledTreeItem = withStyles(
-  treeItemStyles
-)(({ isDragging, ...props }: StyledTreeItemProps & TreeItemProps) => (
-  <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
-));
+export const StyledTreeItem = withStyles(treeItemStyles)(
+  ({ isDragging, ...props }: StyledTreeItemProps & TreeItemProps) => (
+    <TreeItem {...props} TransitionComponent={PaletteTransitionComponent} />
+  )
+);

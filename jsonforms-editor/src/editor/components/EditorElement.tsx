@@ -1,6 +1,6 @@
 /**
  * ---------------------------------------------------------------------
- * Copyright (c) 2020 EclipseSource Munich
+ * Copyright (c) 2021 EclipseSource Munich
  * Licensed under MIT
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
@@ -71,9 +71,8 @@ export const EditorElement: React.FC<EditorElementProps> = ({
   const schema = useSchema();
   const [selection, setSelection] = useSelection();
   const dispatch = useDispatch();
-  const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] = React.useState(
-    false
-  );
+  const [openConfirmRemoveDialog, setOpenConfirmRemoveDialog] =
+    React.useState(false);
   const elementSchema = tryFindByUUID(
     schema,
     wrappedElement.linkedSchemaElement

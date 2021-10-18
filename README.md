@@ -35,6 +35,7 @@ Linting, formatting and import sorting should work automatically.
 ### Scripts
 
 - Start the app with `npm start`
+- Watch changes on the jsonforms-editor library with `npm run watch` (concurrently with previous command)
 - Run unit tests with `npm run test`
 - Run UI tests with `npm run cypress:open`
 

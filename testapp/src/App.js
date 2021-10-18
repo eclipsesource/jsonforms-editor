@@ -1,6 +1,7 @@
 import React from 'react';
 
-import JsonFormsEditor, {
+import {
+  JsonFormsEditor,
   defaultSchemaDecorators,
   defaultSchemaProviders,
 } from '@jsonforms/editor';

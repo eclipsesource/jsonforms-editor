@@ -1,6 +1,6 @@
 /**
  * ---------------------------------------------------------------------
- * Copyright (c) 2020 EclipseSource Munich
+ * Copyright (c) 2021 EclipseSource Munich
  * Licensed under MIT
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
@@ -160,9 +160,10 @@ export const toPrintableObject = (debugSchema: SchemaElement): any => {
   return assign(clone, printableProps);
 };
 
-const isElementOfType = <T extends SchemaElement>(type: string) => (
-  schemaElement: SchemaElement | undefined
-): schemaElement is T => schemaElement?.type === type;
+const isElementOfType =
+  <T extends SchemaElement>(type: string) =>
+  (schemaElement: SchemaElement | undefined): schemaElement is T =>
+    schemaElement?.type === type;
 export const isObjectElement = isElementOfType<ObjectElement>(OBJECT);
 export const isArrayElement = isElementOfType<ArrayElement>(ARRAY);
 export const isPrimitiveElement = isElementOfType<PrimitiveElement>(PRIMITIVE);
