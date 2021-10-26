@@ -8,14 +8,14 @@
 import { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 import { materialCells } from '@jsonforms/material-renderers';
 import { JsonForms } from '@jsonforms/react';
-import { createMuiTheme, Grid, ThemeProvider } from '@material-ui/core';
+import { createTheme, Grid, ThemeProvider } from '@material-ui/core';
 import React from 'react';
 
 import { useUiSchema } from '../../core/context';
 import { useExportSchema } from '../../core/util/hooks';
 import { EmptyEditor } from './EmptyEditor';
 
-const theme = createMuiTheme({
+const theme = createTheme({
   overrides: {
     MuiFormControl: {
       root: {

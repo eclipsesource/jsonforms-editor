@@ -7,7 +7,7 @@
  */
 import {
   createStyles,
-  fade,
+  alpha,
   styled,
   Theme,
   WithStyles,
@@ -55,7 +55,7 @@ const treeItemStyles = (theme: Theme) =>
     group: {
       marginLeft: theme.spacing(1),
       paddingLeft: theme.spacing(2),
-      borderLeft: `1px dashed ${fade(theme.palette.text.primary, 0.4)}`,
+      borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
     },
   });
 
