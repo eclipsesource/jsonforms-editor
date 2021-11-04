@@ -25,7 +25,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React, { useCallback, useMemo, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 
-import { ShowMoreLess } from '../..';
+import { ShowMoreLess } from '../../core/components';
 import {
   configureRuleSchemaValidation,
   EditorApi,
