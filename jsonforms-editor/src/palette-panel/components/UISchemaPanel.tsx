@@ -7,14 +7,10 @@
  */
 import React from 'react';
 
-import {
-  Actions,
-  jsonToText,
-  useDispatch,
-  useExportUiSchema,
-  useUiSchema,
-} from '../..';
+import { useDispatch, useUiSchema } from '../../core/context';
+import { Actions } from '../../core/model';
 import { buildDebugUISchema } from '../../core/model/uischema';
+import { jsonToText, useExportUiSchema } from '../../core/util';
 import { env } from '../../env';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 

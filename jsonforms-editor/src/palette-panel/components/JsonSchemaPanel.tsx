@@ -7,15 +7,9 @@
  */
 import React from 'react';
 
-import {
-  Actions,
-  jsonToText,
-  SchemaElement,
-  toPrintableObject,
-  useDispatch,
-  useExportSchema,
-  useSchema,
-} from '../..';
+import { useDispatch, useSchema } from '../../core/context';
+import { Actions, SchemaElement, toPrintableObject } from '../../core/model';
+import { jsonToText, useExportSchema } from '../../core/util';
 import { env } from '../../env';
 import { SchemaJson, UpdateResult } from './SchemaJson';
 

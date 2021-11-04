@@ -5,13 +5,14 @@
  * https://github.com/eclipsesource/jsonforms-editor/blob/master/LICENSE
  * ---------------------------------------------------------------------
  */
+import { isControl, isLayout, UISchemaElement } from '@jsonforms/core';
 import { get } from 'lodash';
 
 import { EditorState, SchemaElement } from '../model';
-import {
+import type {
+  EditorControl,
+  EditorLayout,
   EditorUISchemaElement,
-  isEditorControl,
-  traverse,
 } from '../model/uischema';
 import { Parentable } from './tree';
 
@@ -249,6 +250,31 @@ export const linkSchemas = (
   return { schema, uiSchema };
 };
 
+export const traverse = <T extends UISchemaElement, C>(
+  uiSchema: T,
+  pre: (uiSchema: T, parent: T | undefined, context: C) => void,
+  context?: C
+): C => doTraverse(uiSchema, pre, undefined, context!);
+
+const doTraverse = <T extends UISchemaElement, C>(
+  uiSchema: T,
+  pre: (uiSchema: T, parent: T | undefined, context: C) => void,
+  parent: T | undefined,
+  context: C
+): C => {
+  pre(uiSchema, parent, context);
+  if (uiSchema && isLayout(uiSchema)) {
+    uiSchema.elements.forEach((el) =>
+      doTraverse(el as T, pre, uiSchema, context)
+    );
+  }
+  if (uiSchema?.options?.detail) {
+    doTraverse(uiSchema.options.detail, pre, uiSchema, context);
+  }
+  // TODO other containments like categorization
+  return context;
+};
+
 const getSchemaElementFromScope = (
   schema: SchemaElement,
   scope: string
@@ -261,3 +287,21 @@ const getSchemaElementFromScope = (
 };
 
 export const jsonToText = (object: any) => JSON.stringify(object, null, 2);
+
+const isEditorUISchemaElement = (
+  element: any
+): element is EditorUISchemaElement => {
+  return !!element?.type && !!element?.uuid;
+};
+
+export const isEditorControl = (
+  element: UISchemaElement
+): element is EditorControl => {
+  return isEditorUISchemaElement(element) && isControl(element);
+};
+
+export const isEditorLayout = (
+  element: UISchemaElement
+): element is EditorLayout => {
+  return isEditorUISchemaElement(element) && isLayout(element);
+};

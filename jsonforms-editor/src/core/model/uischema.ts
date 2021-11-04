@@ -9,7 +9,6 @@ import {
   Categorization,
   Category,
   ControlElement,
-  isControl,
   isLayout,
   Layout,
   UISchemaElement,
@@ -20,8 +19,11 @@ import { v4 as uuid } from 'uuid';
 import {
   calculatePath,
   getRoot,
+  isEditorControl,
+  isEditorLayout,
   isPathError,
   PathError,
+  traverse,
 } from '../util/schemasUtil';
 import { getHierarchy, TreeElement } from '../util/tree';
 
@@ -49,24 +51,6 @@ export interface EditorControl extends ControlElement, EditorUISchemaElement {
 export interface EditorLayout extends Layout, EditorUISchemaElement {
   elements: EditorUISchemaElement[];
 }
-
-const isEditorUISchemaElement = (
-  element: any
-): element is EditorUISchemaElement => {
-  return !!element?.type && !!element?.uuid;
-};
-
-export const isEditorControl = (
-  element: UISchemaElement
-): element is EditorControl => {
-  return isEditorUISchemaElement(element) && isControl(element);
-};
-
-export const isEditorLayout = (
-  element: UISchemaElement
-): element is EditorLayout => {
-  return isEditorUISchemaElement(element) && isLayout(element);
-};
 
 export const getUiSchemaChildren = (
   schemaElement: EditorUISchemaElement
@@ -124,31 +108,6 @@ export const buildDebugUISchema = (
     current.parent = current.parent?.uuid;
   });
   return clone;
-};
-
-export const traverse = <T extends UISchemaElement, C>(
-  uiSchema: T,
-  pre: (uiSchema: T, parent: T | undefined, context: C) => void,
-  context?: C
-): C => doTraverse(uiSchema, pre, undefined, context!);
-
-const doTraverse = <T extends UISchemaElement, C>(
-  uiSchema: T,
-  pre: (uiSchema: T, parent: T | undefined, context: C) => void,
-  parent: T | undefined,
-  context: C
-): C => {
-  pre(uiSchema, parent, context);
-  if (uiSchema && isLayout(uiSchema)) {
-    uiSchema.elements.forEach((el) =>
-      doTraverse(el as T, pre, uiSchema, context)
-    );
-  }
-  if (uiSchema?.options?.detail) {
-    doTraverse(uiSchema.options.detail, pre, uiSchema, context);
-  }
-  // TODO other containments like categorization
-  return context;
 };
 
 export const getUISchemaPath = (

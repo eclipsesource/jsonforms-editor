@@ -12,9 +12,12 @@ import { withCloneTree, withCloneTrees } from '../util/clone';
 import {
   findByUUID,
   getRoot,
+  isEditorControl,
+  isEditorLayout,
   isUUIDError,
   linkElements,
   linkSchemas,
+  traverse,
   UUIDError,
 } from '../util/schemasUtil';
 import {
@@ -37,9 +40,6 @@ import {
   cleanUiSchemaLinks,
   EditorLayout,
   EditorUISchemaElement,
-  isEditorControl,
-  isEditorLayout,
-  traverse,
 } from './uischema';
 
 export interface EditorState {

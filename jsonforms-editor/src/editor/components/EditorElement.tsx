@@ -20,9 +20,8 @@ import {
   EditorUISchemaElement,
   getUISchemaPath,
   hasChildren,
-  isEditorControl,
 } from '../../core/model/uischema';
-import { tryFindByUUID } from '../../core/util/schemasUtil';
+import { isEditorControl, tryFindByUUID } from '../../core/util/schemasUtil';
 
 const useEditorElementStyles = makeStyles((theme) => ({
   editorElement: {
